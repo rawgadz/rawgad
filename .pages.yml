@@ -157,6 +157,12 @@ content:
         label: Post ID
         required: true
 
+      - name: slug
+        type: string
+        label: Slug / URL
+        required: false
+        description: "URL slug for standalone blog post (e.g. building-modern-web-applications)"
+
       - name: title
         type: string
         label: Title
@@ -206,6 +212,12 @@ content:
         type: string
         label: Car ID
         required: true
+
+      - name: slug
+        type: string
+        label: Slug / URL
+        required: false
+        description: "URL slug for standalone vehicle page (e.g. porsche-911-gt3-rs)"
 
       - name: title
         type: string

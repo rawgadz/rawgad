@@ -51,7 +51,8 @@
       const pId = item.productId != null ? String(item.productId).trim() : '';
       const tId = (item.typeId != null && item.typeId !== 'null') ? String(item.typeId).trim() : 'null';
       const sId = (item.subProductId != null && item.subProductId !== 'null') ? String(item.subProductId).trim() : 'null';
-      const stock = typeof item.stock === 'number' ? item.stock : 0;
+      const isAvail = item.isAvailable === true || item.stockType === 'available';
+      const stock = typeof item.stock === 'number' ? Math.max(0, item.stock) : (isAvail ? 999 : 0);
 
       // 1. Triple key: productId:::typeId:::subProductId
       map[`${pId}:::${tId}:::${sId}`] = stock;
@@ -136,8 +137,9 @@
         }
 
         const data = await res.json();
-        if (data && data.success && Array.isArray(data.inventory)) {
-          const cacheObj = saveToLocalStorage(data.inventory);
+        const invArray = (data && Array.isArray(data.inventory)) ? data.inventory : (data && Array.isArray(data.items) ? data.items : null);
+        if (data && data.success && invArray) {
+          const cacheObj = saveToLocalStorage(invArray);
           notifyListeners(cacheObj);
           return cacheObj;
         } else {

@@ -1195,12 +1195,6 @@
               throw new Error(result.error || result.message || 'Failed to process checkout');
             }
 
-            // Fallback for gateway if provided
-            if (this.paymentMethod === 'paystation' && result.payment_url) {
-              window.location.href = result.payment_url;
-              return;
-            }
-
             // Clear Cart & invalidate cached inventory to reflect decremented stock
             Alpine.store('cart').clear();
             try {

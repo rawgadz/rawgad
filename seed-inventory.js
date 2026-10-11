@@ -1,5 +1,4 @@
-// seed-inventory.js
-// Seeds initial inventory in MongoDB Atlas (paystationdemo.inventory)
+// Seeds initial inventory in MongoDB Atlas (inventory collection)
 // based on products.json purchasable item hierarchy rules.
 
 const fs = require('fs');
@@ -24,7 +23,7 @@ if (!process.env.MONGO_URI && fs.existsSync(path.join(__dirname, '.env'))) {
 
 const MONGO_URI = process.env.MONGO_URI;
 
-async function seedInventory(defaultStock = 10) {
+async function seedInventory(defaultStock = 0) {
   if (!MONGO_URI) {
     console.error('[seed-inventory] ERROR: MONGO_URI environment variable is missing.');
     process.exit(1);
@@ -44,7 +43,8 @@ async function seedInventory(defaultStock = 10) {
 
   try {
     await client.connect();
-    const db = client.db('paystationdemo');
+    const dbName = process.env.MONGODB_DB || process.env.MONGO_DB || "paystationdemo";
+    const db = client.db(dbName);
     const inventoryCol = db.collection('inventory');
 
     // Create unique compound index
@@ -132,7 +132,7 @@ async function seedInventory(defaultStock = 10) {
 
     console.log(`[seed-inventory] Processed ${totalItems} inventory items. Newly upserted: ${upsertedCount}`);
     const count = await inventoryCol.countDocuments();
-    console.log(`[seed-inventory] Total documents in paystationdemo.inventory: ${count}`);
+    console.log(`[seed-inventory] Total documents in inventory collection: ${count}`);
 
     // Sample checks:
     const sampleProd1 = await inventoryCol.findOne({ productId: 'prod_001' });

@@ -94,7 +94,7 @@ function generateStandaloneProductHTML(product) {
   const initialPrice = firstSub?.price ?? firstType?.price ?? product.price;
 
   const tagsHtml = product.tags
-    ? product.tags.split(',').map(tag => `<span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">${escapeHtml(tag.trim())}</span>`).join('\n              ')
+    ? product.tags.split(',').map(tag => `<span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">${escapeHtml(tag.trim())}</span>`).join('\n             ')
     : '';
 
   const sanitizedProductJson = JSON.stringify(product).replace(/</g, '\\u003c');
@@ -104,7 +104,7 @@ function generateStandaloneProductHTML(product) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>${escapeHtml(product.title)} - Rawgadz</title>
+  <title>${escapeHtml(product.title)} | Rawgadz</title>
   <meta name="description" content="${escapeHtml(product.description || product.title)}">
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -216,26 +216,60 @@ function generateStandaloneProductHTML(product) {
   <!-- MAIN CONTENT AREA -->
   <main class="p-4 md:p-8 flex flex-col items-center mt-4 w-full max-w-7xl mx-auto flex-grow gap-4" x-data="productPage()" x-cloak>
     
-    <!-- ==================== MOBILE LAYOUT (Side-by-Side Cards) ==================== -->
-    <div class="w-full md:hidden flex flex-row gap-3">
+    <!-- ==================== MOBILE LAYOUT ==================== -->
+    <div class="w-full md:hidden flex flex-col bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm">
       
-      <!-- LEFT SIDE: Product Gallery Card (Separate Card) -->
-      <div class="w-28 bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-sm flex flex-col flex-shrink-0">
-        <div x-show="currentVariantImages && currentVariantImages.length > 0" class="flex flex-col gap-2 p-2 max-h-64 overflow-y-auto custom-scroll bg-neutral-50">
+      <!-- Main Product Image with Slider Controls & Swipe -->
+      <div 
+        class="bg-neutral-50 rounded-xl p-3 flex items-center justify-center aspect-square relative overflow-hidden select-none"
+        x-data="{ touchStartX: 0, touchEndX: 0 }"
+        @touchstart.passive="touchStartX = $event.changedTouches[0].screenX"
+        @touchend.passive="touchEndX = $event.changedTouches[0].screenX; if (touchStartX - touchEndX > 40) nextGalleryImage(); if (touchEndX - touchStartX > 40) prevGalleryImage();"
+      >
+        <img :src="currentImage" :alt="product.title" class="w-full h-full object-contain mix-blend-multiply transition-all duration-300">
+        
+        <!-- Slider Arrows on Image (Active when multiple images exist) -->
+        <template x-if="currentVariantImages && currentVariantImages.length > 1">
+          <div class="pointer-events-none absolute inset-0 flex items-center justify-between p-2">
+            <button 
+              type="button" 
+              @click.stop="prevGalleryImage()" 
+              class="pointer-events-auto w-8 h-8 rounded-full bg-white/90 hover:bg-white text-black shadow-md flex items-center justify-center transition-all opacity-85 active:scale-90"
+              aria-label="Previous Photo"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button 
+              type="button" 
+              @click.stop="nextGalleryImage()" 
+              class="pointer-events-auto w-8 h-8 rounded-full bg-white/90 hover:bg-white text-black shadow-md flex items-center justify-center transition-all opacity-85 active:scale-90"
+              aria-label="Next Photo"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        </template>
+      </div>
+
+      <!-- Small Tiny Thumbnail Gallery Slider (Right Below the Main Image) -->
+      <div x-show="currentVariantImages && currentVariantImages.length > 1" class="mt-2.5 mb-3">
+        <div class="flex flex-row gap-1.5 overflow-x-auto no-scrollbar py-1 px-0.5 scroll-smooth">
           <template x-for="(imgUrl, i) in currentVariantImages" :key="'mobile-thumb-' + i">
-            <button @click="selectedGalleryImage = imgUrl" class="w-full aspect-square rounded-lg border-2 overflow-hidden transition-all flex-shrink-0" :class="currentImage === imgUrl ? 'border-black ring-1 ring-black' : 'border-neutral-200 opacity-60'">
-              <img :src="imgUrl" class="w-full h-full object-cover">
+            <button 
+              type="button" 
+              @click="selectedGalleryImage = imgUrl" 
+              class="w-11 h-11 rounded-md border bg-neutral-50 p-0.5 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer overflow-hidden" 
+              :class="currentImage === imgUrl ? 'border-black ring-1 ring-black shadow-xs' : 'border-neutral-200 opacity-60 hover:opacity-100'"
+              :aria-label="'View photo ' + (i + 1)"
+            >
+              <img :src="imgUrl" class="w-full h-full object-contain mix-blend-multiply">
             </button>
           </template>
         </div>
       </div>
 
-      <!-- RIGHT SIDE: Main Product Info Card -->
-      <div class="flex-1 bg-white rounded-2xl border border-neutral-200 p-3 shadow-sm flex flex-col">
-        <div class="bg-neutral-50 rounded-xl p-3 mb-3 flex items-center justify-center aspect-square">
-          <img :src="currentImage" :alt="product.title" class="w-full h-full object-contain mix-blend-multiply">
-        </div>
-
+      <!-- Main Product Info -->
+      <div class="flex flex-col mt-1">
         <div class="flex flex-wrap gap-1 mb-2">${tagsHtml}</div>
         <h1 class="text-base font-black text-black mb-2 leading-tight tracking-tight" x-text="product.title">${escapeHtml(product.title)}</h1>
 
@@ -728,6 +762,24 @@ function generateStandaloneProductHTML(product) {
           this.syncCart();
         },
 
+        prevGalleryImage() {
+          const imgs = this.currentVariantImages;
+          if (!imgs || imgs.length <= 1) return;
+          const current = this.currentImage;
+          const idx = imgs.indexOf(current);
+          const prevIdx = (idx <= 0 ? imgs.length - 1 : idx - 1);
+          this.selectedGalleryImage = imgs[prevIdx];
+        },
+
+        nextGalleryImage() {
+          const imgs = this.currentVariantImages;
+          if (!imgs || imgs.length <= 1) return;
+          const current = this.currentImage;
+          const idx = imgs.indexOf(current);
+          const nextIdx = (idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1);
+          this.selectedGalleryImage = imgs[nextIdx];
+        },
+
         getCartKey() {
           const type = this.selectedType;
           const sub = this.selectedSubProduct;
@@ -968,7 +1020,7 @@ function buildGadgetsPage() {
   html = html.replace(/<h2 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900">\s*Featured Products\s*<\/h2>/i, `<h2 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900">\n            Featured Gadgets\n          </h2>`);
   html = html.replace(/<span class="text-xs font-bold uppercase tracking-wider text-neutral-400">\s*All Products Catalog\s*<\/span>/i, `<span class="text-xs font-bold uppercase tracking-wider text-neutral-400">\n          Gadgets Catalog\n        </span>`);
 
-  html = html.replace(/all\.filter\(p\s*=>\s*!p\.tab\s*\|\|\s*p\.tab\s*===\s*['"]normal['"]\)/g, `all.filter(p => p.tab === 'gadget')`);
+  html = html.replace(/all\.filter\(p\s*=>\s*!p\.tab\s*\Vert{}\Vert{}\s*p\.tab\s*===\s*['"]normal['"]\)/g, `all.filter(p => p.tab === 'gadget')`);
   html = html.replace(/carouselSource:\s*['"]\.\/index\.json['"]/g, `carouselSource: './gadgets.json'`);
 
   fs.writeFileSync(GADGETS_OUTPUT_FILE, html, 'utf-8');

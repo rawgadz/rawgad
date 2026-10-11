@@ -5,7 +5,7 @@
 const fs = require("fs");
 const path = require("path");
 const { ObjectId } = require("mongodb");
-const { getDb } = require("./_db");
+const { getDb } = require("../lib/db");
 
 // Load products.json static catalog once for server-side item & price validation
 let catalogMap = null;
@@ -316,7 +316,8 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const db = client.db("paystationdemo");
+  const dbName = process.env.MONGODB_DB || process.env.MONGO_DB || "paystationdemo";
+  const db = client.db(dbName);
   const inventoryCol = db.collection("inventory");
   const ordersCol = db.collection("orders");
 
@@ -337,42 +338,59 @@ module.exports = async function handler(req, res) {
       await session.withTransaction(async () => {
         // Step 1: Validate every item and atomically decrease stock
         for (const item of validatedLineItems) {
-          const filter = {
-            productId: item.id,
-            subProductId: item.subProductId,
-            stock: { $gte: item.qty }
-          };
-          if (item.typeId) {
-            filter.typeId = item.typeId;
-          }
-
-          const updateRes = await inventoryCol.findOneAndUpdate(
-            filter,
+          const existingDoc = await inventoryCol.findOne(
             {
-              $inc: { stock: -item.qty },
-              $set: { updatedAt: new Date() }
+              productId: item.id,
+              typeId: item.typeId ?? null,
+              subProductId: item.subProductId ?? null,
             },
-            { session, returnDocument: "after" }
+            { session }
           );
 
-          if (!updateRes) {
-            // Find current stock to produce exact human-friendly error
-            const currentItem = await inventoryCol.findOne(
+          const isAlwaysAvailable = existingDoc && (existingDoc.isAvailable === true || existingDoc.stockType === "available");
+
+          if (isAlwaysAvailable) {
+            // Always Available Mode: never blocks order
+            if (existingDoc && typeof existingDoc.stock === "number" && existingDoc.stock >= item.qty) {
+              await inventoryCol.updateOne(
+                { _id: existingDoc._id },
+                { $inc: { stock: -item.qty }, $set: { updatedAt: new Date() } },
+                { session }
+              );
+            } else if (existingDoc) {
+              await inventoryCol.updateOne(
+                { _id: existingDoc._id },
+                { $set: { updatedAt: new Date() } },
+                { session }
+              );
+            }
+          } else {
+            // Fixed stock mode: requires stock >= item.qty
+            const filter = {
+              productId: item.id,
+              typeId: item.typeId ?? null,
+              subProductId: item.subProductId ?? null,
+              stock: { $gte: item.qty }
+            };
+
+            const updateRes = await inventoryCol.findOneAndUpdate(
+              filter,
               {
-                productId: item.id,
-                subProductId: item.subProductId,
-                ...(item.typeId ? { typeId: item.typeId } : {})
+                $inc: { stock: -item.qty },
+                $set: { updatedAt: new Date() }
               },
-              { session }
+              { session, returnDocument: "after" }
             );
 
-            const available = currentItem && typeof currentItem.stock === "number" ? currentItem.stock : 0;
-            const err = new Error(
-              `Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${available} available.`
-            );
-            err.code = "INSUFFICIENT_STOCK";
-            err.available = available;
-            throw err;
+            if (!updateRes) {
+              const available = existingDoc && typeof existingDoc.stock === "number" ? existingDoc.stock : 0;
+              const err = new Error(
+                `Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${available} available.`
+              );
+              err.code = "INSUFFICIENT_STOCK";
+              err.available = available;
+              throw err;
+            }
           }
         }
 
@@ -396,49 +414,64 @@ module.exports = async function handler(req, res) {
     }
   } else {
     // Non-transaction fallback: conditional atomic update with rollback compensation
-    const decrementedItems = [];
+    const decrementedFixedItems = [];
 
     try {
       for (const item of validatedLineItems) {
-        const filter = {
+        const existingDoc = await inventoryCol.findOne({
           productId: item.id,
-          subProductId: item.subProductId,
-          stock: { $gte: item.qty }
-        };
-        if (item.typeId) {
-          filter.typeId = item.typeId;
-        }
+          typeId: item.typeId ?? null,
+          subProductId: item.subProductId ?? null,
+        });
 
-        const updateRes = await inventoryCol.findOneAndUpdate(
-          filter,
-          {
-            $inc: { stock: -item.qty },
-            $set: { updatedAt: new Date() }
-          },
-          { returnDocument: "after" }
-        );
+        const isAlwaysAvailable = existingDoc && (existingDoc.isAvailable === true || existingDoc.stockType === "available");
 
-        if (!updateRes) {
-          const currentItem = await inventoryCol.findOne({
+        if (isAlwaysAvailable) {
+          if (existingDoc && typeof existingDoc.stock === "number" && existingDoc.stock >= item.qty) {
+            await inventoryCol.updateOne(
+              { _id: existingDoc._id },
+              { $inc: { stock: -item.qty }, $set: { updatedAt: new Date() } }
+            );
+          } else if (existingDoc) {
+            await inventoryCol.updateOne(
+              { _id: existingDoc._id },
+              { $set: { updatedAt: new Date() } }
+            );
+          }
+        } else {
+          const filter = {
             productId: item.id,
-            subProductId: item.subProductId,
-            ...(item.typeId ? { typeId: item.typeId } : {})
-          });
-          const available = currentItem && typeof currentItem.stock === "number" ? currentItem.stock : 0;
-          throw new Error(
-            `Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${available} available.`
-          );
-        }
+            typeId: item.typeId ?? null,
+            subProductId: item.subProductId ?? null,
+            stock: { $gte: item.qty }
+          };
 
-        decrementedItems.push(item);
+          const updateRes = await inventoryCol.findOneAndUpdate(
+            filter,
+            {
+              $inc: { stock: -item.qty },
+              $set: { updatedAt: new Date() }
+            },
+            { returnDocument: "after" }
+          );
+
+          if (!updateRes) {
+            const available = existingDoc && typeof existingDoc.stock === "number" ? existingDoc.stock : 0;
+            throw new Error(
+              `Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${available} available.`
+            );
+          }
+
+          decrementedFixedItems.push(item);
+        }
       }
 
-      // Create order after all items decremented
+      // Create order after all items validated & processed
       await ordersCol.insertOne(orderDoc);
 
     } catch (err) {
-      // Rollback any successfully decremented items
-      for (const dec of decrementedItems) {
+      // Rollback any successfully decremented fixed items
+      for (const dec of decrementedFixedItems) {
         try {
           await inventoryCol.updateOne(
             {

@@ -394,10 +394,22 @@ function buildHtmlBlog() {
 </html>`;
   };
 
+  // Clean up outdated blog HTML files that don't match active slugs
+  const activeFileNames = new Set(blogs.map(b => `${b.slug || b.id}.html`));
+  if (fs.existsSync(OUTPUT_DIR)) {
+    const existingFiles = fs.readdirSync(OUTPUT_DIR).filter(f => f.endsWith('.html'));
+    for (const f of existingFiles) {
+      if (!activeFileNames.has(f)) {
+        try { fs.unlinkSync(path.join(OUTPUT_DIR, f)); } catch (_) {}
+      }
+    }
+  }
+
   // Generate individual blog HTML files inside blog/ folder
   let count = 0;
   blogs.forEach(blog => {
-    const filePath = path.join(OUTPUT_DIR, `${blog.id}.html`);
+    const blogSlug = blog.slug || blog.id;
+    const filePath = path.join(OUTPUT_DIR, `${blogSlug}.html`);
     fs.writeFileSync(filePath, generateHTML(blog));
     count++;
   });

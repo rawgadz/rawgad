@@ -8,6 +8,19 @@ const CONTENT_DIR = path.join(__dirname, 'content', 'blog');
 const ROOT_OUTPUT_FILE = path.join(__dirname, 'blog.json');
 const PUBLIC_OUTPUT_FILE = path.join(__dirname, 'public', 'blog.json');
 
+function slugify(str) {
+  if (typeof str !== 'string') return '';
+  return str.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function sanitizeSlug(rawSlug) {
+  if (typeof rawSlug !== 'string') return '';
+  let cleaned = rawSlug.trim().toLowerCase();
+  cleaned = cleaned.replace(/[/\\]/g, '').replace(/\.\.+/g, '');
+  cleaned = cleaned.replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+  return cleaned;
+}
+
 function generateBlogJson() {
   if (!fs.existsSync(CONTENT_DIR)) {
     console.error(`Error: The directory ${CONTENT_DIR} does not exist.`);
@@ -34,6 +47,15 @@ function generateBlogJson() {
       continue;
     }
 
+    let slug = '';
+    if (data.slug !== undefined && data.slug !== null && String(data.slug).trim() !== '') {
+      slug = sanitizeSlug(String(data.slug));
+      if (!slug) slug = slugify(data.title);
+    } else {
+      slug = slugify(data.title);
+    }
+    if (!slug) slug = slugify(String(data.id));
+
     const htmlContent = marked.parse(content || '');
 
     const tags = Array.isArray(data.tags)
@@ -42,6 +64,7 @@ function generateBlogJson() {
 
     blogs.push({
       id: String(data.id),
+      slug: slug,
       title: data.title,
       date: data.date || '',
       author: data.author || 'Rawgadz Team',
@@ -50,6 +73,20 @@ function generateBlogJson() {
       tags: tags,
       content: htmlContent
     });
+  }
+
+  // Validate duplicate slugs
+  const slugToIds = new Map();
+  for (const blog of blogs) {
+    if (!slugToIds.has(blog.slug)) slugToIds.set(blog.slug, []);
+    slugToIds.get(blog.slug).push(blog.id);
+  }
+  const duplicateErrors = [];
+  for (const [slug, ids] of slugToIds.entries()) {
+    if (ids.length > 1) duplicateErrors.push(`Duplicate slug "${slug}" detected in blog posts: ${ids.join(', ')}`);
+  }
+  if (duplicateErrors.length > 0) {
+    throw new Error(`[build-blog] Build failed due to duplicate slugs:\n` + duplicateErrors.join('\n'));
   }
 
   // Sort blogs deterministically by id

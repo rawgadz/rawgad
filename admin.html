@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rawgad Admin - Operations & Overview</title>
+  <meta name="description" content="Rawgad Admin Portal - Order Fulfillment, Pathao Courier & Inventory Management">
+  <meta name="robots" content="noindex,nofollow">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+<body class="bg-neutral-50 min-h-screen flex flex-col font-sans text-neutral-900 selection:bg-black selection:text-white" x-data="adminHub()" x-init="init()" x-cloak>
+
+  <!-- Responsive Top Navbar -->
+  <header class="sticky top-0 z-40 bg-white border-b border-neutral-200 shadow-xs w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <a href="./admin.html" class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex items-center gap-2">
+          <span>RAWGAD</span>
+          <span class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-widest uppercase">OPERATIONS</span>
+        </a>
+      </div>
+
+      <!-- Desktop Nav Tabs -->
+      <nav class="hidden md:flex items-center gap-1 bg-neutral-100 p-1 rounded-xl border border-neutral-200">
+        <a href="./admin.html" class="bg-white text-black shadow-xs font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-all flex items-center gap-2">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+          Overview
+        </a>
+        <a href="./inventory.html" class="text-neutral-600 hover:text-black font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          Inventory
+        </a>
+        <a href="./order.html" class="text-neutral-600 hover:text-black font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          Orders & Pathao
+        </a>
+      </nav>
+
+      <!-- Right Action Links -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="./index.html" target="_blank" class="text-neutral-500 hover:text-black text-xs font-semibold uppercase tracking-wider flex items-center gap-1 transition-colors px-3 py-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50">
+          <span>View Store</span>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </a>
+        <button @click="logout()" class="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-red-200 transition-colors cursor-pointer">
+          Logout
+        </button>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2 rounded-xl text-neutral-700 hover:text-black hover:bg-neutral-100 transition-colors">
+        <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div x-show="mobileMenuOpen" x-transition class="md:hidden flex flex-col bg-white border-b border-neutral-200 p-4 gap-2 shadow-lg">
+      <a href="./admin.html" class="bg-neutral-100 font-bold text-xs uppercase tracking-wider p-3 rounded-lg text-black">Overview</a>
+      <a href="./inventory.html" class="font-semibold text-xs uppercase tracking-wider p-3 rounded-lg text-neutral-700 hover:bg-neutral-50">Inventory Management</a>
+      <a href="./order.html" class="font-semibold text-xs uppercase tracking-wider p-3 rounded-lg text-neutral-700 hover:bg-neutral-50">Orders & Pathao Dispatch</a>
+      <a href="./index.html" target="_blank" class="font-semibold text-xs uppercase tracking-wider p-3 rounded-lg text-neutral-500 hover:bg-neutral-50 border-t border-neutral-100 mt-1">View Store ↗</a>
+      <button @click="logout()" class="text-left font-bold text-xs uppercase tracking-wider p-3 rounded-lg text-red-600 hover:bg-red-50">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="p-4 md:p-8 max-w-7xl mx-auto w-full flex-grow flex flex-col gap-8">
+    
+    <!-- Header with Quick Actions -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-200 pb-6">
+      <div>
+        <h1 class="text-3xl font-black text-black tracking-tight">Admin Operations Hub</h1>
+        <p class="text-xs text-neutral-500 font-medium mt-1">
+          Store snapshot, Pathao courier fulfillment alerts, and stock management.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button 
+          @click="openAddInventoryModal()" 
+          class="bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Add / Update Stock
+        </button>
+
+        <a 
+          href="./order.html" 
+          class="bg-white hover:bg-neutral-100 text-black border border-neutral-300 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all flex items-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          Dispatch Orders
+        </a>
+
+        <button 
+          @click="refreshAll()"
+          :disabled="loading"
+          class="p-2.5 bg-neutral-100 hover:bg-neutral-200 rounded-xl text-neutral-700 transition-colors"
+          title="Refresh Hub Data"
+        >
+          <svg :class="loading ? 'animate-spin' : ''" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Metric Cards (Actionable, No Fluff) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <!-- Total Orders -->
+      <a href="./order.html" class="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs hover:border-black transition-all group flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-neutral-400 group-hover:text-black transition-colors">Total Orders</span>
+          <span class="p-2 bg-neutral-100 rounded-lg text-neutral-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          </span>
+        </div>
+        <div class="mt-4">
+          <div class="text-3xl font-black text-black" x-text="metrics.totalOrders">0</div>
+          <div class="text-[11px] text-neutral-500 font-medium mt-1" x-text="'Revenue: BDT ' + metrics.totalRevenue.toLocaleString()">BDT 0.00</div>
+        </div>
+      </a>
+
+      <!-- Pending Pathao Dispatch -->
+      <a href="./order.html?filter=ready" class="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs hover:border-amber-500 transition-all group flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-600">Ready for Pathao</span>
+          <span class="p-2 bg-amber-50 rounded-lg text-amber-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          </span>
+        </div>
+        <div class="mt-4">
+          <div class="text-3xl font-black text-amber-600" x-text="metrics.pendingDispatch">0</div>
+          <div class="text-[11px] text-neutral-500 font-medium mt-1">Awaiting 1-Click Courier Dispatch</div>
+        </div>
+      </a>
+
+      <!-- Pathao Dispatched -->
+      <a href="./order.html?filter=dispatched" class="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs hover:border-black transition-all group flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-neutral-400 group-hover:text-black transition-colors">Pathao Dispatched</span>
+          <span class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          </span>
+        </div>
+        <div class="mt-4">
+          <div class="text-3xl font-black text-black" x-text="metrics.dispatchedCount">0</div>
+          <div class="text-[11px] text-emerald-600 font-medium mt-1">Consignments active in transit</div>
+        </div>
+      </a>
+
+      <!-- Stock Alerts -->
+      <a href="./inventory.html?filter=low_stock" class="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs hover:border-rose-500 transition-all group flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-rose-600">Stock Alerts</span>
+          <span class="p-2 bg-rose-50 rounded-lg text-rose-600">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </span>
+        </div>
+        <div class="mt-4">
+          <div class="text-3xl font-black text-rose-600" x-text="stockAlertsCount">0</div>
+          <div class="text-[11px] text-neutral-500 font-medium mt-1">Out of Stock or Low (&le;5 units)</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Two-Column Operational Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Recent Orders Column (2 cols wide) -->
+      <div class="lg:col-span-2 flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-black text-black">Recent Orders & Quick Dispatch</h2>
+            <p class="text-xs text-neutral-500">Latest customer orders ready for verification or Pathao dispatch.</p>
+          </div>
+          <a href="./order.html" class="text-xs font-bold uppercase tracking-wider text-black hover:underline flex items-center gap-1">
+            <span>View All Orders</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-xs overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-neutral-50 border-b border-neutral-200 text-[11px] uppercase tracking-wider text-neutral-500 font-bold">
+                  <th class="py-3 px-4">Invoice</th>
+                  <th class="py-3 px-4">Customer</th>
+                  <th class="py-3 px-4">Amount & Mode</th>
+                  <th class="py-3 px-4">Courier</th>
+                  <th class="py-3 px-4 text-right">Quick Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-100 text-xs font-medium">
+                <template x-if="recentOrders.length === 0">
+                  <tr>
+                    <td colspan="5" class="py-8 text-center text-neutral-400 font-bold uppercase tracking-wider text-xs">
+                      No recent orders found.
+                    </td>
+                  </tr>
+                </template>
+
+                <template x-for="o in recentOrders" :key="o.invoice_number">
+                  <tr class="hover:bg-neutral-50/80 transition-colors">
+                    <td class="py-3 px-4">
+                      <div class="font-bold text-black font-mono" x-text="o.invoice_number"></div>
+                      <div class="text-[10px] text-neutral-400 mt-0.5" x-text="o.created_at ? new Date(o.created_at).toLocaleDateString() : ''"></div>
+                    </td>
+
+                    <td class="py-3 px-4">
+                      <div class="font-bold text-black truncate max-w-[150px]" x-text="o.customer?.name || 'Customer'"></div>
+                      <div class="text-neutral-500 text-[11px]" x-text="o.customer?.phone || ''"></div>
+                    </td>
+
+                    <td class="py-3 px-4">
+                      <div class="font-black text-black" x-text="'BDT ' + (Number(o.payment_amount) || 0).toFixed(0)"></div>
+                      <span 
+                        :class="o.payment_method === 'cod' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-purple-50 text-purple-700 border-purple-200'"
+                        class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded border inline-block mt-0.5"
+                        x-text="o.payment_method === 'cod' ? 'COD' : 'Paid/MFS'"
+                      ></span>
+                    </td>
+
+                    <td class="py-3 px-4">
+                      <template x-if="o.courier_status === 'dispatched'">
+                        <span class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1 font-mono">
+                          <svg class="w-2.5 h-2.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                          <span x-text="o.consignment_id || 'Dispatched'"></span>
+                        </span>
+                      </template>
+                      <template x-if="o.courier_status !== 'dispatched'">
+                        <span class="bg-neutral-100 text-neutral-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-neutral-200">
+                          Ready
+                        </span>
+                      </template>
+                    </td>
+
+                    <td class="py-3 px-4 text-right">
+                      <template x-if="o.courier_status === 'dispatched'">
+                        <a :href="'./order.html?search=' + o.invoice_number" class="text-neutral-500 hover:text-black font-bold text-xs uppercase underline">Details</a>
+                      </template>
+                      <template x-if="o.courier_status !== 'dispatched'">
+                        <button 
+                          @click="dispatchToPathao(o.invoice_number)" 
+                          :disabled="dispatching[o.invoice_number]"
+                          class="bg-black hover:bg-neutral-800 disabled:opacity-50 text-white font-bold text-[11px] uppercase tracking-wider px-3 py-1.5 rounded-lg transition-all inline-flex items-center gap-1 cursor-pointer"
+                        >
+                          <span x-text="dispatching[o.invoice_number] ? 'Sending...' : 'Send Pathao'"></span>
+                        </button>
+                      </template>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Stock Alerts Column (1 col wide) -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-black text-black">Stock Attention</h2>
+            <p class="text-xs text-neutral-500">Items out of stock or running low.</p>
+          </div>
+          <a href="./inventory.html" class="text-xs font-bold uppercase tracking-wider text-black hover:underline">Manage All</a>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-neutral-200 shadow-xs p-4 flex flex-col gap-3">
+          <template x-if="alertItems.length === 0">
+            <div class="py-8 text-center text-emerald-600 font-bold uppercase tracking-wider text-xs flex flex-col items-center gap-2">
+              <svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span>All items healthy in stock!</span>
+            </div>
+          </template>
+
+          <template x-for="item in alertItems.slice(0, 6)" :key="item.productId + (item.subProductId || item.typeId || '')">
+            <div class="flex items-center justify-between p-3 rounded-xl border border-neutral-100 bg-neutral-50/50 hover:bg-neutral-50 transition-colors">
+              <div class="min-w-0 pr-2">
+                <div class="font-bold text-black text-xs truncate" x-text="item.productId"></div>
+                <div class="text-[10px] text-neutral-400 truncate" x-text="item.subProductId || item.typeId || 'Main SKU'"></div>
+                <div class="mt-1 flex items-center gap-2">
+                  <span 
+                    :class="item.stock === 0 ? 'bg-rose-100 text-rose-800 border-rose-200' : 'bg-amber-100 text-amber-800 border-amber-200'"
+                    class="text-[9px] font-black uppercase px-2 py-0.5 rounded border"
+                    x-text="item.stock === 0 ? 'Out of Stock' : (item.stock + ' Left')"
+                  ></span>
+                </div>
+              </div>
+
+              <!-- 1-Click Fast Stock Resolution Action -->
+              <div class="flex flex-col gap-1 items-end shrink-0">
+                <button 
+                  @click="quickMakeAvailable(item)"
+                  title="Make this item immediately available/in-stock"
+                  class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  Available
+                </button>
+                <button 
+                  @click="quickAddStock(item, 10)"
+                  title="Add 10 fixed units"
+                  class="bg-neutral-200 hover:bg-neutral-300 text-neutral-800 font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                >
+                  +10 Units
+                </button>
+              </div>
+            </div>
+          </template>
+
+          <a href="./inventory.html" class="w-full text-center py-2.5 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-bold text-xs uppercase tracking-wider text-neutral-700 transition-colors mt-2">
+            Open Inventory Dashboard &rarr;
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ADD / UPDATE INVENTORY MODAL (Shared logic) -->
+  <div 
+    x-show="showAddModal" 
+    x-transition.opacity 
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+  >
+    <div 
+      @click.away="showAddModal = false" 
+      class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-neutral-200 flex flex-col gap-6"
+    >
+      <div class="flex items-center justify-between border-b border-neutral-100 pb-4">
+        <div>
+          <h3 class="text-xl font-black text-black tracking-tight">Add or Update Inventory</h3>
+          <p class="text-xs text-neutral-500 mt-0.5">Select a product and choose fixed units or unlimited availability.</p>
+        </div>
+        <button @click="showAddModal = false" class="text-neutral-400 hover:text-black p-1 text-lg font-bold">&times;</button>
+      </div>
+
+      <!-- Form -->
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600 mb-1">Product ID / SKU *</label>
+          <input 
+            type="text" 
+            x-model="formProduct.productId" 
+            placeholder="e.g. prod_001 or product-slug" 
+            class="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-black font-medium"
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600 mb-1">Type ID (Optional)</label>
+            <input 
+              type="text" 
+              x-model="formProduct.typeId" 
+              placeholder="e.g. type_001" 
+              class="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-black font-medium"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600 mb-1">SubProduct ID (Optional)</label>
+            <input 
+              type="text" 
+              x-model="formProduct.subProductId" 
+              placeholder="e.g. sub_001" 
+              class="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-black font-medium"
+            />
+          </div>
+        </div>
+
+        <!-- Stock Logic Toggle: Core Requirement -->
+        <div class="border border-neutral-200 p-4 rounded-2xl bg-neutral-50/50 flex flex-col gap-3">
+          <span class="text-xs font-black uppercase tracking-wider text-black">Stock Management Mode</span>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <!-- Mode 1: Stock is Available Button -->
+            <button 
+              type="button" 
+              @click="stockMode = 'available'" 
+              :class="stockMode === 'available' ? 'bg-black text-white border-black shadow-xs' : 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-100'"
+              class="p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer"
+            >
+              <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Stock Available
+              </div>
+              <span class="text-[10px] text-neutral-400 leading-tight">Always in-stock / unlimited purchasable</span>
+            </button>
+
+            <!-- Mode 2: Fixed Stock Amount -->
+            <button 
+              type="button" 
+              @click="stockMode = 'fixed'" 
+              :class="stockMode === 'fixed' ? 'bg-black text-white border-black shadow-xs' : 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-100'"
+              class="p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer"
+            >
+              <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                Fixed Amount
+              </div>
+              <span class="text-[10px] text-neutral-400 leading-tight">Set exact numerical inventory count</span>
+            </button>
+          </div>
+
+          <!-- Fixed Amount Input (Shown when fixed mode is active) -->
+          <div x-show="stockMode === 'fixed'" class="mt-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600 mb-1">Enter Fixed Quantity</label>
+            <div class="flex items-center gap-2">
+              <input 
+                type="number" 
+                x-model.number="formProduct.stockAmount" 
+                min="0"
+                class="w-full bg-white border border-neutral-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-black font-bold"
+              />
+              <button type="button" @click="formProduct.stockAmount = 10" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">10</button>
+              <button type="button" @click="formProduct.stockAmount = 25" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">25</button>
+              <button type="button" @click="formProduct.stockAmount = 50" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">50</button>
+            </div>
+          </div>
+
+          <!-- Description for Available Mode -->
+          <div x-show="stockMode === 'available'" class="p-3 bg-emerald-50 text-emerald-800 text-[11px] rounded-xl border border-emerald-200 flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>This product will be marked <strong>"Stock is Available"</strong> with 1-click. Customers can always checkout without stockout limits.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-end gap-3 border-t border-neutral-100 pt-4">
+        <button 
+          @click="showAddModal = false" 
+          class="px-4 py-2.5 rounded-xl border border-neutral-200 text-neutral-600 text-xs font-bold uppercase tracking-wider hover:bg-neutral-50"
+        >
+          Cancel
+        </button>
+        <button 
+          @click="submitStockSave()" 
+          :disabled="savingStock"
+          class="px-6 py-2.5 rounded-xl bg-black hover:bg-neutral-800 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+        >
+          <span x-text="savingStock ? 'Saving...' : 'Save Inventory'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div 
+    x-show="toast.show" 
+    x-transition 
+    :class="toast.type === 'success' ? 'bg-black text-white' : 'bg-rose-600 text-white'"
+    class="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 tracking-wide"
+  >
+    <span x-text="toast.message"></span>
+  </div>
+
+  <!-- Alpine.js Hub Controller -->
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('adminHub', () => ({
+        mobileMenuOpen: false,
+        loading: false,
+        savingStock: false,
+        showAddModal: false,
+        stockMode: 'available', // 'available' or 'fixed'
+
+        formProduct: {
+          productId: '',
+          typeId: '',
+          subProductId: '',
+          stockAmount: 10
+        },
+
+        toast: { show: false, message: '', type: 'success' },
+
+        orders: [],
+        inventory: [],
+        dispatching: {},
+
+        metrics: {
+          totalOrders: 0,
+          totalRevenue: 0,
+          pendingDispatch: 0,
+          dispatchedCount: 0
+        },
+
+        authUser: null,
+
+        async init() {
+          const token = localStorage.getItem('rawgad_auth_token');
+          if (!token) {
+            window.location.href = './login.html?redirect=' + encodeURIComponent(window.location.pathname);
+            return;
+          }
+          try {
+            const res = await fetch('/api/auth?action=verify', {
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await res.json();
+            if (!data.authenticated) {
+              localStorage.removeItem('rawgad_auth_token');
+              window.location.href = './login.html?redirect=' + encodeURIComponent(window.location.pathname);
+              return;
+            }
+            this.authUser = data.user;
+          } catch (_) {
+            window.location.href = './login.html?redirect=' + encodeURIComponent(window.location.pathname);
+            return;
+          }
+          await this.refreshAll();
+        },
+
+        getAuthHeaders(custom = {}) {
+          const token = localStorage.getItem('rawgad_auth_token') || '';
+          return {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': 'Bearer ' + token } : {}),
+            ...custom
+          };
+        },
+
+        logout() {
+          localStorage.removeItem('rawgad_auth_token');
+          localStorage.removeItem('rawgad_auth_user');
+          window.location.href = './login.html?loggedout=true';
+        },
+
+        async refreshAll() {
+          this.loading = true;
+          try {
+            await Promise.all([this.loadOrders(), this.loadInventory()]);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async loadOrders() {
+          try {
+            const res = await fetch('/api/order', {
+              headers: this.getAuthHeaders()
+            });
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+            if (res.ok) {
+              const data = await res.json();
+              this.orders = data.orders || [];
+              if (data.metrics) {
+                this.metrics = {
+                  totalOrders: data.metrics.totalOrders || 0,
+                  totalRevenue: data.metrics.totalRevenue || 0,
+                  pendingDispatch: data.metrics.pendingDispatch || 0,
+                  dispatchedCount: data.metrics.dispatchedCount || 0
+                };
+              }
+            }
+          } catch (e) {
+            console.error('Failed to load orders', e);
+          }
+        },
+
+        async loadInventory() {
+          try {
+            const res = await fetch('/api/inventory?admin=true', {
+              headers: this.getAuthHeaders()
+            });
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+            if (res.ok) {
+              const data = await res.json();
+              this.inventory = data.inventory || [];
+            }
+          } catch (e) {
+            console.error('Failed to load inventory', e);
+          }
+        },
+
+        get recentOrders() {
+          return this.orders.slice(0, 7);
+        },
+
+        get alertItems() {
+          return this.inventory.filter(i => (typeof i.stock === 'number' ? i.stock : 0) <= 5);
+        },
+
+        get stockAlertsCount() {
+          return this.alertItems.length;
+        },
+
+        showToast(msg, type = 'success') {
+          this.toast = { show: true, message: msg, type };
+          setTimeout(() => { this.toast.show = false; }, 3500);
+        },
+
+        openAddInventoryModal(prefill = {}) {
+          this.formProduct = {
+            productId: prefill.productId || '',
+            typeId: prefill.typeId || '',
+            subProductId: prefill.subProductId || '',
+            stockAmount: typeof prefill.stock === 'number' ? prefill.stock : 10
+          };
+          this.stockMode = prefill.isAvailable ? 'available' : 'fixed';
+          this.showAddModal = true;
+        },
+
+        async submitStockSave() {
+          if (!this.formProduct.productId.trim()) {
+            this.showToast('Product ID is required', 'error');
+            return;
+          }
+
+          this.savingStock = true;
+          try {
+            const payload = {
+              action: 'update_stock',
+              productId: this.formProduct.productId.trim(),
+              typeId: this.formProduct.typeId.trim() || null,
+              subProductId: this.formProduct.subProductId.trim() || null,
+              isAvailable: this.stockMode === 'available',
+              stockType: this.stockMode === 'available' ? 'available' : 'fixed',
+              stock: this.stockMode === 'available' ? 999 : Number(this.formProduct.stockAmount)
+            };
+
+            const res = await fetch('/api/inventory', {
+              method: 'POST',
+              headers: this.getAuthHeaders(),
+              body: JSON.stringify(payload)
+            });
+
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+
+            const data = await res.json();
+            if (res.ok && data.success) {
+              this.showToast(data.message || 'Inventory updated successfully!');
+              this.showAddModal = false;
+              await this.loadInventory();
+            } else {
+              this.showToast(data.error || 'Failed to update inventory', 'error');
+            }
+          } catch (e) {
+            this.showToast('Network error updating stock', 'error');
+          } finally {
+            this.savingStock = false;
+          }
+        },
+
+        async quickMakeAvailable(item) {
+          try {
+            const res = await fetch('/api/inventory', {
+              method: 'POST',
+              headers: this.getAuthHeaders(),
+              body: JSON.stringify({
+                action: 'update_stock',
+                productId: item.productId,
+                typeId: item.typeId,
+                subProductId: item.subProductId,
+                isAvailable: true,
+                stockType: 'available'
+              })
+            });
+
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+
+            if (res.ok) {
+              this.showToast(`${item.productId} marked as Stock Available!`);
+              await this.loadInventory();
+            }
+          } catch (e) {
+            this.showToast('Failed to update stock', 'error');
+          }
+        },
+
+        async quickAddStock(item, amount) {
+          try {
+            const res = await fetch('/api/inventory', {
+              method: 'POST',
+              headers: this.getAuthHeaders(),
+              body: JSON.stringify({
+                action: 'update_stock',
+                productId: item.productId,
+                typeId: item.typeId,
+                subProductId: item.subProductId,
+                adjust: amount
+              })
+            });
+
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+
+            if (res.ok) {
+              this.showToast(`Added +${amount} units to ${item.productId}`);
+              await this.loadInventory();
+            }
+          } catch (e) {
+            this.showToast('Failed to adjust stock', 'error');
+          }
+        },
+
+        async dispatchToPathao(invoiceNumber) {
+          if (!invoiceNumber) return;
+          if (!confirm(`Dispatch order ${invoiceNumber} to Pathao Courier?`)) return;
+
+          this.dispatching = { ...this.dispatching, [invoiceNumber]: true };
+
+          try {
+            const res = await fetch('/api/pathao', {
+              method: 'POST',
+              headers: this.getAuthHeaders(),
+              body: JSON.stringify({ invoice_number: invoiceNumber })
+            });
+
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+
+            const data = await res.json();
+            if (res.ok && data.success) {
+              this.showToast(`Dispatched! Consignment ID: ${data.consignment_id}`);
+              await this.loadOrders();
+            } else {
+              this.showToast(data.error || 'Pathao Dispatch Failed', 'error');
+            }
+          } catch (e) {
+            this.showToast('Network error during dispatch', 'error');
+          } finally {
+            const upd = { ...this.dispatching };
+            delete upd[invoiceNumber];
+            this.dispatching = upd;
+          }
+        }
+      }));
+    });
+  </script>
+
+</body>
+</html>

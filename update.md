@@ -608,18 +608,26 @@ stateDiagram-v2
 
 ---
 
-### 10.2 `GET /api/inventory` & `POST /api/inventory`
+### 10.2 `GET /api/inventory` & `POST /api/inventory` (Merged Admin Inventory Architecture)
 - **File**: [`api/inventory.js`](file:///C:/Users/victus/Documents/Rawgadz_05/final_public/api/inventory.js)
-- **Edge Cache Headers (GET)**:
-  - `Cache-Control: public, max-age=0, s-maxage=86400, stale-while-revalidate=86400`
-  - `CDN-Cache-Control: public, s-maxage=86400, stale-while-revalidate=86400`
-  - `Vercel-CDN-Cache-Control: public, s-maxage=86400, stale-while-revalidate=86400`
-- **Parameters (GET)**:
-  - `?productId=prod_001` (Returns all variants for product)
-  - `?productId=prod_001&typeId=type_black&subProductId=strap_leather` (Specific item lookup)
-  - No params: Returns full inventory list.
-- **POST Body**:
-  - `{ "items": [{ "productId": "prod_001", "typeId": "...", "subProductId": "..." }] }` or `{ "productIds": ["prod_001"] }`
+- **Helper Modules**: [`api/_catalog.js`](file:///C:/Users/victus/Documents/Rawgadz_05/final_public/api/_catalog.js), [`api/_lib.js`](file:///C:/Users/victus/Documents/Rawgadz_05/final_public/api/_lib.js), [`api/_db.js`](file:///C:/Users/victus/Documents/Rawgadz_05/final_public/api/_db.js)
+- **Authoritative Identity**: 3-part compound tuple `(productId, typeId, subProductId)` with unique index `{ productId: 1, typeId: 1, subProductId: 1 }`.
+- **Authoritative Source-of-Truth**: Catalog metadata from `products.json`; physical stock from MongoDB Atlas `paystationdemo.inventory`.
+- **GET Endpoints & Parameters**:
+  - `?status=true`: System diagnostics & MongoDB Atlas health ping.
+  - `?admin=true`: Full inventory listing merged with catalog metadata (`items`, `inventory`, `summary`, `nestedProducts`, `orphanedItems`).
+  - `?productId=prod_001` (Returns all variants for product).
+  - `?productId=prod_001&typeId=type_01&subProductId=sub_01` (Specific item lookup).
+- **POST Synchronization Contract (`action: "sync"`)**:
+  - Compares live catalog set against MongoDB Atlas inventory keys.
+  - Missing records inserted with `stock: 0`, `createdAt: now`, `updatedAt: now`.
+  - Non-destruction guarantee: existing records and stock are never deleted or reset. Orphaned records retained.
+  - Returns canonical 5-metric payload: `catalogCount`, `existingCount`, `addedCount`, `orphanedCount`, `totalInventoryCount`.
+- **POST Stock Mutation Contract**:
+  - Supported actions: `set` (non-negative integer), `increase` (server-side addition), `decrease` (server-side subtraction with `INSUFFICIENT_STOCK` guard), `adjust`.
+  - Enforces floor invariant: stock cannot drop below 0. Rejects negative decrease requests with HTTP 400 `INSUFFICIENT_STOCK`.
+- **Transactional Stock Restoration on Order Cancellation**:
+  - Moving order status to `cancelled` atomically restores physical line item quantities to MongoDB inventory via `$inc: { stock: qty }`. Double-restoration guarded by `stockRestored: true`.
 
 ---
 

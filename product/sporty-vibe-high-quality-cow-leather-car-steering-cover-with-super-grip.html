@@ -2,17 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Car Steering cover with sports look, leather with super grip - Rawgadz</title>
   <meta name="description" content="Upgrade your drive with the durable, breathable, and anti-slip Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement warranty.">
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Alpine.js CDN -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-  <!-- Stock & Inventory 24-Hour Cache Manager -->
   <script src="../stock.js"></script>
 
   <style>
@@ -39,18 +34,13 @@
     .product-content a:hover { color: #525252; }
   </style>
 </head>
-<body class="bg-neutral-50 min-h-screen flex flex-col font-sans text-neutral-900 selection:bg-black selection:text-white" x-data="{ mobileMenuOpen: false }">
+<body class="bg-neutral-50 min-h-screen flex flex-col font-sans text-neutral-900 selection:bg-black selection:text-white pb-24 md:pb-0" x-data="{ mobileMenuOpen: false }">
 
   <!-- Responsive Navbar -->
   <header class="sticky top-0 z-40 bg-white border-b border-neutral-200 shadow-sm w-full">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-      
-      <!-- Brand Logo -->
-      <a href="../index.html" class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex-shrink-0">
-        RAWGADZ
-      </a>
+      <a href="../index.html" class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex-shrink-0">RAWGADZ</a>
 
-      <!-- Desktop Links -->
       <nav class="hidden md:flex md:flex-row md:items-center md:gap-6 flex-grow">
         <a href="../index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
         <a href="../index.html#shop" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Shop</a>
@@ -60,51 +50,22 @@
         <a href="../contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
       </nav>
 
-      <!-- Right Controls: Cart & Mobile Hamburger -->
       <div class="flex items-center gap-3 ml-auto flex-shrink-0">
-        <!-- Cart Button -->
-        <button 
-          @click="$store.cart.isOpen = true" 
-          type="button" 
-          aria-label="View Cart"
-          class="relative p-2.5 text-black hover:bg-neutral-100 rounded-full transition-colors border border-neutral-300 focus:outline-none flex items-center justify-center cursor-pointer"
-        >
+        <button @click="$store.cart.isOpen = true" type="button" aria-label="View Cart" class="relative p-2.5 text-black hover:bg-neutral-100 rounded-full transition-colors border border-neutral-300 focus:outline-none flex items-center justify-center cursor-pointer hidden md:flex">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
           </svg>
-          <span 
-            x-show="$store.cart.totalCount > 0" 
-            x-text="$store.cart.totalCount" 
-            class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-black rounded-full border-2 border-white"
-            style="display: none;"
-          ></span>
+          <span x-show="$store.cart.totalCount > 0" x-text="$store.cart.totalCount" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-black rounded-full border-2 border-white" style="display: none;"></span>
         </button>
 
-        <!-- Mobile Hamburger Toggle -->
-        <button
-          @click="mobileMenuOpen = !mobileMenuOpen"
-          aria-label="Toggle Navigation Menu"
-          class="md:hidden p-2 rounded-xl text-neutral-700 hover:text-black hover:bg-neutral-100 transition-colors focus:outline-none"
-        >
-          <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display: none;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
+        <button @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Toggle Navigation Menu" class="md:hidden p-2 rounded-xl text-neutral-700 hover:text-black hover:bg-neutral-100 transition-colors focus:outline-none">
+          <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
         </button>
       </div>
-
     </div>
 
-    <!-- Mobile Navigation Drawer -->
-    <div 
-      x-show="mobileMenuOpen" 
-      x-transition 
-      @click.away="mobileMenuOpen = false" 
-      class="md:hidden flex flex-col absolute top-16 left-0 right-0 bg-white border-b border-neutral-200 p-6 shadow-xl z-50 gap-4" 
-      style="display: none;"
-    >
+    <div x-show="mobileMenuOpen" x-transition @click.away="mobileMenuOpen = false" class="md:hidden flex flex-col absolute top-16 left-0 right-0 bg-white border-b border-neutral-200 p-6 shadow-xl z-50 gap-4" style="display: none;">
       <a href="../index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
       <a href="../index.html#shop" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Shop</a>
       <a href="../gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
@@ -115,31 +76,14 @@
   </header>
 
   <!-- Slide-Over Cart Drawer -->
-  <div 
-    x-show="$store.cart.isOpen" 
-    class="fixed inset-0 bg-black/60 z-50 transition-opacity" 
-    @click="$store.cart.isOpen = false"
-    style="display: none;"
-  ></div>
-
-  <div 
-    x-show="$store.cart.isOpen" 
-    x-transition:enter="transform transition ease-in-out duration-300"
-    x-transition:enter-start="translate-x-full"
-    x-transition:enter-end="translate-x-0"
-    x-transition:leave="transform transition ease-in-out duration-300"
-    x-transition:leave-start="translate-x-0"
-    x-transition:leave-end="translate-x-full"
-    class="fixed inset-y-0 right-0 max-w-sm w-full bg-white border-l border-neutral-200 z-50 flex flex-col shadow-2xl"
-    style="display: none;"
-  >
+  <div x-show="$store.cart.isOpen" class="fixed inset-0 bg-black/60 z-50 transition-opacity" @click="$store.cart.isOpen = false" style="display: none;"></div>
+  <div x-show="$store.cart.isOpen" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="fixed inset-y-0 right-0 max-w-sm w-full bg-white border-l border-neutral-200 z-50 flex flex-col shadow-2xl" style="display: none;">
     <div class="flex items-center justify-between p-6 border-b border-neutral-200">
       <h2 class="text-base font-black text-black uppercase tracking-wider">Your Cart</h2>
       <button @click="$store.cart.isOpen = false" class="p-1 text-neutral-400 hover:text-black focus:outline-none transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg>
       </button>
     </div>
-
     <div class="flex-grow overflow-y-auto p-6 space-y-4">
       <template x-if="$store.cart.itemsArray.length === 0">
         <p class="text-neutral-400 text-center mt-12 font-bold text-xs uppercase tracking-wider">Your cart is empty.</p>
@@ -159,100 +103,177 @@
         </div>
       </template>
     </div>
-
     <div class="p-6 border-t border-neutral-200 bg-neutral-50">
       <div class="flex justify-between items-center mb-6">
         <span class="font-semibold text-neutral-600 text-xs uppercase tracking-wider">Total</span>
         <span class="font-extrabold text-2xl text-black" x-text="'BDT ' + $store.cart.totalPrice.toFixed(2)">BDT 0.00</span>
       </div>
-      <a 
-        href="../checkout.html"
-        :class="{ 'opacity-40 pointer-events-none': $store.cart.itemsArray.length === 0 }"
-        class="w-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all block text-center shadow-sm"
-      >
-        Proceed to Checkout
-      </a>
+      <a href="../checkout.html" :class="{ 'opacity-40 pointer-events-none': $store.cart.itemsArray.length === 0 }" class="w-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all block text-center shadow-sm">Proceed to Checkout</a>
     </div>
   </div>
 
-  <!-- REORGANIZED PRODUCT GALLERY LAYOUT -->
-  <main class="p-4 md:p-8 flex flex-col items-center mt-4 w-full max-w-7xl mx-auto flex-grow gap-8" x-data="productPage()" x-cloak>
+  <!-- MAIN CONTENT AREA -->
+  <main class="p-4 md:p-8 flex flex-col items-center mt-4 w-full max-w-7xl mx-auto flex-grow gap-4" x-data="productPage()" x-cloak>
     
-    <div class="w-full max-w-6xl mx-auto bg-white rounded-3xl border border-neutral-200 overflow-hidden shadow-sm">
+    <!-- ==================== MOBILE LAYOUT ==================== -->
+    <div class="w-full md:hidden flex flex-col bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm">
       
-      <!-- Mobile: Horizontal Swipe Gallery (shown only on mobile) -->
+      <!-- Main Product Image with Slider Controls & Swipe -->
       <div 
-        x-show="currentVariantImages && currentVariantImages.length > 0" 
-        class="flex md:hidden w-full overflow-x-auto snap-x snap-mandatory no-scrollbar gap-2 p-4 border-b border-neutral-200"
+        class="bg-neutral-50 rounded-xl p-3 flex items-center justify-center aspect-square relative overflow-hidden select-none"
+        x-data="{ touchStartX: 0, touchEndX: 0 }"
+        @touchstart.passive="touchStartX = $event.changedTouches[0].screenX"
+        @touchend.passive="touchEndX = $event.changedTouches[0].screenX; if (touchStartX - touchEndX > 40) nextGalleryImage(); if (touchEndX - touchStartX > 40) prevGalleryImage();"
       >
-        <template x-for="(imgUrl, i) in currentVariantImages" :key="'mobile-' + i">
-          <div class="snap-center shrink-0 w-20 h-20 flex items-center justify-center">
+        <img :src="currentImage" :alt="product.title" class="w-full h-full object-contain mix-blend-multiply transition-all duration-300">
+        
+        <!-- Slider Arrows on Image (Active when multiple images exist) -->
+        <template x-if="currentVariantImages && currentVariantImages.length > 1">
+          <div class="pointer-events-none absolute inset-0 flex items-center justify-between p-2">
             <button 
-              @click="selectedGalleryImage = imgUrl"
-              class="w-full h-full rounded-xl border-2 overflow-hidden transition-all"
-              :class="currentImage === imgUrl ? 'border-black ring-2 ring-black' : 'border-neutral-200 opacity-60'"
+              type="button" 
+              @click.stop="prevGalleryImage()" 
+              class="pointer-events-auto w-8 h-8 rounded-full bg-white/90 hover:bg-white text-black shadow-md flex items-center justify-center transition-all opacity-85 active:scale-90"
+              aria-label="Previous Photo"
             >
-              <img :src="imgUrl" :alt="'Photo ' + (i + 1)" class="w-full h-full object-cover">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button 
+              type="button" 
+              @click.stop="nextGalleryImage()" 
+              class="pointer-events-auto w-8 h-8 rounded-full bg-white/90 hover:bg-white text-black shadow-md flex items-center justify-center transition-all opacity-85 active:scale-90"
+              aria-label="Next Photo"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
         </template>
       </div>
 
-      <!-- Desktop Layout: Left Gallery + Right Main Content -->
-      <div class="hidden md:flex flex-row w-full">
-        
-        <!-- LEFT SIDE: Vertical Thumbnail Gallery -->
-        <div 
-          x-show="currentVariantImages && currentVariantImages.length > 0"
-          class="w-24 md:w-28 flex-shrink-0 bg-neutral-50 border-r border-neutral-200 p-4 flex flex-col gap-3 overflow-y-auto max-h-[800px]"
-        >
-          <template x-for="(imgUrl, i) in currentVariantImages" :key="'thumb-' + i">
+      <!-- Small Thumbnail Gallery Slider (Right Below the Image) -->
+      <div x-show="currentVariantImages && currentVariantImages.length > 1" class="mt-2.5 mb-3">
+        <div class="flex flex-row gap-2 overflow-x-auto no-scrollbar py-1 px-0.5 scroll-smooth">
+          <template x-for="(imgUrl, i) in currentVariantImages" :key="'mobile-thumb-' + i">
             <button 
-              type="button"
-              @click="selectedGalleryImage = imgUrl"
-              class="w-full aspect-square rounded-xl border-2 bg-white p-1.5 flex items-center justify-center shrink-0 transition-all cursor-pointer overflow-hidden hover:shadow-md"
-              :class="currentImage === imgUrl ? 'border-black ring-2 ring-black ring-offset-1' : 'border-neutral-200 hover:border-neutral-400 opacity-70 hover:opacity-100'"
+              type="button" 
+              @click="selectedGalleryImage = imgUrl" 
+              class="w-12 h-12 rounded-lg border-2 bg-neutral-50 p-1 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer overflow-hidden" 
+              :class="currentImage === imgUrl ? 'border-black ring-1 ring-black shadow-xs' : 'border-neutral-200 opacity-60 hover:opacity-100'"
               :aria-label="'View photo ' + (i + 1)"
             >
-              <img :src="imgUrl" :alt="'Thumbnail ' + (i + 1)" class="w-full h-full object-contain mix-blend-multiply">
+              <img :src="imgUrl" class="w-full h-full object-contain mix-blend-multiply">
             </button>
           </template>
         </div>
+      </div>
 
-        <!-- RIGHT SIDE: Main Image + Product Details -->
-        <div class="flex-1 flex flex-col">
+      <!-- Main Product Info -->
+      <div class="flex flex-col mt-1">
+        <div class="flex flex-wrap gap-1 mb-2"><span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">Car Accessories</span></div>
+        <h1 class="text-base font-black text-black mb-2 leading-tight tracking-tight" x-text="product.title">Car Steering cover with sports look, leather with super grip</h1>
+
+        <div class="flex items-baseline gap-2 mb-2">
+          <span class="text-lg font-black text-black tracking-tight" x-text="'BDT ' + currentPrice.toFixed(2)">BDT 1750.00</span>
+          <template x-if="currentPrice !== product.price">
+            <span class="text-[10px] font-bold text-neutral-400 line-through" x-text="'BDT ' + Number(product.price).toFixed(2)"></span>
+          </template>
+        </div>
+
+        <div class="mb-3">
+          <template x-if="stockStatus === 'in_stock'">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span>In Stock (<span x-text="currentStock"></span>)</span>
+            </div>
+          </template>
+          <template x-if="stockStatus === 'low_stock'">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+              <span>Low Stock (<span x-text="currentStock"></span>)</span>
+            </div>
+          </template>
+          <template x-if="stockStatus === 'out_of_stock'">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-[10px] font-bold uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              <span>Out of Stock</span>
+            </div>
+          </template>
+          <template x-if="stockStatus === 'loading'">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-600 text-[10px] font-medium">
+              <svg class="animate-spin h-3 w-3 text-neutral-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              <span>Checking...</span>
+            </div>
+          </template>
+        </div>
+
+        <template x-if="product.types && product.types.length > 0">
+          <div class="mb-2">
+            <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-black">
+              <template x-for="(type, idx) in product.types" :key="idx">
+                <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
+              </template>
+            </select>
+          </div>
+        </template>
+
+        <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
+          <div class="mb-3">
+            <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-black">
+              <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
+                <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
+              </template>
+            </select>
+          </div>
+        </template>
+
+        <div class="border-t border-neutral-200 pt-2 mt-1">
+          <p class="text-neutral-600 text-xs leading-relaxed" x-text="product.description">Upgrade your drive with the durable, breathable, and anti-slip Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement warranty.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== DESKTOP LAYOUT (3-Column: Thumbnails | Image | Info Panel) ==================== -->
+    <div class="w-full max-w-6xl mx-auto hidden md:block">
+      <div class="w-full bg-white rounded-3xl border border-neutral-200 overflow-hidden shadow-sm">
+        <div class="flex flex-row w-full">
           
-          <!-- Main Product Image Display -->
-          <div class="flex-1 bg-neutral-50 p-6 md:p-10 flex items-center justify-center min-h-[400px] md:min-h-[500px]">
-            <img 
-              :src="currentImage" 
-              :alt="product.title" 
-              class="w-full max-w-lg md:max-w-xl object-contain mix-blend-multiply transition-all duration-300"
-            >
+          <!-- COLUMN 1: Vertical Thumbnail Gallery -->
+          <div x-show="currentVariantImages && currentVariantImages.length > 0" class="w-24 flex-shrink-0 bg-neutral-50 border-r border-neutral-200 p-4 flex flex-col gap-3 overflow-y-auto max-h-[700px]">
+            <template x-for="(imgUrl, i) in currentVariantImages" :key="'thumb-' + i">
+              <button type="button" @click="selectedGalleryImage = imgUrl" class="w-full aspect-square rounded-xl border-2 bg-white p-1.5 flex items-center justify-center shrink-0 transition-all cursor-pointer overflow-hidden hover:shadow-md" :class="currentImage === imgUrl ? 'border-black ring-2 ring-black ring-offset-1' : 'border-neutral-200 hover:border-neutral-400 opacity-70 hover:opacity-100'" :aria-label="'View photo ' + (i + 1)">
+                <img :src="imgUrl" :alt="'Thumbnail ' + (i + 1)" class="w-full h-full object-contain mix-blend-multiply">
+              </button>
+            </template>
           </div>
 
-          <!-- Product Details Section -->
-          <div class="border-t border-neutral-200 p-6 md:p-8 lg:p-10 bg-white">
+          <!-- COLUMN 2: Main Product Image -->
+          <div class="flex-1 bg-neutral-50 p-8 flex items-center justify-center min-h-[500px] border-r border-neutral-200">
+            <img :src="currentImage" :alt="product.title" class="w-full max-w-lg object-contain mix-blend-multiply transition-all duration-300">
+          </div>
+
+          <!-- COLUMN 3: Info Panel (Title, Price, Quantity, 2x2 Buttons, Brand) -->
+          <div class="w-[340px] lg:w-[380px] flex-shrink-0 p-6 lg:p-8 flex flex-col">
             
             <!-- Tags -->
-            <div class="flex flex-wrap gap-1.5 mb-4">
-              <span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">Car Accessories</span>
-            </div>
+            <div class="flex flex-wrap gap-1.5 mb-3"><span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">Car Accessories</span></div>
 
-            <!-- Product Title & Short Description -->
-            <h1 class="text-2xl lg:text-3xl font-black text-black mb-2 leading-tight tracking-tight" x-text="product.title">Car Steering cover with sports look, leather with super grip</h1>
-            <p class="text-neutral-500 text-sm md:text-base mb-5 leading-relaxed" x-text="product.description">Upgrade your drive with the durable, breathable, and anti-slip Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement warranty.</p>
+            <!-- Title -->
+            <h1 class="text-xl lg:text-2xl font-black text-black mb-3 leading-tight tracking-tight" x-text="product.title">Car Steering cover with sports look, leather with super grip</h1>
 
-            <!-- Dynamic Price Display -->
-            <div class="flex items-baseline gap-3 mb-6 pb-6 border-b border-neutral-100">
-              <span class="text-3xl lg:text-4xl font-black text-black tracking-tight" x-text="'BDT ' + currentPrice.toFixed(2)">BDT 1750.00</span>
+            <!-- Price Row -->
+            <div class="flex items-baseline gap-2 mb-4">
+              <span class="text-2xl lg:text-3xl font-black text-black tracking-tight" x-text="'BDT ' + currentPrice.toFixed(2)">BDT 1750.00</span>
               <template x-if="currentPrice !== product.price">
                 <span class="text-sm font-bold text-neutral-400 line-through" x-text="'BDT ' + Number(product.price).toFixed(2)"></span>
               </template>
+              <template x-if="currentPrice !== product.price">
+                <span class="text-[10px] font-bold text-white bg-emerald-500 px-1.5 py-0.5 rounded">Save</span>
+              </template>
             </div>
 
-            <!-- Stock & Availability Indicator -->
-            <div class="flex items-center gap-2 mb-6">
+            <!-- Stock Status -->
+            <div class="mb-5">
               <template x-if="stockStatus === 'in_stock'">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider">
                   <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -279,231 +300,77 @@
               </template>
             </div>
 
-            <!-- Variant Dropdown (Level 1 Subproducts) -->
+            <!-- Quantity Stepper -->
+            <div class="mb-5">
+              <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Quantity</label>
+              <div class="inline-flex items-center border border-neutral-300 rounded-lg overflow-hidden bg-white">
+                <button type="button" @click="updateCart(Math.max(0, inCartQuantity - 1))" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-r border-neutral-300">−</button>
+                <div class="px-5 py-2 font-black text-sm text-black bg-white min-w-[50px] text-center" x-text="inCartQuantity === 0 ? 1 : inCartQuantity">1</div>
+                <button type="button" :disabled="isOutOfStock || inCartQuantity >= currentStock" :class="{ 'opacity-40 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }" @click="updateCart(inCartQuantity + 1)" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-l border-neutral-300">+</button>
+              </div>
+            </div>
+
+            <!-- Variant Dropdown -->
             <template x-if="product.types && product.types.length > 0">
               <div class="mb-4">
-                <label for="variant-dropdown" class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
-                  Select Variant
-                </label>
-                <div class="relative">
-                  <select 
-                    id="variant-dropdown"
-                    x-model.number="selectedTypeIndex" 
-                    @change="selectType(selectedTypeIndex)"
-                    class="w-full appearance-none bg-neutral-50 hover:bg-white border border-neutral-300 hover:border-black rounded-xl px-4 py-3.5 text-sm font-bold text-neutral-900 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all cursor-pointer pr-10"
-                  >
-                    <template x-for="(type, idx) in product.types" :key="type.subProductId || idx">
-                      <option 
-                        :value="idx" 
-                        x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"
-                      ></option>
-                    </template>
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-neutral-500">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
+                <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Variant</label>
+                <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
+                  <template x-for="(type, idx) in product.types" :key="idx">
+                    <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
+                  </template>
+                </select>
               </div>
             </template>
 
-            <!-- Subproduct Option Dropdown (Level 2 Subproducts) -->
+            <!-- Subproduct Dropdown -->
             <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
-              <div class="mb-6">
-                <label for="option-dropdown" class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
-                  Select Option
-                </label>
-                <div class="relative">
-                  <select 
-                    id="option-dropdown"
-                    x-model.number="selectedSubProductIndex"
-                    @change="selectSubProduct(selectedSubProductIndex)"
-                    class="w-full appearance-none bg-neutral-50 hover:bg-white border border-neutral-300 hover:border-black rounded-xl px-4 py-3.5 text-sm font-bold text-neutral-900 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all cursor-pointer pr-10"
-                  >
-                    <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sub.subProductId || sIdx">
-                      <option 
-                        :value="sIdx" 
-                        x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"
-                      ></option>
-                    </template>
-                  </select>
-                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-neutral-500">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                </div>
+              <div class="mb-5">
+                <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Option</label>
+                <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
+                  <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
+                    <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
+                  </template>
+                </select>
               </div>
             </template>
 
-            <!-- Cart & Buy Now Action Controls -->
-            <div class="flex flex-col sm:flex-row gap-3 pt-2">
-              
-              <!-- Default Add to Cart / Buy Now buttons -->
-              <div x-show="inCartQuantity === 0" class="flex flex-col sm:flex-row gap-3 flex-1">
-                <button 
-                  type="button"
-                  :disabled="isOutOfStock || stockStatus === 'loading'"
-                  @click="updateCart(1)" 
-                  :class="(isOutOfStock || stockStatus === 'loading') ? 'opacity-40 cursor-not-allowed bg-neutral-200 text-neutral-500 border-neutral-300 pointer-events-none' : 'bg-neutral-100 hover:bg-neutral-200 text-black border-neutral-300 cursor-pointer'"
-                  class="flex-1 border font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all h-13 flex items-center justify-center"
-                >
-                  <span x-text="isOutOfStock ? 'Out of Stock' : 'Add to Cart'">Add to Cart</span>
-                </button>
-                <button 
-                  type="button"
-                  :disabled="isOutOfStock || stockStatus === 'loading'"
-                  @click="buyNow()" 
-                  :class="(isOutOfStock || stockStatus === 'loading') ? 'opacity-40 cursor-not-allowed bg-neutral-300 text-neutral-500 pointer-events-none' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer shadow-sm'"
-                  class="flex-1 font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all h-13 flex items-center justify-center"
-                >
-                  Buy Now
-                </button>
-              </div>
+            <!-- 2x2 Button Grid -->
+            <div class="grid grid-cols-2 gap-2.5 mb-4">
+              <!-- Add to Cart -->
+              <button type="button" :disabled="isOutOfStock || stockStatus === 'loading'" @click="updateCart(1)" :class="(isOutOfStock || stockStatus === 'loading') ? 'opacity-40 cursor-not-allowed bg-neutral-200 text-neutral-500' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer'" class="h-11 rounded-lg font-bold text-[11px] uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" /></svg>
+                Add to Cart
+              </button>
 
-              <!-- In-Cart Quantity Controls -->
-              <div x-show="inCartQuantity > 0" class="flex flex-col gap-2 flex-1" style="display: none;">
-                <template x-if="isOutOfStock">
-                  <div class="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs text-center font-bold">
-                    This item is currently out of stock.
-                  </div>
-                </template>
-                <div class="flex items-center justify-between border-2 border-black rounded-xl overflow-hidden h-13 bg-neutral-50">
-                  <button type="button" @click="updateCart(inCartQuantity - 1)" class="bg-neutral-100 hover:bg-black hover:text-white text-black font-black text-xl w-1/3 h-full transition-colors flex items-center justify-center cursor-pointer">-</button>
-                  <div class="font-black text-xl text-center w-1/3 text-black bg-white flex items-center justify-center h-full" x-text="inCartQuantity">1</div>
-                  <button 
-                    type="button" 
-                    :disabled="isOutOfStock || inCartQuantity >= currentStock"
-                    :class="{ 'opacity-30 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }"
-                    @click="updateCart(inCartQuantity + 1)" 
-                    class="bg-neutral-100 hover:bg-black hover:text-white text-black font-black text-xl w-1/3 h-full transition-colors flex items-center justify-center cursor-pointer"
-                  >+</button>
-                </div>
-                <div class="text-xs text-center font-bold text-neutral-800 uppercase tracking-wider mt-1">Item added to cart</div>
-                <button 
-                  type="button" 
-                  :disabled="isOutOfStock"
-                  :class="isOutOfStock ? 'opacity-40 cursor-not-allowed pointer-events-none' : 'cursor-pointer'"
-                  @click="buyNow()" 
-                  class="w-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all h-13 flex items-center justify-center shadow-sm"
-                >
-                  Buy Now
-                </button>
-              </div>
+              <!-- Buy Now -->
+              <button type="button" :disabled="isOutOfStock || stockStatus === 'loading'" @click="buyNow()" :class="(isOutOfStock || stockStatus === 'loading') ? 'opacity-40 cursor-not-allowed bg-neutral-300 text-neutral-500' : 'bg-neutral-900 hover:bg-black text-white cursor-pointer'" class="h-11 rounded-lg font-bold text-[11px] uppercase tracking-wider transition-all flex items-center justify-center shadow-sm">
+                Buy Now
+              </button>
 
+              <!-- WhatsApp (full width on row 2) -->
+              <a :href="'https://wa.me/?text=' + encodeURIComponent('Hi, I\'m interested in this product: ' + product.title + ' - ' + (typeof window !== 'undefined' ? window.location.href : ''))" target="_blank" rel="noopener noreferrer" class="col-span-2 h-11 rounded-lg bg-green-500 hover:bg-green-600 text-white font-bold text-[11px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-sm">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Order on WhatsApp
+              </a>
+            </div>
+
+            <!-- Brand Badge -->
+            <div class="mt-auto pt-4 border-t border-neutral-200">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white">
+                <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Brand:</span>
+                <span class="text-sm font-black text-black">Rawgadz</span>
+              </div>
             </div>
 
           </div>
         </div>
       </div>
-
-      <!-- Mobile Layout: Stacked (Image on top, details below) -->
-      <div class="md:hidden">
-        <!-- Main Image -->
-        <div class="bg-neutral-50 p-6 flex items-center justify-center min-h-[300px]">
-          <img 
-            :src="currentImage" 
-            :alt="product.title" 
-            class="w-full max-w-sm object-contain mix-blend-multiply"
-          >
-        </div>
-
-        <!-- Product Details -->
-        <div class="p-6">
-          <!-- Tags -->
-          <div class="flex flex-wrap gap-1.5 mb-4">
-            <span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">Car Accessories</span>
-          </div>
-
-          <!-- Title & Description -->
-          <h1 class="text-2xl font-black text-black mb-2 leading-tight" x-text="product.title">Car Steering cover with sports look, leather with super grip</h1>
-          <p class="text-neutral-500 text-sm mb-5 leading-relaxed" x-text="product.description">Upgrade your drive with the durable, breathable, and anti-slip Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement warranty.</p>
-
-          <!-- Price -->
-          <div class="flex items-baseline gap-2 mb-6 pb-6 border-b border-neutral-100">
-            <span class="text-2xl font-black text-black" x-text="'BDT ' + currentPrice.toFixed(2)">BDT 1750.00</span>
-          </div>
-
-          <!-- Stock Status -->
-          <div class="mb-6">
-            <template x-if="stockStatus === 'in_stock'">
-              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>In Stock</span>
-              </div>
-            </template>
-            <template x-if="stockStatus === 'low_stock'">
-              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold uppercase tracking-wider">
-                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                <span>Low Stock</span>
-              </div>
-            </template>
-            <template x-if="stockStatus === 'out_of_stock'">
-              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold uppercase tracking-wider">
-                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                <span>Out of Stock</span>
-              </div>
-            </template>
-          </div>
-
-          <!-- Dropdowns -->
-          <template x-if="product.types && product.types.length > 0">
-            <div class="mb-4">
-              <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Variant</label>
-              <select 
-                x-model.number="selectedTypeIndex" 
-                @change="selectType(selectedTypeIndex)"
-                class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-black"
-              >
-                <template x-for="(type, idx) in product.types" :key="idx">
-                  <option :value="idx" x-text="type.subTitle"></option>
-                </template>
-              </select>
-            </div>
-          </template>
-
-          <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
-            <div class="mb-6">
-              <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Option</label>
-              <select 
-                x-model.number="selectedSubProductIndex"
-                @change="selectSubProduct(selectedSubProductIndex)"
-                class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-black"
-              >
-                <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                  <option :value="sIdx" x-text="sub.subTitle"></option>
-                </template>
-              </select>
-            </div>
-          </template>
-
-          <!-- Buttons -->
-          <div class="flex flex-col gap-3">
-            <button 
-              @click="updateCart(inCartQuantity + 1)" 
-              :disabled="isOutOfStock"
-              class="w-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-black font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all"
-            >
-              Add to Cart
-            </button>
-            <button 
-              @click="buyNow()"
-              :disabled="isOutOfStock"
-              class="w-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all"
-            >
-              Buy Now
-            </button>
-          </div>
-        </div>
-      </div>
-
     </div>
 
 
     <!-- Markdown Overview Content Section -->
     
-    <section class="bg-white rounded-3xl border border-neutral-200 p-6 md:p-10 w-full shadow-sm">
+    <section class="bg-white rounded-3xl border border-neutral-200 p-6 md:p-10 w-full max-w-6xl shadow-sm">
       <h2 class="text-lg md:text-xl font-black text-black uppercase tracking-wider mb-5 border-b border-neutral-100 pb-3">Product Overview</h2>
       <div class="product-content text-neutral-800">
         <p>Upgrade your driving comfort and interior aesthetic with the Rawgadaz Premium Steering Wheel Cover.</p>
@@ -517,19 +384,92 @@
     </section>
     
 
+
+    <!-- ==================== MOBILE: FLOATING CART (Right Side, Black & White) ==================== -->
+    <div class="md:hidden fixed right-3 top-1/2 -translate-y-1/2 z-40">
+      <button @click="$store.cart.isOpen = true" type="button" aria-label="View Cart" class="relative flex flex-col items-center justify-center bg-black hover:bg-neutral-800 text-white rounded-2xl shadow-lg px-3 py-3 transition-colors min-w-[60px] border border-neutral-800">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+        <span class="text-[9px] font-bold mt-0.5 leading-tight" x-text="$store.cart.totalCount + ' item' + ($store.cart.totalCount !== 1 ? 's' : '')">0 items</span>
+        <span class="text-[10px] font-black leading-tight" x-text="'' + $store.cart.totalPrice.toFixed(2)">0.00</span>
+      </button>
+    </div>
+
+    <!-- ==================== MOBILE: FLOATING BOTTOM ACTION BAR (Add to Cart ↔ Stepper) ==================== -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 p-3 bg-white/95 backdrop-blur-md border-t border-neutral-200">
+      <div class="max-w-lg mx-auto flex items-center gap-2">
+        
+        <!-- SLOT 1: Add to Cart OR Quantity Stepper (toggles based on inCartQuantity) -->
+        <div class="flex-1">
+          <!-- Add to Cart Button (shown when quantity is 0) -->
+          <button 
+            x-show="inCartQuantity === 0"
+            type="button"
+            @click="updateCart(1)" 
+            :disabled="isOutOfStock || stockStatus === 'loading'"
+            :class="(isOutOfStock || stockStatus === 'loading') ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed' : 'bg-black hover:bg-neutral-800 text-white'"
+            class="w-full h-12 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+            </svg>
+            Add to Cart
+          </button>
+
+          <!-- Quantity Stepper (shown when quantity > 0, replaces Add to Cart in same slot) -->
+          <div 
+            x-show="inCartQuantity > 0" 
+            class="w-full h-12 rounded-xl overflow-hidden border-2 border-black flex items-center bg-neutral-50"
+            style="display: none;"
+          >
+            <button type="button" @click="updateCart(inCartQuantity - 1)" class="w-10 h-full bg-neutral-100 hover:bg-black hover:text-white text-black font-black text-lg flex items-center justify-center transition-colors flex-shrink-0">−</button>
+            <div class="flex-1 h-full bg-white flex items-center justify-center font-black text-sm text-black" x-text="inCartQuantity">1</div>
+            <button 
+              type="button" 
+              :disabled="isOutOfStock || inCartQuantity >= currentStock"
+              :class="{ 'opacity-30 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }"
+              @click="updateCart(inCartQuantity + 1)" 
+              class="w-10 h-full bg-neutral-100 hover:bg-black hover:text-white text-black font-black text-lg flex items-center justify-center transition-colors flex-shrink-0"
+            >+</button>
+          </div>
+        </div>
+
+        <!-- SLOT 2: Buy Now (always visible) -->
+        <button 
+          type="button"
+          @click="buyNow()" 
+          :disabled="isOutOfStock || stockStatus === 'loading'"
+          :class="(isOutOfStock || stockStatus === 'loading') ? 'bg-neutral-300 text-neutral-500 cursor-not-allowed' : 'bg-neutral-900 text-white hover:bg-black'"
+          class="flex-1 h-12 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-all flex items-center justify-center shadow-sm"
+        >
+          Buy Now
+        </button>
+
+        <!-- SLOT 3: WhatsApp (always visible) -->
+        <a 
+          :href="'https://wa.me/?text=' + encodeURIComponent('Hi, I\'m interested in this product: ' + product.title + ' - ' + (typeof window !== 'undefined' ? window.location.href : ''))"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex-1 h-12 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-[11px] uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm"
+          aria-label="Chat on WhatsApp"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- Footer -->
   <footer class="bg-black text-neutral-400 py-16 border-t border-neutral-800 mt-auto">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
-      
       <div class="flex flex-col gap-4">
         <h3 class="text-xs font-bold text-white uppercase tracking-widest">About Rawgadz</h3>
-        <p class="text-xs text-neutral-400 leading-relaxed">
-          Premier e-commerce platform for gadgets and car accessories.
-        </p>
+        <p class="text-xs text-neutral-400 leading-relaxed">Premier e-commerce platform for gadgets and car accessories.</p>
       </div>
-
       <div class="flex flex-col gap-4">
         <h3 class="text-xs font-bold text-white uppercase tracking-widest">Connect</h3>
         <div class="flex flex-col gap-2.5 text-xs">
@@ -538,75 +478,38 @@
           <a href="https://youtube.com" target="_blank" rel="noopener" class="text-neutral-400 hover:text-white transition-colors">YouTube</a>
         </div>
       </div>
-
       <div class="flex flex-col gap-4" x-data="newsletterForm()">
         <h3 class="text-xs font-bold text-white uppercase tracking-widest">Newsletter</h3>
         <form @submit.prevent="submitNewsletter" class="flex flex-col gap-2">
-          <input 
-            type="email" 
-            x-model="email" 
-            placeholder="Enter your email..." 
-            required 
-            class="border border-neutral-800 bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-xs focus:outline-none focus:border-white w-full"
-          >
-          <button 
-            type="submit" 
-            :disabled="submitting" 
-            class="bg-white hover:bg-neutral-200 disabled:opacity-40 text-black font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-all"
-          >
+          <input type="email" x-model="email" placeholder="Enter your email..." required class="border border-neutral-800 bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-xs focus:outline-none focus:border-white w-full">
+          <button type="submit" :disabled="submitting" class="bg-white hover:bg-neutral-200 disabled:opacity-40 text-black font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-all">
             <span x-text="submitting ? 'Subscribing...' : 'Subscribe'">Subscribe</span>
           </button>
-          <div 
-            x-show="message" 
-            x-text="message" 
-            class="text-xs text-center font-bold uppercase tracking-wider py-1.5 rounded-lg border border-neutral-700 bg-neutral-900 text-white mt-1" 
-            style="display: none;"
-          ></div>
+          <div x-show="message" x-text="message" class="text-xs text-center font-bold uppercase tracking-wider py-1.5 rounded-lg border border-neutral-700 bg-neutral-900 text-white mt-1" style="display: none;"></div>
         </form>
       </div>
-
     </div>
-    
-    <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-neutral-900 text-center text-xs text-neutral-500 font-medium">
-      &copy; 2026 Rawgadz. All rights reserved.
-    </div>
+    <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-neutral-900 text-center text-xs text-neutral-500 font-medium">&copy; 2026 Rawgadz. All rights reserved.</div>
   </footer>
 
   <!-- Alpine.js Global Store & Component Controller -->
   <script>
     document.addEventListener('alpine:init', () => {
-      // Shared Global Cart Store
       Alpine.store('cart', {
         storageKey: 'main_store_cart',
         items: {},
         isOpen: false,
-
         init() {
           this.sync();
           window.addEventListener('storage', () => this.sync());
           window.addEventListener('cart-update-' + this.storageKey, () => this.sync());
         },
-
         sync() {
-          try {
-            this.items = JSON.parse(localStorage.getItem(this.storageKey)) || {};
-          } catch (e) {
-            this.items = {};
-          }
+          try { this.items = JSON.parse(localStorage.getItem(this.storageKey)) || {}; } catch (e) { this.items = {}; }
         },
-
-        get itemsArray() {
-          return Object.values(this.items);
-        },
-
-        get totalCount() {
-          return this.itemsArray.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
-        },
-
-        get totalPrice() {
-          return this.itemsArray.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0);
-        },
-
+        get itemsArray() { return Object.values(this.items); },
+        get totalCount() { return this.itemsArray.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0); },
+        get totalPrice() { return this.itemsArray.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0); },
         updateQuantity(idOrKey, qty) {
           if (qty < 0) return;
           let targetKey = idOrKey;
@@ -614,44 +517,25 @@
             targetKey = Object.keys(this.items).find(k => k === idOrKey || this.items[k]?.cartKey === idOrKey || this.items[k]?.subProductId === idOrKey || this.items[k]?.id === idOrKey);
           }
           if (!targetKey) return;
-          if (qty === 0) {
-            delete this.items[targetKey];
-          } else {
-            this.items[targetKey].quantity = qty;
-          }
+          if (qty === 0) { delete this.items[targetKey]; } else { this.items[targetKey].quantity = qty; }
           localStorage.setItem(this.storageKey, JSON.stringify(this.items));
           window.dispatchEvent(new Event('cart-update-' + this.storageKey));
         }
       });
 
-      // Newsletter Form Component
       Alpine.data('newsletterForm', () => ({
-        email: '',
-        submitting: false,
-        message: '',
+        email: '', submitting: false, message: '',
         async submitNewsletter() {
           if (!this.email) return;
-          this.submitting = true;
-          this.message = '';
+          this.submitting = true; this.message = '';
           try {
-            await fetch('https://script.google.com/macros/s/AKfycbwnstevpnw3FdYnnuMF75_KaZk8Qi_8qqsWX0DsZ-Mr4fWahfmKMZyGHhubMj6ydxiy/exec', {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ email: this.email })
-            });
-            this.message = 'Subscribed successfully!';
-            this.email = '';
-          } catch (err) {
-            this.message = 'Subscribed successfully!';
-            this.email = '';
-          } finally {
-            this.submitting = false;
-            setTimeout(() => { this.message = ''; }, 4000);
-          }
+            await fetch('https://script.google.com/macros/s/AKfycbwnstevpnw3FdYnnuMF75_KaZk8Qi_8qqsWX0DsZ-Mr4fWahfmKMZyGHhubMj6ydxiy/exec', { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ email: this.email }) });
+            this.message = 'Subscribed successfully!'; this.email = '';
+          } catch (err) { this.message = 'Subscribed successfully!'; this.email = ''; } 
+          finally { this.submitting = false; setTimeout(() => { this.message = ''; }, 4000); }
         }
       }));
 
-      // Product Page Component
       Alpine.data('productPage', () => ({
         product: {"id":"MRA-16","slug":"sporty-vibe-high-quality-cow-leather-car-steering-cover-with-super-grip","tab":"normal","imageSrc":"https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp"],"title":"Car Steering cover with sports look, leather with super grip","description":"Upgrade your drive with the durable, breathable, and anti-slip Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement warranty.","price":1750,"priceRange":{"min":1750,"max":1750},"tags":"Car Accessories","types":[{"subProductId":"MRA-1601","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp"],"subTitle":"Red Dots","price":1750}],"content":"\u003cp>Upgrade your driving comfort and interior aesthetic with the Rawgadaz Premium Steering Wheel Cover.\u003c/p>\n\u003cp>Imported Premium Quality (Tested by Engineers &amp; Drivers)\u003c/p>\n\u003cp>\u003cstrong>✅ 3 Months Replacement Warranty:\u003c/strong> 100% replacement guarantee if it cracks or tears under regular use\u003cbr>\u003cstrong>✅ Long-Lasting Durability:\u003c/strong> Heavy-duty build engineered for 2–3 years of dependable daily use\u003cbr>\u003cstrong>✅ Slim &amp; Ergonomic Fit:\u003c/strong> Contours naturally to your hands for a fatigue-free driving experience\u003cbr>\u003cstrong>✅ Classy Interior Upgrade:\u003c/strong> Instantly enhances black and custom vehicle cabin aesthetics\u003cbr>\u003cstrong>✅ Anti-Slip Inner Grip:\u003c/strong> High-grade inner rubber prevents slipping and ensures solid steering control\u003cbr>\u003cstrong>✅ Breathable &amp; Sweat-Absorbent:\u003c/strong> Outer airflow material keeps your hands dry and comfortable\u003cbr>\u003cstrong>✅ Odorless &amp; Eco-Friendly:\u003c/strong> Safe, non-toxic construction free from harsh chemical smells\u003cbr>\u003cstrong>✅ Universal Fit:\u003c/strong> Seamlessly fits standard 37–38 cm steering wheels\u003cbr>\u003cstrong>✅ Cash on Delivery:\u003c/strong> Available for genuine buyers—inspect your product upon arrival before payment\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling high-quality and unique products is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>📞 For Returns &amp; Refunds: 01608-331322\u003c/strong>\u003c/p>\n"},
         selectedTypeIndex: 0,
@@ -670,7 +554,6 @@
         },
 
         loadInventory() {
-          // 1. Instant synchronous resolution from 24-hour localStorage cache
           if (window.RawgadStock) {
             const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
             if (cachedMap && Object.keys(cachedMap).length > 0) {
@@ -678,20 +561,12 @@
               this.loadingInventory = false;
               return;
             }
-          }
-
-          // 2. If not yet in cache or expired, pull all stock at once and store in localStorage
-          if (window.RawgadStock) {
             this.loadingInventory = true;
             window.RawgadStock.fetchAndStoreAllStock().then(() => {
               this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
               this.loadingInventory = false;
-            }).catch(() => {
-              this.loadingInventory = false;
-            });
-          } else {
-            this.fetchInventoryFallback();
-          }
+            }).catch(() => { this.loadingInventory = false; });
+          } else { this.fetchInventoryFallback(); }
         },
 
         async fetchInventoryFallback() {
@@ -709,11 +584,8 @@
                 this.inventoryMap = map;
               }
             }
-          } catch (err) {
-            console.warn('[Inventory] Live inventory fetch fallback error:', err);
-          } finally {
-            this.loadingInventory = false;
-          }
+          } catch (err) { console.warn('[Inventory] Live inventory fetch fallback error:', err); } 
+          finally { this.loadingInventory = false; }
         },
 
         get selectedType() {
@@ -727,26 +599,14 @@
           return type.subProducts[this.selectedSubProductIndex] || type.subProducts[0];
         },
 
-        get activeItem() {
-          return this.selectedSubProduct || this.selectedType || this.product;
-        },
+        get activeItem() { return this.selectedSubProduct || this.selectedType || this.product; },
 
         get currentVariantImages() {
-          if (this.selectedSubProduct && Array.isArray(this.selectedSubProduct.images) && this.selectedSubProduct.images.length > 0) {
-            return this.selectedSubProduct.images;
-          }
-          if (this.selectedType && Array.isArray(this.selectedType.images) && this.selectedType.images.length > 0) {
-            return this.selectedType.images;
-          }
-          if (this.selectedSubProduct && this.selectedSubProduct.subImage) {
-            return [this.selectedSubProduct.subImage];
-          }
-          if (this.selectedType && this.selectedType.subImage) {
-            return [this.selectedType.subImage];
-          }
-          if (Array.isArray(this.product.images) && this.product.images.length > 0) {
-            return this.product.images;
-          }
+          if (this.selectedSubProduct && Array.isArray(this.selectedSubProduct.images) && this.selectedSubProduct.images.length > 0) return this.selectedSubProduct.images;
+          if (this.selectedType && Array.isArray(this.selectedType.images) && this.selectedType.images.length > 0) return this.selectedType.images;
+          if (this.selectedSubProduct && this.selectedSubProduct.subImage) return [this.selectedSubProduct.subImage];
+          if (this.selectedType && this.selectedType.subImage) return [this.selectedType.subImage];
+          if (Array.isArray(this.product.images) && this.product.images.length > 0) return this.product.images;
           return this.product.imageSrc ? [this.product.imageSrc] : [];
         },
 
@@ -759,19 +619,13 @@
         },
 
         get currentImage() {
-          if (this.selectedGalleryImage && this.currentVariantImages.includes(this.selectedGalleryImage)) {
-            return this.selectedGalleryImage;
-          }
+          if (this.selectedGalleryImage && this.currentVariantImages.includes(this.selectedGalleryImage)) return this.selectedGalleryImage;
           return this.currentVariantImages[0] || this.product.imageSrc;
         },
 
         get currentPrice() {
-          if (this.selectedSubProduct && typeof this.selectedSubProduct.price === 'number') {
-            return this.selectedSubProduct.price;
-          }
-          if (this.selectedType && typeof this.selectedType.price === 'number') {
-            return this.selectedType.price;
-          }
+          if (this.selectedSubProduct && typeof this.selectedSubProduct.price === 'number') return this.selectedSubProduct.price;
+          if (this.selectedType && typeof this.selectedType.price === 'number') return this.selectedType.price;
           return Number(this.product.price) || 0;
         },
 
@@ -782,10 +636,7 @@
           const typeId = type ? String(type.subProductId || type.id) : 'null';
           const subId = sub ? String(sub.subProductId || sub.id) : 'null';
           const key = typeId + ':::' + subId;
-
-          if (this.inventoryMap && Object.prototype.hasOwnProperty.call(this.inventoryMap, key)) {
-            return this.inventoryMap[key];
-          }
+          if (this.inventoryMap && Object.prototype.hasOwnProperty.call(this.inventoryMap, key)) return this.inventoryMap[key];
           if (window.RawgadStock) {
             const direct = window.RawgadStock.getItemStock(this.product.id, typeId, subId);
             if (direct !== null) return direct;
@@ -801,9 +652,7 @@
           return 'in_stock';
         },
 
-        get isOutOfStock() {
-          return !this.loadingInventory && (typeof this.currentStock !== 'number' || this.currentStock <= 0);
-        },
+        get isOutOfStock() { return !this.loadingInventory && (typeof this.currentStock !== 'number' || this.currentStock <= 0); },
 
         selectType(index) {
           this.selectedTypeIndex = Number(index) || 0;
@@ -818,6 +667,24 @@
           this.syncCart();
         },
 
+        prevGalleryImage() {
+          const imgs = this.currentVariantImages;
+          if (!imgs || imgs.length <= 1) return;
+          const current = this.currentImage;
+          const idx = imgs.indexOf(current);
+          const prevIdx = (idx <= 0 ? imgs.length - 1 : idx - 1);
+          this.selectedGalleryImage = imgs[prevIdx];
+        },
+
+        nextGalleryImage() {
+          const imgs = this.currentVariantImages;
+          if (!imgs || imgs.length <= 1) return;
+          const current = this.currentImage;
+          const idx = imgs.indexOf(current);
+          const nextIdx = (idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1);
+          this.selectedGalleryImage = imgs[nextIdx];
+        },
+
         getCartKey() {
           const type = this.selectedType;
           const sub = this.selectedSubProduct;
@@ -826,21 +693,13 @@
           return this.product.id;
         },
 
-        getCart() {
-          try {
-            return JSON.parse(localStorage.getItem('main_store_cart')) || {};
-          } catch (e) {
-            return {};
-          }
-        },
+        getCart() { try { return JSON.parse(localStorage.getItem('main_store_cart')) || {}; } catch (e) { return {}; } },
 
         setCart(cart) {
           try {
             localStorage.setItem('main_store_cart', JSON.stringify(cart));
             window.dispatchEvent(new Event('cart-update-main_store_cart'));
-          } catch (e) {
-            console.error('Failed to save cart:', e);
-          }
+          } catch (e) { console.error('Failed to save cart:', e); }
         },
 
         syncCart() {
@@ -867,17 +726,12 @@
           if (newQty === 0) {
             delete cart[key];
             for (const k of Object.keys(cart)) {
-              if (cart[k]?.cartKey === key || cart[k]?.subProductId === key) {
-                delete cart[k];
-              }
+              if (cart[k]?.cartKey === key || cart[k]?.subProductId === key) delete cart[k];
             }
           } else {
             let titleSuffix = '';
-            if (type && sub) {
-              titleSuffix = ' (' + type.subTitle + ' - ' + sub.subTitle + ')';
-            } else if (type) {
-              titleSuffix = ' (' + type.subTitle + ')';
-            }
+            if (type && sub) titleSuffix = ' (' + type.subTitle + ' - ' + sub.subTitle + ')';
+            else if (type) titleSuffix = ' (' + type.subTitle + ')';
 
             const typeId = type ? String(type.subProductId || type.id) : null;
             const subProductId = sub ? String(sub.subProductId || sub.id) : null;
@@ -901,12 +755,8 @@
 
         buyNow() {
           if (this.isOutOfStock) return;
-          if (this.inCartQuantity === 0) {
-            this.updateCart(1);
-          }
-          if (this.inCartQuantity > 0) {
-            window.location.href = '../checkout.html';
-          }
+          if (this.inCartQuantity === 0) this.updateCart(1);
+          if (this.inCartQuantity > 0) window.location.href = '../checkout.html';
         }
       }));
     });

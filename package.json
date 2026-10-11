@@ -12,10 +12,11 @@
     "build-html-blog": "node build-html-blog.js",
     "build-car": "node build-car.js",
     "build-html-cars": "node build-html-cars.js",
+    "build-sitemap": "node build-sitemap.js",
     "seed-inventory": "node seed-inventory.js",
-    "predev": "node build-index.js && node build-gadgets.js && node build-hero.js && node build-products.js && node build-blog.js && node build-html-blog.js && node build-car.js && node build-html-cars.js",
+    "predev": "node build-index.js && node build-gadgets.js && node build-hero.js && node build-products.js && node build-blog.js && node build-html-blog.js && node build-car.js && node build-html-cars.js && node build-sitemap.js",
     "dev": "npx vercel dev",
-    "build": "node build-index.js && node build-gadgets.js && node build-hero.js && node build-products.js && node build-blog.js && node build-html-blog.js && node build-car.js && node build-html-cars.js"
+    "build": "node build-index.js && node build-gadgets.js && node build-hero.js && node build-products.js && node build-blog.js && node build-html-blog.js && node build-car.js && node build-html-cars.js && node build-sitemap.js"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

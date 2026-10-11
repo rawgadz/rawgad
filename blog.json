@@ -1,6 +1,7 @@
 [
   {
     "id": "blog_001",
+    "slug": "building-modern-web-applications-with-web-components-and-lit",
     "title": "Building Modern Web Applications with Web Components and Lit",
     "date": "2026-08-10T00:00:00.000Z",
     "author": "Rawgadz Engineering",
@@ -11,6 +12,7 @@
   },
   {
     "id": "blog_002",
+    "slug": "minimalist-tech-setup-essential-gear-for-developers",
     "title": "Minimalist Tech Setup: Essential Gear for Developers",
     "date": "2026-08-09T00:00:00.000Z",
     "author": "Alex Rivers",
@@ -21,6 +23,7 @@
   },
   {
     "id": "blog_003",
+    "slug": "the-future-of-lightweight-frontend-architecture",
     "title": "The Future of Lightweight Frontend Architecture",
     "date": "2026-08-05T00:00:00.000Z",
     "author": "Sarah Chen",

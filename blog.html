@@ -199,7 +199,7 @@
           <article class="bg-white rounded-3xl border border-neutral-200 overflow-hidden shadow-xs hover:shadow-md transition-all duration-300 flex flex-col h-full group">
             
             <!-- Image -->
-            <a :href="'./blog/' + blog.id + '.html'" class="aspect-16/9 overflow-hidden bg-neutral-100 block relative border-b border-neutral-100">
+            <a :href="'./blog/' + (blog.slug || blog.id) + '.html'" class="aspect-16/9 overflow-hidden bg-neutral-100 block relative border-b border-neutral-100">
               <img 
                 :src="blog.imageSrc || 'https://placehold.co/800x450/171717/ffffff?text=' + encodeURIComponent(blog.title)" 
                 :alt="blog.title" 
@@ -219,7 +219,7 @@
 
               <!-- Title -->
               <h3 class="text-xl font-black text-black tracking-tight mb-3 leading-snug group-hover:text-neutral-700 transition-colors line-clamp-2">
-                <a :href="'./blog/' + blog.id + '.html'" x-text="blog.title"></a>
+                <a :href="'./blog/' + (blog.slug || blog.id) + '.html'" x-text="blog.title"></a>
               </h3>
 
               <!-- Excerpt -->
@@ -233,7 +233,7 @@
                 </div>
                 
                 <a 
-                  :href="'./blog/' + blog.id + '.html'" 
+                  :href="'./blog/' + (blog.slug || blog.id) + '.html'" 
                   class="text-xs font-black text-black group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 uppercase tracking-wider"
                 >
                   Read <span>&rarr;</span>

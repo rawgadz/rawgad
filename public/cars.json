@@ -1,6 +1,7 @@
 [
   {
     "id": "car_001",
+    "slug": "porsche-911-gt3-rs",
     "imageSrc": "https://placehold.co/1200x800/171717/ffffff?text=Porsche+911+GT3+RS+Front",
     "images": [
       "https://placehold.co/1200x800/171717/ffffff?text=Porsche+911+GT3+RS+Front",
@@ -125,6 +126,7 @@
   },
   {
     "id": "car_002",
+    "slug": "tesla-model-s-plaid",
     "imageSrc": "https://placehold.co/1200x800/0f172a/ffffff?text=Tesla+Model+S+Plaid+Front",
     "images": [
       "https://placehold.co/1200x800/0f172a/ffffff?text=Tesla+Model+S+Plaid+Front",
@@ -214,6 +216,7 @@
   },
   {
     "id": "car_003",
+    "slug": "audi-rs6-avant-performance",
     "imageSrc": "https://placehold.co/1200x800/18181b/ffffff?text=Audi+RS6+Avant+Front+Grille",
     "images": [
       "https://placehold.co/1200x800/18181b/ffffff?text=Audi+RS6+Avant+Front+Grille",
@@ -303,6 +306,7 @@
   },
   {
     "id": "car_004",
+    "slug": "bmw-m4-competition-coupe",
     "imageSrc": "https://placehold.co/1200x800/171717/ffffff?text=BMW+M4+Front+Kidney+Grille",
     "images": [
       "https://placehold.co/1200x800/171717/ffffff?text=BMW+M4+Front+Kidney+Grille",

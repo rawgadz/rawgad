@@ -581,9 +581,20 @@ function buildHtmlCars() {
   const rawData = fs.readFileSync(CARS_JSON_FILE, 'utf8');
   const cars = JSON.parse(rawData);
 
+  const activeFileNames = new Set(cars.map(c => `${c.slug || c.id}.html`));
+  if (fs.existsSync(HTML_OUTPUT_DIR)) {
+    const existingFiles = fs.readdirSync(HTML_OUTPUT_DIR).filter(f => f.endsWith('.html'));
+    for (const f of existingFiles) {
+      if (!activeFileNames.has(f)) {
+        try { fs.unlinkSync(path.join(HTML_OUTPUT_DIR, f)); } catch (_) {}
+      }
+    }
+  }
+
   let count = 0;
   cars.forEach(car => {
-    const filePath = path.join(HTML_OUTPUT_DIR, `${car.id}.html`);
+    const carSlug = car.slug || car.id;
+    const filePath = path.join(HTML_OUTPUT_DIR, `${carSlug}.html`);
     fs.writeFileSync(filePath, generateStandaloneCarHTML(car));
     count++;
   });

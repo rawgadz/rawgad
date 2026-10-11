@@ -1,5 +1,6 @@
 ---
 id: blog_001
+slug: "building-modern-web-applications-with-web-components-and-lit"
 title: Building Modern Web Applications with Web Components and Lit
 date: 2026-08-10
 author: Rawgadz Engineering

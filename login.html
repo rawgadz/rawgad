@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In &lsaquo; Rawgad Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    
+    body {
+      background: #f0f0f1;
+      color: #3c434a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+    }
+
+    #login {
+      width: 340px;
+      padding: 5% 0 0;
+      margin: auto;
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .login-logo a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      background: #111;
+      border-radius: 20px;
+      color: #fff;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .login-logo a:hover {
+      background: #000;
+      transform: scale(1.02);
+    }
+
+    .login-logo-text {
+      margin-top: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #111;
+      text-transform: uppercase;
+    }
+
+    .login-box {
+      background: #fff;
+      border: 1px solid #c3c4c7;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      padding: 26px 24px 28px;
+      font-weight: 400;
+    }
+
+    .notice {
+      background: #fff;
+      border: 1px solid #c3c4c7;
+      border-left-width: 4px;
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      margin: 0 0 16px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notice-error {
+      border-left-color: #d63638;
+    }
+
+    .notice-info {
+      border-left-color: #2271b1;
+    }
+
+    .notice strong {
+      color: #d63638;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.5;
+      display: inline-block;
+      margin-bottom: 4px;
+      color: #3c434a;
+    }
+
+    .input {
+      font-size: 14px;
+      line-height: 1.4;
+      width: 100%;
+      border: 1px solid #8c8f94;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin: 2px 0 16px;
+      background: #fff;
+      color: #2c3338;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input:focus {
+      border-color: #000;
+      box-shadow: 0 0 0 1px #000;
+    }
+
+    .user-pass-wrap {
+      position: relative;
+    }
+
+    .wp-pwd-toggle {
+      position: absolute;
+      right: 10px;
+      top: 11px;
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 6px;
+    }
+
+    .wp-pwd-toggle:hover {
+      color: #000;
+    }
+
+    .submit {
+      margin-top: 8px;
+    }
+
+    .button-primary {
+      background: #000;
+      border: 1px solid #000;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      min-height: 38px;
+      line-height: 38px;
+      padding: 0 12px;
+      text-align: center;
+      text-decoration: none;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .button-primary:hover:not(:disabled) {
+      background: #222;
+    }
+
+    .button-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #backtoblog {
+      font-size: 12px;
+      padding: 16px 0 0;
+      text-align: center;
+    }
+
+    #backtoblog a {
+      color: #666;
+      text-decoration: none;
+    }
+
+    #backtoblog a:hover {
+      color: #000;
+    }
+
+    .spinner {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 5px;
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body x-data="wpLoginApp()" x-init="init()" x-cloak>
+
+  <div id="login">
+    
+    <!-- Rawgad Logo -->
+    <div class="login-logo">
+      <a href="./index.html" title="Rawgad Storefront">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489l-3.92-10.74A9.972 9.972 0 0 1 12 4c2.296 0 4.404.773 6.096 2.072L12 2zm8.081 4.733A9.957 9.957 0 0 1 22 12c0 3.738-2.053 6.998-5.114 8.683L19.5 12l-2.083-5.267.664-.002zM12 22a9.98 9.98 0 0 1-5.12-1.402l4.98-13.88 3.82 10.963A9.965 9.965 0 0 1 12 22zm-7.618-9.47l2.84 8.27A9.96 9.96 0 0 1 4 12c0-1.782.466-3.456 1.282-4.91l-.9-2.56z"/>
+        </svg>
+      </a>
+      <div class="login-logo-text">Rawgad Administration</div>
+    </div>
+
+    <!-- Logged out notice -->
+    <div class="notice notice-info" x-show="loggedOut">
+      <p>You have been logged out securely.</p>
+    </div>
+
+    <!-- Error notice -->
+    <div class="notice notice-error" x-show="errorMessage">
+      <p><strong>Error:</strong> <span x-text="errorMessage"></span></p>
+    </div>
+
+    <!-- Login Box -->
+    <div class="login-box">
+      <form @submit.prevent="handleLogin()">
+        <p>
+          <label for="user_login">Username or Email Address</label>
+          <input 
+            type="text" 
+            name="log" 
+            id="user_login" 
+            class="input" 
+            x-model="email" 
+            required 
+            autocomplete="username"
+            placeholder="admin or email"
+            autofocus
+          >
+        </p>
+
+        <p class="user-pass-wrap">
+          <label for="user_pass">Password</label>
+          <input 
+            :type="showPassword ? 'text' : 'password'" 
+            name="pwd" 
+            id="user_pass" 
+            class="input" 
+            x-model="password" 
+            required 
+            autocomplete="current-password"
+            placeholder="••••••••"
+          >
+          <button 
+            type="button" 
+            class="wp-pwd-toggle" 
+            @click="showPassword = !showPassword" 
+            x-text="showPassword ? 'Hide' : 'Show'"
+            tabindex="-1"
+          ></button>
+        </p>
+
+        <p class="submit">
+          <button type="submit" class="button-primary" :disabled="loading">
+            <span x-text="loading ? 'Authenticating...' : 'Log In'"></span>
+            <span x-show="loading" class="spinner">&#8635;</span>
+          </button>
+        </p>
+      </form>
+    </div>
+
+    <p id="backtoblog">
+      <a href="./index.html">&larr; Return to Storefront</a>
+    </p>
+
+  </div>
+
+  <script>
+    function wpLoginApp() {
+      return {
+        email: '',
+        password: '',
+        showPassword: false,
+        loading: false,
+        errorMessage: '',
+        loggedOut: false,
+
+        init() {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('loggedout') === 'true') {
+            this.loggedOut = true;
+            localStorage.removeItem('rawgad_auth_token');
+            localStorage.removeItem('rawgad_auth_user');
+          }
+
+          const token = localStorage.getItem('rawgad_auth_token');
+          if (token && !this.loggedOut) {
+            this.verifyExistingSession(token);
+          }
+        },
+
+        async verifyExistingSession(token) {
+          try {
+            const res = await fetch('/api/auth?action=verify', {
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await res.json();
+            if (data && data.authenticated) {
+              const redirect = new URLSearchParams(window.location.search).get('redirect') || './admin.html';
+              window.location.href = redirect;
+            }
+          } catch (_) {}
+        },
+
+        async handleLogin() {
+          this.loading = true;
+          this.errorMessage = '';
+          this.loggedOut = false;
+
+          try {
+            const res = await fetch('/api/auth', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'login',
+                email: this.email,
+                password: this.password
+              })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+              throw new Error(data.error || 'Invalid credentials.');
+            }
+
+            // Store session
+            localStorage.setItem('rawgad_auth_token', data.token);
+            localStorage.setItem('rawgad_auth_user', JSON.stringify(data.user || { name: 'Admin', email: this.email }));
+
+            // Redirect
+            const redirect = new URLSearchParams(window.location.search).get('redirect') || './admin.html';
+            window.location.href = redirect;
+          } catch (err) {
+            this.errorMessage = err.message || 'The username or password you entered is incorrect.';
+          } finally {
+            this.loading = false;
+          }
+        }
+      };
+    }
+  </script>
+</body>
+</html>

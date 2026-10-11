@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Confirmed - Rawgadz</title>
   <meta name="description" content="Thank you for your order! Your order details and payment verification status.">
+  <meta name="robots" content="noindex,nofollow">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -433,7 +434,6 @@
           if (this.paymentMethod === 'cod') return 'Cash on Delivery (COD)';
           if (this.paymentMethod === 'bkash') return 'bKash (বিকাশ)';
           if (this.paymentMethod === 'nagad') return 'Nagad (নগদ)';
-          if (this.paymentMethod === 'paystation') return 'Paystation Online';
           return 'Direct Order';
         },
 

@@ -1,5 +1,6 @@
 ---
 id: blog_003
+slug: "the-future-of-lightweight-frontend-architecture"
 title: The Future of Lightweight Frontend Architecture
 date: 2026-08-05
 author: Sarah Chen

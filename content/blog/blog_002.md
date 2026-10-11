@@ -1,5 +1,6 @@
 ---
 id: blog_002
+slug: "minimalist-tech-setup-essential-gear-for-developers"
 title: "Minimalist Tech Setup: Essential Gear for Developers"
 date: 2026-08-09
 author: Alex Rivers

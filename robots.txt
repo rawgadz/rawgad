@@ -1,0 +1,29 @@
+# robots.txt for Rawgadz (final_public)
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /gadgets.html
+Allow: /car.html
+Allow: /blog.html
+Allow: /contact.html
+
+# Disallow Administrative, API, & Transactional Pages
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /order
+Disallow: /order.html
+Disallow: /orders
+Disallow: /orders.html
+Disallow: /inventory
+Disallow: /inventory.html
+Disallow: /login
+Disallow: /login.html
+Disallow: /checkout
+Disallow: /checkout.html
+Disallow: /checkout02.html
+Disallow: /thank.html
+Disallow: /fail.html
+Disallow: /api/
+
+# Sitemap Location
+Sitemap: https://rawgadz.com/sitemap.xml

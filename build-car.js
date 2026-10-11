@@ -8,6 +8,19 @@ const CONTENT_DIR = path.join(__dirname, 'content', 'cars');
 const ROOT_OUTPUT_FILE = path.join(__dirname, 'cars.json');
 const PUBLIC_OUTPUT_FILE = path.join(__dirname, 'public', 'cars.json');
 
+function slugify(str) {
+  if (typeof str !== 'string') return '';
+  return str.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function sanitizeSlug(rawSlug) {
+  if (typeof rawSlug !== 'string') return '';
+  let cleaned = rawSlug.trim().toLowerCase();
+  cleaned = cleaned.replace(/[/\\]/g, '').replace(/\.\.+/g, '');
+  cleaned = cleaned.replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
+  return cleaned;
+}
+
 /**
  * Normalizes a car variant/subproduct and recursively parses nested subproducts
  * Extracts and normalizes both singular subImage and multiple images array for galleries
@@ -135,8 +148,18 @@ function generateCarsJson() {
       }
     }
 
+    let slug = '';
+    if (data.slug !== undefined && data.slug !== null && String(data.slug).trim() !== '') {
+      slug = sanitizeSlug(String(data.slug));
+      if (!slug) slug = slugify(data.title);
+    } else {
+      slug = slugify(data.title);
+    }
+    if (!slug) slug = slugify(String(data.id));
+
     cars.push({
       id: String(data.id),
+      slug: slug,
       imageSrc: carImages[0] || data.imageSrc || '',
       images: carImages.length > 0 ? carImages : (data.imageSrc ? [data.imageSrc] : []),
       youtube: youtube,
@@ -151,6 +174,20 @@ function generateCarsJson() {
       types: types,
       content: htmlContent
     });
+  }
+
+  // Validate duplicate slugs
+  const slugToIds = new Map();
+  for (const car of cars) {
+    if (!slugToIds.has(car.slug)) slugToIds.set(car.slug, []);
+    slugToIds.get(car.slug).push(car.id);
+  }
+  const duplicateErrors = [];
+  for (const [slug, ids] of slugToIds.entries()) {
+    if (ids.length > 1) duplicateErrors.push(`Duplicate slug "${slug}" detected in vehicles: ${ids.join(', ')}`);
+  }
+  if (duplicateErrors.length > 0) {
+    throw new Error(`[build-car] Build failed due to duplicate slugs:\n` + duplicateErrors.join('\n'));
   }
 
   // Deterministic sort by ID
