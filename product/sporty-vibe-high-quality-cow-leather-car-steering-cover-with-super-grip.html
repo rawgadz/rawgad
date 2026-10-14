@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Car Steering cover with sports look, leather with super grip - Rawgadz</title>
+  <title>Car Steering cover with sports look, leather with super grip | Rawgadz</title>
   <meta name="description" content="Upgrade your drive with the durable, breathable, and anti-slip Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement warranty.">
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -43,8 +43,8 @@
 
       <nav class="hidden md:flex md:flex-row md:items-center md:gap-6 flex-grow">
         <a href="../index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
-        <a href="../index.html#shop" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Shop</a>
-        <a href="../gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
+        <a href="../index.html#shop" class="hover:text-black transition-colors text-xs tracking-wider uppercase text-black font-bold border-b-2 border-black pb-0.5">Shop</a>
+        <a href="../gadgets.html" class="hover:text-black transition-colors text-xs tracking-wider uppercase text-neutral-600 font-semibold">Gadgets</a>
         <a href="../car.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Cars</a>
         <a href="../blog.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Blog</a>
         <a href="../contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
@@ -67,8 +67,8 @@
 
     <div x-show="mobileMenuOpen" x-transition @click.away="mobileMenuOpen = false" class="md:hidden flex flex-col absolute top-16 left-0 right-0 bg-white border-b border-neutral-200 p-6 shadow-xl z-50 gap-4" style="display: none;">
       <a href="../index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
-      <a href="../index.html#shop" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Shop</a>
-      <a href="../gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
+      <a href="../index.html#shop" class="hover:text-black transition-colors text-xs tracking-wider uppercase text-black font-bold">Shop</a>
+      <a href="../gadgets.html" class="hover:text-black transition-colors text-xs tracking-wider uppercase text-neutral-600 font-semibold">Gadgets</a>
       <a href="../car.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Cars</a>
       <a href="../blog.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Blog</a>
       <a href="../contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
@@ -115,6 +115,17 @@
   <!-- MAIN CONTENT AREA -->
   <main class="p-4 md:p-8 flex flex-col items-center mt-4 w-full max-w-7xl mx-auto flex-grow gap-4" x-data="productPage()" x-cloak>
     
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="w-full text-xs text-neutral-500 font-medium mb-1">
+      <ol class="flex items-center space-x-2">
+        <li><a href="../index.html" class="hover:text-black transition-colors">Home</a></li>
+        <li><span>/</span></li>
+        <li><a href="../index.html#shop" class="hover:text-black transition-colors">Shop</a></li>
+        <li><span>/</span></li>
+        <li class="text-neutral-900 font-bold truncate max-w-xs sm:max-w-md">Car Steering cover with sports look, leather with super grip</li>
+      </ol>
+    </nav>
+    
     <!-- ==================== MOBILE LAYOUT ==================== -->
     <div class="w-full md:hidden flex flex-col bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm">
       
@@ -150,14 +161,14 @@
         </template>
       </div>
 
-      <!-- Small Thumbnail Gallery Slider (Right Below the Image) -->
+      <!-- Small Tiny Thumbnail Gallery Slider (Right Below the Main Image) -->
       <div x-show="currentVariantImages && currentVariantImages.length > 1" class="mt-2.5 mb-3">
-        <div class="flex flex-row gap-2 overflow-x-auto no-scrollbar py-1 px-0.5 scroll-smooth">
+        <div class="flex flex-row gap-1.5 overflow-x-auto no-scrollbar py-1 px-0.5 scroll-smooth">
           <template x-for="(imgUrl, i) in currentVariantImages" :key="'mobile-thumb-' + i">
             <button 
               type="button" 
               @click="selectedGalleryImage = imgUrl" 
-              class="w-12 h-12 rounded-lg border-2 bg-neutral-50 p-1 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer overflow-hidden" 
+              class="w-11 h-11 rounded-md border bg-neutral-50 p-0.5 flex items-center justify-center flex-shrink-0 transition-all cursor-pointer overflow-hidden" 
               :class="currentImage === imgUrl ? 'border-black ring-1 ring-black shadow-xs' : 'border-neutral-200 opacity-60 hover:opacity-100'"
               :aria-label="'View photo ' + (i + 1)"
             >
@@ -183,7 +194,7 @@
           <template x-if="stockStatus === 'in_stock'">
             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              <span>In Stock (<span x-text="currentStock"></span>)</span>
+              <span x-text="currentStock > 0 ? 'In Stock (' + currentStock + ')' : 'Available'"></span>
             </div>
           </template>
           <template x-if="stockStatus === 'low_stock'">
@@ -195,7 +206,7 @@
           <template x-if="stockStatus === 'out_of_stock'">
             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-[10px] font-bold uppercase tracking-wider">
               <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-              <span>Out of Stock</span>
+              <span>Unavailable</span>
             </div>
           </template>
           <template x-if="stockStatus === 'loading'">
@@ -208,21 +219,49 @@
 
         <template x-if="product.types && product.types.length > 0">
           <div class="mb-2">
-            <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-black">
-              <template x-for="(type, idx) in product.types" :key="idx">
-                <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
-              </template>
-            </select>
+            <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+              </svg>
+              Select Variant
+            </label>
+            <div class="relative">
+              <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 pr-8 text-xs font-bold focus:outline-none focus:border-black">
+                <template x-for="(type, idx) in product.types" :key="idx">
+                  <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
+                </template>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-500">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
           </div>
         </template>
 
         <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
           <div class="mb-3">
-            <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-black">
-              <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
-              </template>
-            </select>
+            <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+              </svg>
+              Select Option
+            </label>
+            <div class="relative">
+              <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 pr-8 text-xs font-bold focus:outline-none focus:border-black">
+                <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
+                  <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
+                </template>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-500">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
           </div>
         </template>
 
@@ -277,7 +316,7 @@
               <template x-if="stockStatus === 'in_stock'">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider">
                   <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>In Stock (<span x-text="currentStock"></span> available)</span>
+                  <span x-text="currentStock > 0 ? 'In Stock (' + currentStock + ' units)' : 'Available'"></span>
                 </div>
               </template>
               <template x-if="stockStatus === 'low_stock'">
@@ -289,7 +328,7 @@
               <template x-if="stockStatus === 'out_of_stock'">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold uppercase tracking-wider">
                   <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                  <span>Out of Stock</span>
+                  <span>Unavailable</span>
                 </div>
               </template>
               <template x-if="stockStatus === 'loading'">
@@ -306,31 +345,57 @@
               <div class="inline-flex items-center border border-neutral-300 rounded-lg overflow-hidden bg-white">
                 <button type="button" @click="updateCart(Math.max(0, inCartQuantity - 1))" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-r border-neutral-300">−</button>
                 <div class="px-5 py-2 font-black text-sm text-black bg-white min-w-[50px] text-center" x-text="inCartQuantity === 0 ? 1 : inCartQuantity">1</div>
-                <button type="button" :disabled="isOutOfStock || inCartQuantity >= currentStock" :class="{ 'opacity-40 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }" @click="updateCart(inCartQuantity + 1)" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-l border-neutral-300">+</button>
+                <button type="button" :disabled="isOutOfStock" :class="{ 'opacity-40 cursor-not-allowed': isOutOfStock }" @click="updateCart(inCartQuantity + 1)" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-l border-neutral-300">+</button>
               </div>
             </div>
 
             <!-- Variant Dropdown -->
             <template x-if="product.types && product.types.length > 0">
               <div class="mb-4">
-                <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Variant</label>
-                <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
-                  <template x-for="(type, idx) in product.types" :key="idx">
-                    <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
-                  </template>
-                </select>
+                <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+                  </svg>
+                  Select Variant
+                </label>
+                <div class="relative">
+                  <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 pr-10 text-sm font-bold focus:outline-none focus:border-black">
+                    <template x-for="(type, idx) in product.types" :key="idx">
+                      <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
+                    </template>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-neutral-500">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </template>
 
             <!-- Subproduct Dropdown -->
             <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
               <div class="mb-5">
-                <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Option</label>
-                <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
-                  <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                    <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
-                  </template>
-                </select>
+                <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+                  </svg>
+                  Select Option
+                </label>
+                <div class="relative">
+                  <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 pr-10 text-sm font-bold focus:outline-none focus:border-black">
+                    <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
+                      <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
+                    </template>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-neutral-500">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </template>
 
@@ -427,8 +492,8 @@
             <div class="flex-1 h-full bg-white flex items-center justify-center font-black text-sm text-black" x-text="inCartQuantity">1</div>
             <button 
               type="button" 
-              :disabled="isOutOfStock || inCartQuantity >= currentStock"
-              :class="{ 'opacity-30 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }"
+              :disabled="isOutOfStock"
+              :class="{ 'opacity-30 cursor-not-allowed': isOutOfStock }"
               @click="updateCart(inCartQuantity + 1)" 
               class="w-10 h-full bg-neutral-100 hover:bg-black hover:text-white text-black font-black text-lg flex items-center justify-center transition-colors flex-shrink-0"
             >+</button>
@@ -543,6 +608,7 @@
         selectedGalleryImage: null,
         inCartQuantity: 0,
         inventoryMap: {},
+        availabilityMap: {},
         loadingInventory: true,
 
         init() {
@@ -556,14 +622,21 @@
         loadInventory() {
           if (window.RawgadStock) {
             const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
+            const cachedAvail = (typeof window.RawgadStock.getProductAvailabilityMap === 'function')
+              ? window.RawgadStock.getProductAvailabilityMap(this.product.id)
+              : null;
             if (cachedMap && Object.keys(cachedMap).length > 0) {
               this.inventoryMap = cachedMap;
+              if (cachedAvail) this.availabilityMap = cachedAvail;
               this.loadingInventory = false;
               return;
             }
             this.loadingInventory = true;
             window.RawgadStock.fetchAndStoreAllStock().then(() => {
               this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
+              if (typeof window.RawgadStock.getProductAvailabilityMap === 'function') {
+                this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id);
+              }
               this.loadingInventory = false;
             }).catch(() => { this.loadingInventory = false; });
           } else { this.fetchInventoryFallback(); }
@@ -577,11 +650,14 @@
               const data = await res.json();
               if (data && Array.isArray(data.inventory)) {
                 const map = {};
+                const availMap = {};
                 for (const item of data.inventory) {
                   const key = String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
                   map[key] = typeof item.stock === 'number' ? item.stock : 0;
+                  availMap[key] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
                 }
                 this.inventoryMap = map;
+                this.availabilityMap = availMap;
               }
             }
           } catch (err) { console.warn('[Inventory] Live inventory fetch fallback error:', err); } 
@@ -644,15 +720,32 @@
           return 0;
         },
 
+        get isAvailable() {
+          if (this.loadingInventory) return true;
+          const type = this.selectedType;
+          const sub = this.selectedSubProduct;
+          const typeId = type ? String(type.subProductId || type.id) : 'null';
+          const subId = sub ? String(sub.subProductId || sub.id) : 'null';
+          const key = typeId + ':::' + subId;
+          if (this.availabilityMap && Object.prototype.hasOwnProperty.call(this.availabilityMap, key)) {
+            return this.availabilityMap[key] === true;
+          }
+          if (window.RawgadStock && typeof window.RawgadStock.isItemAvailable === 'function') {
+            const direct = window.RawgadStock.isItemAvailable(this.product.id, typeId, subId);
+            if (direct !== null) return direct === true;
+          }
+          return typeof this.currentStock === 'number' ? this.currentStock > 0 : true;
+        },
+
         get stockStatus() {
           if (this.loadingInventory) return 'loading';
+          if (!this.isAvailable) return 'out_of_stock';
           const s = this.currentStock;
-          if (typeof s !== 'number' || s <= 0) return 'out_of_stock';
-          if (s <= 5) return 'low_stock';
+          if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
           return 'in_stock';
         },
 
-        get isOutOfStock() { return !this.loadingInventory && (typeof this.currentStock !== 'number' || this.currentStock <= 0); },
+        get isOutOfStock() { return !this.loadingInventory && !this.isAvailable; },
 
         selectType(index) {
           this.selectedTypeIndex = Number(index) || 0;
@@ -717,11 +810,6 @@
           const type = this.selectedType;
           const sub = this.selectedSubProduct;
           const cart = this.getCart();
-
-          if (newQty > 0 && typeof this.currentStock === 'number' && newQty > this.currentStock) {
-            alert('Sorry, only ' + this.currentStock + ' items are currently in stock.');
-            return;
-          }
 
           if (newQty === 0) {
             delete cart[key];

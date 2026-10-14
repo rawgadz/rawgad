@@ -130,26 +130,34 @@
     </div>
 
     <!-- Quick Stats KPI Bar -->
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-      <div class="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-black transition-colors" @click="activeFilter = 'all'">
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-black transition-colors" @click="activeFilter = 'all'">
         <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Total Tracked</span>
-        <div class="text-2xl font-black text-black mt-1" x-text="summary.total">0</div>
+        <div class="text-xl font-black text-black mt-1" x-text="summary.total">0</div>
       </div>
-      <div class="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-emerald-500 transition-colors" @click="activeFilter = 'in_stock'">
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-emerald-500 transition-colors" @click="activeFilter = 'available'">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Available (True)</span>
+        <div class="text-xl font-black text-emerald-600 mt-1" x-text="summary.available || 0">0</div>
+      </div>
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-rose-500 transition-colors" @click="activeFilter = 'unavailable'">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600">Unavailable (False)</span>
+        <div class="text-xl font-black text-rose-600 mt-1" x-text="summary.unavailable || 0">0</div>
+      </div>
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-emerald-500 transition-colors" @click="activeFilter = 'in_stock'">
         <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600">In Stock (&gt;5)</span>
-        <div class="text-2xl font-black text-emerald-600 mt-1" x-text="summary.inStock">0</div>
+        <div class="text-xl font-black text-emerald-600 mt-1" x-text="summary.inStock">0</div>
       </div>
-      <div class="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-amber-500 transition-colors" @click="activeFilter = 'low_stock'">
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-amber-500 transition-colors" @click="activeFilter = 'low_stock'">
         <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600">Low Stock (1–5)</span>
-        <div class="text-2xl font-black text-amber-600 mt-1" x-text="summary.lowStock">0</div>
+        <div class="text-xl font-black text-amber-600 mt-1" x-text="summary.lowStock">0</div>
       </div>
-      <div class="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-rose-500 transition-colors" @click="activeFilter = 'out_of_stock'">
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-rose-500 transition-colors" @click="activeFilter = 'out_of_stock'">
         <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600">Out of Stock (0)</span>
-        <div class="text-2xl font-black text-rose-600 mt-1" x-text="summary.outOfStock">0</div>
+        <div class="text-xl font-black text-rose-600 mt-1" x-text="summary.outOfStock">0</div>
       </div>
-      <div class="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-purple-500 transition-colors" @click="activeFilter = 'orphaned'">
+      <div class="bg-white p-3.5 rounded-2xl border border-neutral-200 shadow-xs cursor-pointer hover:border-purple-500 transition-colors" @click="activeFilter = 'orphaned'">
         <span class="text-[10px] font-bold uppercase tracking-wider text-purple-600">Orphaned Records</span>
-        <div class="text-2xl font-black text-purple-600 mt-1" x-text="summary.orphaned">0</div>
+        <div class="text-xl font-black text-purple-600 mt-1" x-text="summary.orphaned">0</div>
       </div>
     </div>
 
@@ -164,6 +172,22 @@
           class="px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
         >
           All (<span x-text="summary.total"></span>)
+        </button>
+
+        <button 
+          @click="activeFilter = 'available'" 
+          :class="activeFilter === 'available' ? 'bg-emerald-600 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+        >
+          Available (<span x-text="summary.available || 0"></span>)
+        </button>
+
+        <button 
+          @click="activeFilter = 'unavailable'" 
+          :class="activeFilter === 'unavailable' ? 'bg-rose-600 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+        >
+          Unavailable (<span x-text="summary.unavailable || 0"></span>)
         </button>
 
         <button 
@@ -247,6 +271,20 @@
 
       <div class="flex flex-wrap items-center gap-2">
         <button 
+          @click="bulkSetAvailability(true)"
+          class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+        >
+          ✓ Make Available (True)
+        </button>
+
+        <button 
+          @click="bulkSetAvailability(false)"
+          class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+        >
+          ✕ Make Unavailable (False)
+        </button>
+
+        <button 
           @click="bulkSetFixedPrompt()"
           class="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
         >
@@ -255,9 +293,9 @@
 
         <button 
           @click="bulkSetZero()"
-          class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
+          class="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-1 cursor-pointer"
         >
-          Set to 0 (Out of Stock)
+          Set to 0
         </button>
 
         <button 
@@ -301,6 +339,7 @@
               <th class="py-3 px-3">Subproduct Name & ID</th>
               <th class="py-3 px-3 text-right">Price</th>
               <th class="py-3 px-3 text-center">Stock</th>
+              <th class="py-3 px-3 text-center">Availability</th>
               <th class="py-3 px-3 text-center">Status</th>
               <th class="py-3 px-3 text-right">Last Updated</th>
               <th class="py-3 px-3 text-right">Actions</th>
@@ -332,7 +371,7 @@
                   </template>
                 </td>
 
-                <!-- Product Name & Product ID -->
+                <!-- Product Name & Product ID & Tab Badge -->
                 <td class="py-3 px-3">
                   <div class="min-w-0 max-w-[200px]">
                     <template x-if="item.productUrl">
@@ -341,8 +380,14 @@
                     <template x-if="!item.productUrl">
                       <div class="font-bold text-black truncate" x-text="item.productTitle"></div>
                     </template>
-                    <div class="text-[10px] text-neutral-500 font-mono flex items-center gap-1 mt-0.5">
+                    <div class="text-[10px] text-neutral-500 font-mono flex flex-wrap items-center gap-1 mt-0.5">
                       <span class="bg-neutral-100 px-1 py-0.2 rounded" x-text="item.productId"></span>
+                      <template x-if="item.tab === 'gadget'">
+                        <span class="bg-blue-50 text-blue-700 border border-blue-200 text-[9px] font-bold uppercase px-1.5 py-0.2 rounded">Gadget</span>
+                      </template>
+                      <template x-if="!item.tab || item.tab === 'normal'">
+                        <span class="bg-neutral-100 text-neutral-600 border border-neutral-200 text-[9px] font-bold uppercase px-1.5 py-0.2 rounded">Normal</span>
+                      </template>
                       <template x-if="item.orphaned">
                         <span class="bg-purple-100 text-purple-700 px-1 rounded text-[9px] font-bold uppercase">Orphaned</span>
                       </template>
@@ -386,6 +431,21 @@
                   <span class="font-black font-mono text-sm px-2 py-0.5 rounded-lg"
                         :class="item.stock > 5 ? 'text-emerald-700 bg-emerald-50' : (item.stock > 0 ? 'text-amber-700 bg-amber-50' : 'text-rose-700 bg-rose-50')"
                         x-text="item.stock"></span>
+                </td>
+
+                <!-- Availability Toggle Column -->
+                <td class="py-3 px-3 text-center whitespace-nowrap">
+                  <button 
+                    type="button"
+                    @click="toggleItemAvailability(item)" 
+                    :disabled="saving"
+                    :class="item.isAvailable ? 'bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100' : 'bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100'"
+                    class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer shadow-2xs"
+                    :title="item.isAvailable ? 'Click to mark as Unavailable' : 'Click to mark as Available'"
+                  >
+                    <span class="w-1.5 h-1.5 rounded-full" :class="item.isAvailable ? 'bg-emerald-500' : 'bg-rose-500'"></span>
+                    <span x-text="item.isAvailable ? 'Available' : 'Unavailable'"></span>
+                  </button>
                 </td>
 
                 <!-- Stock Status Badge (TRD 7.1) -->
@@ -504,6 +564,31 @@
           </div>
         </div>
       </template>
+
+      <!-- Availability Toggle in Modal -->
+      <div>
+        <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600 mb-1.5">Availability Status</label>
+        <div class="grid grid-cols-2 gap-2">
+          <button 
+            type="button" 
+            @click="stockModal.isAvailable = true" 
+            :class="stockModal.isAvailable ? 'bg-emerald-600 text-white shadow-xs font-black' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'"
+            class="py-2.5 px-3 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5"
+          >
+            <span class="w-2 h-2 rounded-full" :class="stockModal.isAvailable ? 'bg-white' : 'bg-emerald-500'"></span>
+            Available (True)
+          </button>
+          <button 
+            type="button" 
+            @click="stockModal.isAvailable = false" 
+            :class="!stockModal.isAvailable ? 'bg-rose-600 text-white shadow-xs font-black' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'"
+            class="py-2.5 px-3 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5"
+          >
+            <span class="w-2 h-2 rounded-full" :class="!stockModal.isAvailable ? 'bg-white' : 'bg-rose-500'"></span>
+            Unavailable (False)
+          </button>
+        </div>
+      </div>
 
       <!-- Target Value Input -->
       <div>
@@ -652,7 +737,9 @@
           inStock: 0,
           lowStock: 0,
           outOfStock: 0,
-          orphaned: 0
+          orphaned: 0,
+          available: 0,
+          unavailable: 0
         },
 
         activeFilter: 'all',
@@ -665,7 +752,8 @@
         stockModal: {
           open: false,
           item: null,
-          targetValue: 0
+          targetValue: 0,
+          isAvailable: true
         },
 
         // Sync Modal (TRD 4.2 metrics)
@@ -825,6 +913,7 @@
         openStockModal(item) {
           this.stockModal.item = item;
           this.stockModal.targetValue = item.stock || 0;
+          this.stockModal.isAvailable = item.isAvailable !== false;
           this.stockModal.open = true;
         },
 
@@ -840,7 +929,7 @@
             this.showToast('Stock must be a non-negative integer (>= 0).', 'error');
             return;
           }
-          await this.mutateStockApi(this.stockModal.item, 'set', val);
+          await this.mutateStockApi(this.stockModal.item, 'set', val, this.stockModal.isAvailable);
           this.closeStockModal();
         },
 
@@ -866,7 +955,8 @@
           await this.mutateStockApi(item, action, Math.abs(delta));
         },
 
-        async mutateStockApi(item, action, value) {
+        async toggleItemAvailability(item) {
+          const nextVal = !item.isAvailable;
           this.saving = true;
           try {
             const res = await fetch('/api/inventory', {
@@ -876,8 +966,8 @@
                 productId: item.productId,
                 typeId: item.typeId,
                 subProductId: item.subProductId,
-                action,
-                value
+                action: 'set_availability',
+                isAvailable: nextVal
               })
             });
 
@@ -888,10 +978,101 @@
 
             const data = await res.json();
             if (res.ok && data.success) {
-              const newStock = data.stock;
-              item.stock = newStock;
+              item.isAvailable = nextVal;
               item.updatedAt = data.updatedAt || new Date().toISOString();
-              item.status = newStock > 5 ? 'in_stock' : (newStock > 0 ? 'low_stock' : 'out_of_stock');
+              item.status = item.isAvailable === false
+                ? 'out_of_stock'
+                : (item.stock > 5 ? 'in_stock' : (item.stock > 0 ? 'low_stock' : 'out_of_stock'));
+              this.recalcSummary();
+              const display = item.displayName || item.productTitle || item.productId;
+              this.showToast(`${display} is now ${nextVal ? 'Available' : 'Unavailable'}.`);
+            } else {
+              this.showToast(data.error || 'Failed to toggle availability', 'error');
+            }
+          } catch (e) {
+            this.showToast('Network error toggling availability', 'error');
+          } finally {
+            this.saving = false;
+          }
+        },
+
+        async bulkSetAvailability(isAvailable) {
+          const targetState = !!isAvailable;
+          const label = targetState ? 'Available' : 'Unavailable';
+          if (!confirm(`Set all ${this.selectedKeys.length} selected items to ${label}?`)) return;
+
+          this.saving = true;
+          try {
+            const selectedItems = this.inventory.filter(i => this.selectedKeys.includes(i.key));
+            for (const item of selectedItems) {
+              const res = await fetch('/api/inventory', {
+                method: 'POST',
+                headers: this.getAuthHeaders(),
+                body: JSON.stringify({
+                  productId: item.productId,
+                  typeId: item.typeId,
+                  subProductId: item.subProductId,
+                  action: 'set_availability',
+                  isAvailable: targetState
+                })
+              });
+              const data = await res.json();
+              if (data && data.success) {
+                item.isAvailable = targetState;
+                item.updatedAt = data.updatedAt || new Date().toISOString();
+                item.status = item.isAvailable === false
+                  ? 'out_of_stock'
+                  : (item.stock > 5 ? 'in_stock' : (item.stock > 0 ? 'low_stock' : 'out_of_stock'));
+              }
+            }
+            this.selectedKeys = [];
+            this.recalcSummary();
+            this.showToast(`Set ${selectedItems.length} items to ${label}.`);
+          } catch (e) {
+            this.showToast('Error during bulk availability update', 'error');
+          } finally {
+            this.saving = false;
+          }
+        },
+
+        async mutateStockApi(item, action, value, isAvailable) {
+          this.saving = true;
+          try {
+            const payload = {
+              productId: item.productId,
+              typeId: item.typeId,
+              subProductId: item.subProductId,
+              action,
+              value
+            };
+            if (typeof isAvailable === 'boolean') {
+              payload.isAvailable = isAvailable;
+            }
+
+            const res = await fetch('/api/inventory', {
+              method: 'POST',
+              headers: this.getAuthHeaders(),
+              body: JSON.stringify(payload)
+            });
+
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+
+            const data = await res.json();
+            if (res.ok && data.success) {
+              const newStock = typeof data.stock === 'number' ? data.stock : item.stock;
+              item.stock = newStock;
+              if (typeof data.isAvailable === 'boolean') {
+                item.isAvailable = data.isAvailable;
+              } else if (typeof isAvailable === 'boolean') {
+                item.isAvailable = isAvailable;
+              }
+              item.updatedAt = data.updatedAt || new Date().toISOString();
+              item.status = item.isAvailable === false
+                ? 'out_of_stock'
+                : (newStock > 5 ? 'in_stock' : (newStock > 0 ? 'low_stock' : 'out_of_stock'));
 
               this.recalcSummary();
               const display = item.displayName || item.productTitle || item.productId;
@@ -952,6 +1133,8 @@
             lowStock: this.inventory.filter(i => i.stock > 0 && i.stock <= 5).length,
             outOfStock: this.inventory.filter(i => i.stock <= 0).length,
             orphaned: this.inventory.filter(i => i.orphaned).length,
+            available: this.inventory.filter(i => i.isAvailable !== false).length,
+            unavailable: this.inventory.filter(i => i.isAvailable === false).length,
           };
         },
 
@@ -973,6 +1156,8 @@
           else if (this.activeFilter === 'low_stock') list = list.filter(i => i.stock > 0 && i.stock <= 5);
           else if (this.activeFilter === 'out_of_stock') list = list.filter(i => i.stock <= 0);
           else if (this.activeFilter === 'orphaned') list = list.filter(i => i.orphaned);
+          else if (this.activeFilter === 'available') list = list.filter(i => i.isAvailable !== false);
+          else if (this.activeFilter === 'unavailable') list = list.filter(i => i.isAvailable === false);
 
           // 2. Tab Filter
           if (this.activeTabFilter !== 'all') {
@@ -1005,7 +1190,7 @@
         },
 
         exportCSV() {
-          const headers = ['ProductId', 'TypeId', 'SubProductId', 'ProductTitle', 'TypeTitle', 'SubTitle', 'Price', 'Stock', 'Status', 'UpdatedAt'];
+          const headers = ['ProductId', 'TypeId', 'SubProductId', 'ProductTitle', 'TypeTitle', 'SubTitle', 'Tab', 'Price', 'Stock', 'IsAvailable', 'Status', 'UpdatedAt'];
           const rows = this.filteredItems.map(i => [
             `"${i.productId || ''}"`,
             `"${i.typeId || ''}"`,
@@ -1013,8 +1198,10 @@
             `"${(i.productTitle || '').replace(/"/g, '""')}"`,
             `"${(i.typeTitle || '').replace(/"/g, '""')}"`,
             `"${(i.subTitle || '').replace(/"/g, '""')}"`,
+            `"${i.tab || 'normal'}"`,
             i.price || 0,
             i.stock || 0,
+            i.isAvailable !== false ? 'true' : 'false',
             `"${i.status}"`,
             `"${i.updatedAt || ''}"`
           ]);

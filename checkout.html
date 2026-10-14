@@ -569,9 +569,12 @@
 
             <!-- Submit Button Desktop & Mobile -->
             <div class="pt-4">
+              <div x-show="cartItems.some(i => getItemAvailability(i) === false)" class="bg-rose-50 text-rose-700 border border-rose-200 p-3 rounded-xl text-xs font-bold mb-3" style="display: none;">
+                One or more items in your cart are currently unavailable. Please remove them to proceed.
+              </div>
               <button 
                 type="submit" 
-                :disabled="submitting || cartItems.length === 0" 
+                :disabled="submitting || cartItems.length === 0 || cartItems.some(i => getItemAvailability(i) === false)" 
                 class="w-full bg-black hover:bg-neutral-800 disabled:opacity-40 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span x-show="!submitting">
@@ -609,10 +612,10 @@
                   <div class="flex-grow min-w-0">
                     <p class="text-xs font-bold text-black truncate" x-text="item.title"></p>
                     <p class="text-[11px] text-neutral-500 font-semibold" x-text="'BDT ' + Number(item.price).toFixed(2) + ' × ' + item.quantity"></p>
-                    <template x-if="getItemStock(item) !== null && getItemStock(item) <= 0">
-                      <span class="text-[10px] text-rose-600 font-bold block mt-0.5">Out of stock in database</span>
+                    <template x-if="getItemAvailability(item) === false">
+                      <span class="text-[10px] text-rose-600 font-bold block mt-0.5">Item is currently unavailable</span>
                     </template>
-                    <template x-if="getItemStock(item) !== null && getItemStock(item) > 0 && getItemStock(item) < item.quantity">
+                    <template x-if="getItemAvailability(item) !== false && getItemStock(item) !== null && getItemStock(item) > 0 && getItemStock(item) < item.quantity">
                       <span class="text-[10px] text-amber-600 font-bold block mt-0.5" x-text="'Only ' + getItemStock(item) + ' left in stock'"></span>
                     </template>
                   </div>
@@ -856,6 +859,7 @@
         errorMessage: '',
 
         stockStatusMap: {},
+        availabilityStatusMap: {},
         checkingStock: false,
 
         init() {
@@ -871,6 +875,12 @@
             const map = window.RawgadStock.getStockMap();
             if (map && Object.keys(map).length > 0) {
               this.stockStatusMap = { ...map };
+            }
+            if (typeof window.RawgadStock.getAvailabilityMap === 'function') {
+              const avail = window.RawgadStock.getAvailabilityMap();
+              if (avail && Object.keys(avail).length > 0) {
+                this.availabilityStatusMap = { ...avail };
+              }
             }
           }
         },
@@ -894,17 +904,22 @@
               const data = await res.json();
               if (data && Array.isArray(data.inventory)) {
                 const map = {};
+                const availMap = {};
                 for (const item of data.inventory) {
                   const key = String(item.productId) + ':::' + String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
                   map[key] = item.stock;
+                  availMap[key] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
                   if (item.subProductId) {
                     map[String(item.subProductId)] = item.stock;
+                    availMap[String(item.subProductId)] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
                   }
                   if (item.typeId && !item.subProductId) {
                     map[String(item.typeId)] = item.stock;
+                    availMap[String(item.typeId)] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
                   }
                 }
                 this.stockStatusMap = map;
+                this.availabilityStatusMap = availMap;
               }
             }
           } catch (_) {
@@ -923,6 +938,24 @@
           }
           if (item.typeId && Object.prototype.hasOwnProperty.call(this.stockStatusMap, String(item.typeId))) {
             return this.stockStatusMap[String(item.typeId)];
+          }
+          return null;
+        },
+
+        getItemAvailability(item) {
+          const key1 = String(item.id || item.productId) + ':::' + String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
+          if (this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, key1)) {
+            return this.availabilityStatusMap[key1];
+          }
+          if (item.subProductId && this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, String(item.subProductId))) {
+            return this.availabilityStatusMap[String(item.subProductId)];
+          }
+          if (item.typeId && this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, String(item.typeId))) {
+            return this.availabilityStatusMap[String(item.typeId)];
+          }
+          if (window.RawgadStock && typeof window.RawgadStock.isItemAvailable === 'function') {
+            const direct = window.RawgadStock.isItemAvailable(item.id || item.productId, item.typeId, item.subProductId);
+            if (direct !== null) return direct;
           }
           return null;
         },
@@ -1072,6 +1105,13 @@
           if (this.cartItems.length === 0) {
             this.errorMessage = 'Your cart is empty. Please add products to your cart.';
             return;
+          }
+
+          for (const item of this.cartItems) {
+            if (this.getItemAvailability(item) === false) {
+              this.errorMessage = `Item "${item.title}" is currently unavailable for purchase. Please remove it from your cart before proceeding.`;
+              return;
+            }
           }
 
           if (!this.form.cust_name.trim()) {

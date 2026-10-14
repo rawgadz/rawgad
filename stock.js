@@ -18,6 +18,7 @@
     if (!data || typeof data !== 'object') return false;
     if (!data.timestamp || typeof data.timestamp !== 'number') return false;
     if (!Array.isArray(data.inventory)) return false;
+    if (!data.stockMap || !data.availabilityMap) return false;
     const age = Date.now() - data.timestamp;
     return age >= 0 && age < CACHE_TTL_MS;
   }
@@ -41,56 +42,72 @@
   }
 
   /**
-   * Compiles an O(1) multi-key lookup map from the inventory items array.
+   * Compiles O(1) multi-key lookup maps for stock and availability from the inventory items array.
    */
-  function buildStockMap(inventory) {
-    const map = {};
-    if (!Array.isArray(inventory)) return map;
+  function buildStockMaps(inventory) {
+    const stockMap = {};
+    const availabilityMap = {};
+    if (!Array.isArray(inventory)) return { stockMap, availabilityMap };
 
     for (const item of inventory) {
       const pId = item.productId != null ? String(item.productId).trim() : '';
       const tId = (item.typeId != null && item.typeId !== 'null') ? String(item.typeId).trim() : 'null';
       const sId = (item.subProductId != null && item.subProductId !== 'null') ? String(item.subProductId).trim() : 'null';
-      const isAvail = item.isAvailable === true || item.stockType === 'available';
-      const stock = typeof item.stock === 'number' ? Math.max(0, item.stock) : (isAvail ? 999 : 0);
+      const isAvail = (typeof item.isAvailable === 'boolean')
+        ? item.isAvailable
+        : (item.stockType === 'available' || (typeof item.stock === 'number' && item.stock > 0));
+      const stock = typeof item.stock === 'number' ? Math.max(0, item.stock) : 0;
+
+      function setEntry(k) {
+        stockMap[k] = stock;
+        availabilityMap[k] = isAvail;
+      }
 
       // 1. Triple key: productId:::typeId:::subProductId
-      map[`${pId}:::${tId}:::${sId}`] = stock;
+      setEntry(`${pId}:::${tId}:::${sId}`);
 
       // 2. Variant pair key: typeId:::subProductId
-      map[`${tId}:::${sId}`] = stock;
+      setEntry(`${tId}:::${sId}`);
 
       // 3. Direct subProductId key
       if (sId !== 'null') {
-        map[sId] = stock;
-        map[`${pId}:::${sId}`] = stock;
+        setEntry(sId);
+        setEntry(`${pId}:::${sId}`);
       }
 
       // 4. Direct typeId key (when variant has no nested subproduct)
       if (tId !== 'null' && sId === 'null') {
-        map[tId] = stock;
-        map[`${pId}:::${tId}`] = stock;
+        setEntry(tId);
+        setEntry(`${pId}:::${tId}`);
       }
 
       // 5. Product-level summary/max fallback
       if (pId) {
-        if (!map[pId] || map[pId] < stock) {
-          map[pId] = stock;
+        if (!stockMap[pId] || stockMap[pId] < stock) {
+          stockMap[pId] = stock;
+        }
+        if (availabilityMap[pId] === undefined || isAvail) {
+          availabilityMap[pId] = availabilityMap[pId] || isAvail;
         }
       }
     }
-    return map;
+    return { stockMap, availabilityMap };
+  }
+
+  function buildStockMap(inventory) {
+    return buildStockMaps(inventory).stockMap;
   }
 
   /**
-   * Saves inventory items and precomputed lookup map to localStorage with current timestamp.
+   * Saves inventory items and precomputed lookup maps to localStorage with current timestamp.
    */
   function saveToLocalStorage(inventory) {
-    const stockMap = buildStockMap(inventory);
+    const { stockMap, availabilityMap } = buildStockMaps(inventory);
     const cacheObj = {
       timestamp: Date.now(),
       inventory: inventory,
-      stockMap: stockMap
+      stockMap: stockMap,
+      availabilityMap: availabilityMap
     };
 
     try {
@@ -178,6 +195,7 @@
         detail: {
           inventory: cacheObj.inventory,
           stockMap: cacheObj.stockMap,
+          availabilityMap: cacheObj.availabilityMap,
           timestamp: cacheObj.timestamp
         }
       }));
@@ -195,6 +213,7 @@
         const store = window.Alpine.store('inventory');
         store.items = cacheObj.inventory;
         store.stockMap = cacheObj.stockMap;
+        store.availabilityMap = cacheObj.availabilityMap || {};
         store.timestamp = cacheObj.timestamp;
         store.loading = false;
       } catch (_) {}
@@ -211,13 +230,20 @@
         window.Alpine.store('inventory', {
           items: currentCache ? currentCache.inventory : [],
           stockMap: currentCache ? currentCache.stockMap : {},
+          availabilityMap: currentCache ? (currentCache.availabilityMap || {}) : {},
           timestamp: currentCache ? currentCache.timestamp : null,
           loading: !currentCache,
           getItemStock(productId, typeId, subProductId) {
             return RawgadStock.getItemStock(productId, typeId, subProductId);
           },
+          isItemAvailable(productId, typeId, subProductId) {
+            return RawgadStock.isItemAvailable(productId, typeId, subProductId);
+          },
           getProductStockMap(productId) {
             return RawgadStock.getProductStockMap(productId);
+          },
+          getProductAvailabilityMap(productId) {
+            return RawgadStock.getProductAvailabilityMap(productId);
           },
           refresh(force = true) {
             return RawgadStock.fetchAndStoreAllStock(force);
@@ -269,6 +295,14 @@
     },
 
     /**
+     * Returns the precomputed availability lookup dictionary.
+     */
+    getAvailabilityMap() {
+      const cache = this.getCache();
+      return cache ? (cache.availabilityMap || {}) : {};
+    },
+
+    /**
      * Returns a product-specific map: { 'typeId:::subProductId': stockNumber }
      */
     getProductStockMap(productId) {
@@ -289,12 +323,66 @@
     },
 
     /**
+     * Returns a product-specific availability map: { 'typeId:::subProductId': boolean }
+     */
+    getProductAvailabilityMap(productId) {
+      const pId = productId != null ? String(productId).trim() : '';
+      const cache = this.getCache();
+      const resMap = {};
+      if (!cache || !Array.isArray(cache.inventory)) return resMap;
+
+      for (const item of cache.inventory) {
+        if (String(item.productId).trim() === pId) {
+          const tId = (item.typeId != null && item.typeId !== 'null') ? String(item.typeId).trim() : 'null';
+          const sId = (item.subProductId != null && item.subProductId !== 'null') ? String(item.subProductId).trim() : 'null';
+          const key = tId + ':::' + sId;
+          resMap[key] = (typeof item.isAvailable === 'boolean')
+            ? item.isAvailable
+            : (item.stockType === 'available' || (typeof item.stock === 'number' && item.stock > 0));
+        }
+      }
+      return resMap;
+    },
+
+    /**
      * Retrieves stock count for an item by its identifiers with hierarchical fallbacks.
      */
     getItemStock(productId, typeId, subProductId) {
       const cache = this.getCache();
       if (!cache || !cache.stockMap) return null;
       const map = cache.stockMap;
+
+      const pId = productId != null ? String(productId).trim() : '';
+      const tId = (typeId != null && typeId !== 'null') ? String(typeId).trim() : 'null';
+      const sId = (subProductId != null && subProductId !== 'null') ? String(subProductId).trim() : 'null';
+
+      // 1. Exact triple match
+      const key1 = `${pId}:::${tId}:::${sId}`;
+      if (Object.prototype.hasOwnProperty.call(map, key1)) return map[key1];
+
+      // 2. Variant pair match
+      const key2 = `${tId}:::${sId}`;
+      if (Object.prototype.hasOwnProperty.call(map, key2)) return map[key2];
+
+      // 3. Subproduct match
+      if (sId !== 'null' && Object.prototype.hasOwnProperty.call(map, sId)) return map[sId];
+
+      // 4. Type match
+      if (tId !== 'null' && Object.prototype.hasOwnProperty.call(map, tId)) return map[tId];
+
+      // 5. Product match
+      if (pId && Object.prototype.hasOwnProperty.call(map, pId)) return map[pId];
+
+      return null;
+    },
+
+    /**
+     * Retrieves availability boolean for an item by its identifiers with hierarchical fallbacks.
+     */
+    isItemAvailable(productId, typeId, subProductId) {
+      const cache = this.getCache();
+      if (!cache || !cache.availabilityMap) return null;
+      const map = cache.availabilityMap;
 
       const pId = productId != null ? String(productId).trim() : '';
       const tId = (typeId != null && typeId !== 'null') ? String(typeId).trim() : 'null';

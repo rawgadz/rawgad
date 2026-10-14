@@ -52,7 +52,7 @@ module.exports = async function handler(req, res) {
       }
 
       // B. Storefront single item lookup: ?productId=...&typeId=...
-      const { productId, typeId, subProductId, admin, fresh } = req.query || {};
+      const { productId, typeId, subProductId, admin, fresh, tab: queryTab } = req.query || {};
       if (productId && typeId !== undefined && !admin) {
         const pId = String(productId).trim();
         const tId = normalizeId(typeId);
@@ -65,7 +65,8 @@ module.exports = async function handler(req, res) {
         });
 
         const stock = doc && typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
-        const status = getStockStatus(stock);
+        const isAvailable = doc && typeof doc.isAvailable === "boolean" ? doc.isAvailable : stock > 0;
+        const status = getStockStatus(stock, isAvailable);
 
         return ok(res, {
           productId: pId,
@@ -73,8 +74,8 @@ module.exports = async function handler(req, res) {
           subProductId: sId,
           stock,
           rawStock: stock,
-          isAvailable: stock > 0,
-          inStock: stock > 0,
+          isAvailable,
+          inStock: isAvailable,
           status,
           updatedAt: doc?.updatedAt || null,
           createdAt: doc?.createdAt || null,
@@ -89,15 +90,16 @@ module.exports = async function handler(req, res) {
 
         const formatted = docs.map((doc) => {
           const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
+          const isAvailable = typeof doc.isAvailable === "boolean" ? doc.isAvailable : stock > 0;
           return {
             productId: doc.productId,
             typeId: normalizeId(doc.typeId),
             subProductId: normalizeId(doc.subProductId),
             stock,
             rawStock: stock,
-            isAvailable: stock > 0,
-            inStock: stock > 0,
-            status: getStockStatus(stock),
+            isAvailable,
+            inStock: isAvailable,
+            status: getStockStatus(stock, isAvailable),
             updatedAt: doc.updatedAt || null,
             createdAt: doc.createdAt || null,
           };
@@ -138,6 +140,8 @@ module.exports = async function handler(req, res) {
       let inStockCount = 0;
       let lowStockCount = 0;
       let outOfStockCount = 0;
+      let availableCount = 0;
+      let unavailableCount = 0;
       let orphanedCount = 0;
 
       const mergedItems = inventoryDocs.map((doc) => {
@@ -149,11 +153,15 @@ module.exports = async function handler(req, res) {
         const catalogInfo = catalogMap.get(key);
 
         const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
-        const status = getStockStatus(stock);
+        const isAvailable = typeof doc.isAvailable === "boolean" ? doc.isAvailable : stock > 0;
+        const status = getStockStatus(stock, isAvailable);
 
         if (status === "in_stock") inStockCount++;
         else if (status === "low_stock") lowStockCount++;
         else outOfStockCount++;
+
+        if (isAvailable) availableCount++;
+        else unavailableCount++;
 
         const isOrphaned = !catalogInfo;
         if (isOrphaned) orphanedCount++;
@@ -171,7 +179,7 @@ module.exports = async function handler(req, res) {
           subProductId: sId,
           stock,
           rawStock: stock,
-          isAvailable: stock > 0,
+          isAvailable,
           status,
           orphaned: isOrphaned,
           unmatched: isOrphaned,
@@ -193,20 +201,28 @@ module.exports = async function handler(req, res) {
       const nestedProducts = buildNestedCatalog(rawCatalogProducts, stockMap);
       const orphanedItems = mergedItems.filter((i) => i.orphaned);
 
+      let outputItems = mergedItems;
+      if (queryTab && queryTab.trim()) {
+        const normTab = queryTab.trim().toLowerCase();
+        outputItems = outputItems.filter((i) => (i.tab || "").toLowerCase() === normTab);
+      }
+
       return ok(res, {
         connected: true,
         database: process.env.MONGODB_DB || process.env.MONGO_DB || "inventory",
-        count: mergedItems.length,
+        count: outputItems.length,
         totalCatalogItems: catalogItems.length,
         summary: {
           total: mergedItems.length,
           inStock: inStockCount,
           lowStock: lowStockCount,
           outOfStock: outOfStockCount,
+          available: availableCount,
+          unavailable: unavailableCount,
           orphaned: orphanedCount,
         },
-        items: mergedItems,
-        inventory: mergedItems, // Dual output for storefront / stock.js compatibility
+        items: outputItems,
+        inventory: outputItems, // Dual output for storefront / stock.js compatibility
         nestedProducts,
         orphanedItems,
       });
@@ -232,13 +248,14 @@ module.exports = async function handler(req, res) {
         const docs = await inventoryCol.find({ productId: { $in: cleanIds } }).toArray();
         const formatted = docs.map((doc) => {
           const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
+          const isAvailable = typeof doc.isAvailable === "boolean" ? doc.isAvailable : stock > 0;
           return {
             productId: doc.productId,
             typeId: normalizeId(doc.typeId),
             subProductId: normalizeId(doc.subProductId),
             stock,
-            isAvailable: stock > 0,
-            status: getStockStatus(stock),
+            isAvailable,
+            status: getStockStatus(stock, isAvailable),
             updatedAt: doc.updatedAt || null,
           };
         });
@@ -263,13 +280,14 @@ module.exports = async function handler(req, res) {
         const docs = await inventoryCol.find({ $or: orConditions }).toArray();
         const formatted = docs.map((doc) => {
           const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
+          const isAvailable = typeof doc.isAvailable === "boolean" ? doc.isAvailable : stock > 0;
           return {
             productId: doc.productId,
             typeId: normalizeId(doc.typeId),
             subProductId: normalizeId(doc.subProductId),
             stock,
-            isAvailable: stock > 0,
-            status: getStockStatus(stock),
+            isAvailable,
+            status: getStockStatus(stock, isAvailable),
             updatedAt: doc.updatedAt || null,
           };
         });
@@ -324,6 +342,7 @@ module.exports = async function handler(req, res) {
             typeId: item.typeId,
             subProductId: item.subProductId,
             stock: 0,
+            isAvailable: false,
             createdAt: now,
             updatedAt: now,
           }));
@@ -360,7 +379,7 @@ module.exports = async function handler(req, res) {
       }
 
       // ----------------------------------------------------
-      // C. Stock Mutation Rules (set, increase, decrease)
+      // C. Stock Mutation Rules (set, increase, decrease, availability)
       // ----------------------------------------------------
       const { productId, typeId, subProductId, adjust, stockType, isAvailable, value, stock } = body;
 
@@ -380,16 +399,27 @@ module.exports = async function handler(req, res) {
 
       const existingDoc = await inventoryCol.findOne(filter);
       const currentStock = existingDoc && typeof existingDoc.stock === "number" ? Math.max(0, existingDoc.stock) : 0;
+      const currentAvailable = existingDoc && typeof existingDoc.isAvailable === "boolean" ? existingDoc.isAvailable : currentStock > 0;
       let newStock = currentStock;
-      const mutationAction = action || (adjust !== undefined ? "adjust" : "set");
+      let newAvailable = currentAvailable;
+      const mutationAction = action || (adjust !== undefined ? "adjust" : (isAvailable !== undefined && stock === undefined && value === undefined ? "set_availability" : "set"));
 
-      if (mutationAction === "set") {
+      if (mutationAction === "set_availability" || mutationAction === "toggle_availability") {
+        if (mutationAction === "toggle_availability") {
+          newAvailable = !currentAvailable;
+        } else {
+          newAvailable = Boolean(isAvailable);
+        }
+      } else if (mutationAction === "set") {
         const rawTarget = value !== undefined ? value : stock;
         const target = parseInt(rawTarget, 10);
         if (isNaN(target) || target < 0) {
           return badRequest(res, "Invalid 'value' provided for action 'set'. Must be a non-negative integer (>= 0).");
         }
         newStock = target;
+        if (isAvailable !== undefined) {
+          newAvailable = Boolean(isAvailable);
+        }
       } else if (mutationAction === "increase") {
         const rawDelta = value !== undefined ? value : (body.delta || 1);
         const delta = parseInt(rawDelta, 10);
@@ -397,6 +427,9 @@ module.exports = async function handler(req, res) {
           return badRequest(res, "Invalid increase delta. Must be a positive integer.");
         }
         newStock = currentStock + delta;
+        if (isAvailable !== undefined) {
+          newAvailable = Boolean(isAvailable);
+        }
       } else if (mutationAction === "decrease") {
         const rawDelta = value !== undefined ? value : (body.delta || 1);
         const delta = parseInt(rawDelta, 10);
@@ -411,6 +444,9 @@ module.exports = async function handler(req, res) {
           });
         }
         newStock = currentStock - delta;
+        if (isAvailable !== undefined) {
+          newAvailable = Boolean(isAvailable);
+        }
       } else if (mutationAction === "adjust" || adjust !== undefined) {
         const delta = parseInt(adjust, 10);
         if (isNaN(delta)) {
@@ -424,6 +460,9 @@ module.exports = async function handler(req, res) {
           });
         }
         newStock = currentStock + delta;
+        if (isAvailable !== undefined) {
+          newAvailable = Boolean(isAvailable);
+        }
       } else if (mutationAction === "update_stock" || mutationAction === "add_item" || mutationAction === "upsert") {
         // Compatibility handler for legacy update_stock callers
         if (adjust !== undefined && adjust !== null) {
@@ -436,18 +475,21 @@ module.exports = async function handler(req, res) {
             });
           }
           newStock = currentStock + delta;
-        } else if (isAvailable === true || stockType === "available") {
-          const target = (stock !== undefined && stock !== null && Number(stock) > 0) ? parseInt(stock, 10) : 100;
-          newStock = Math.max(1, target);
-        } else {
-          const parsed = parseInt(stock !== undefined && stock !== null ? stock : (value !== undefined ? value : 0), 10);
-          if (isNaN(parsed) || parsed < 0) {
-            return badRequest(res, "Stock must be a non-negative integer (>= 0).");
-          }
-          newStock = parsed;
+        } else if (stock !== undefined && stock !== null) {
+          const parsed = parseInt(stock, 10);
+          if (!isNaN(parsed) && parsed >= 0) newStock = parsed;
+        } else if (value !== undefined && value !== null) {
+          const parsed = parseInt(value, 10);
+          if (!isNaN(parsed) && parsed >= 0) newStock = parsed;
+        }
+
+        if (isAvailable !== undefined) {
+          newAvailable = Boolean(isAvailable);
+        } else if (stockType === "available") {
+          newAvailable = true;
         }
       } else {
-        return badRequest(res, `Invalid or unsupported action '${mutationAction}'. Supported: 'set', 'increase', 'decrease', 'sync'.`);
+        return badRequest(res, `Invalid or unsupported action '${mutationAction}'. Supported: 'set', 'set_availability', 'toggle_availability', 'increase', 'decrease', 'sync'.`);
       }
 
       // Enforce floor invariant: stock >= 0
@@ -459,6 +501,7 @@ module.exports = async function handler(req, res) {
         {
           $set: {
             stock: newStock,
+            isAvailable: newAvailable,
             updatedAt: now,
           },
           $setOnInsert: {
@@ -478,6 +521,7 @@ module.exports = async function handler(req, res) {
         typeId: cleanTypeId,
         subProductId: cleanSubProductId,
         stock: newStock,
+        isAvailable: newAvailable,
         previousStock: currentStock,
         action: mutationAction,
         updatedAt: now,

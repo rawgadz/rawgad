@@ -97,6 +97,10 @@ function generateStandaloneProductHTML(product) {
     ? product.tags.split(',').map(tag => `<span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">${escapeHtml(tag.trim())}</span>`).join('\n             ')
     : '';
 
+  const isGadget = product.tab === 'gadget';
+  const catalogLink = isGadget ? '../gadgets.html' : '../index.html#shop';
+  const catalogName = isGadget ? 'Gadgets' : 'Shop';
+
   const sanitizedProductJson = JSON.stringify(product).replace(/</g, '\\u003c');
 
   return `<!DOCTYPE html>
@@ -144,8 +148,8 @@ function generateStandaloneProductHTML(product) {
 
       <nav class="hidden md:flex md:flex-row md:items-center md:gap-6 flex-grow">
         <a href="../index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
-        <a href="../index.html#shop" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Shop</a>
-        <a href="../gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
+        <a href="../index.html#shop" class="hover:text-black transition-colors text-xs tracking-wider uppercase ${!isGadget ? 'text-black font-bold border-b-2 border-black pb-0.5' : 'text-neutral-600 font-semibold'}">Shop</a>
+        <a href="../gadgets.html" class="hover:text-black transition-colors text-xs tracking-wider uppercase ${isGadget ? 'text-black font-bold border-b-2 border-black pb-0.5' : 'text-neutral-600 font-semibold'}">Gadgets</a>
         <a href="../car.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Cars</a>
         <a href="../blog.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Blog</a>
         <a href="../contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
@@ -168,8 +172,8 @@ function generateStandaloneProductHTML(product) {
 
     <div x-show="mobileMenuOpen" x-transition @click.away="mobileMenuOpen = false" class="md:hidden flex flex-col absolute top-16 left-0 right-0 bg-white border-b border-neutral-200 p-6 shadow-xl z-50 gap-4" style="display: none;">
       <a href="../index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
-      <a href="../index.html#shop" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Shop</a>
-      <a href="../gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
+      <a href="../index.html#shop" class="hover:text-black transition-colors text-xs tracking-wider uppercase ${!isGadget ? 'text-black font-bold' : 'text-neutral-600 font-semibold'}">Shop</a>
+      <a href="../gadgets.html" class="hover:text-black transition-colors text-xs tracking-wider uppercase ${isGadget ? 'text-black font-bold' : 'text-neutral-600 font-semibold'}">Gadgets</a>
       <a href="../car.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Cars</a>
       <a href="../blog.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Blog</a>
       <a href="../contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
@@ -215,6 +219,17 @@ function generateStandaloneProductHTML(product) {
 
   <!-- MAIN CONTENT AREA -->
   <main class="p-4 md:p-8 flex flex-col items-center mt-4 w-full max-w-7xl mx-auto flex-grow gap-4" x-data="productPage()" x-cloak>
+    
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="Breadcrumb" class="w-full text-xs text-neutral-500 font-medium mb-1">
+      <ol class="flex items-center space-x-2">
+        <li><a href="../index.html" class="hover:text-black transition-colors">Home</a></li>
+        <li><span>/</span></li>
+        <li><a href="${catalogLink}" class="hover:text-black transition-colors">${catalogName}</a></li>
+        <li><span>/</span></li>
+        <li class="text-neutral-900 font-bold truncate max-w-xs sm:max-w-md">${escapeHtml(product.title)}</li>
+      </ol>
+    </nav>
     
     <!-- ==================== MOBILE LAYOUT ==================== -->
     <div class="w-full md:hidden flex flex-col bg-white rounded-2xl border border-neutral-200 p-4 shadow-sm">
@@ -284,7 +299,7 @@ function generateStandaloneProductHTML(product) {
           <template x-if="stockStatus === 'in_stock'">
             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              <span>In Stock (<span x-text="currentStock"></span>)</span>
+              <span x-text="currentStock > 0 ? 'In Stock (' + currentStock + ')' : 'Available'"></span>
             </div>
           </template>
           <template x-if="stockStatus === 'low_stock'">
@@ -296,7 +311,7 @@ function generateStandaloneProductHTML(product) {
           <template x-if="stockStatus === 'out_of_stock'">
             <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-[10px] font-bold uppercase tracking-wider">
               <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-              <span>Out of Stock</span>
+              <span>Unavailable</span>
             </div>
           </template>
           <template x-if="stockStatus === 'loading'">
@@ -406,7 +421,7 @@ function generateStandaloneProductHTML(product) {
               <template x-if="stockStatus === 'in_stock'">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider">
                   <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>In Stock (<span x-text="currentStock"></span> available)</span>
+                  <span x-text="currentStock > 0 ? 'In Stock (' + currentStock + ' units)' : 'Available'"></span>
                 </div>
               </template>
               <template x-if="stockStatus === 'low_stock'">
@@ -418,7 +433,7 @@ function generateStandaloneProductHTML(product) {
               <template x-if="stockStatus === 'out_of_stock'">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold uppercase tracking-wider">
                   <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                  <span>Out of Stock</span>
+                  <span>Unavailable</span>
                 </div>
               </template>
               <template x-if="stockStatus === 'loading'">
@@ -435,7 +450,7 @@ function generateStandaloneProductHTML(product) {
               <div class="inline-flex items-center border border-neutral-300 rounded-lg overflow-hidden bg-white">
                 <button type="button" @click="updateCart(Math.max(0, inCartQuantity - 1))" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-r border-neutral-300">−</button>
                 <div class="px-5 py-2 font-black text-sm text-black bg-white min-w-[50px] text-center" x-text="inCartQuantity === 0 ? 1 : inCartQuantity">1</div>
-                <button type="button" :disabled="isOutOfStock || inCartQuantity >= currentStock" :class="{ 'opacity-40 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }" @click="updateCart(inCartQuantity + 1)" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-l border-neutral-300">+</button>
+                <button type="button" :disabled="isOutOfStock" :class="{ 'opacity-40 cursor-not-allowed': isOutOfStock }" @click="updateCart(inCartQuantity + 1)" class="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-black font-bold text-sm transition-colors border-l border-neutral-300">+</button>
               </div>
             </div>
 
@@ -576,8 +591,8 @@ function generateStandaloneProductHTML(product) {
             <div class="flex-1 h-full bg-white flex items-center justify-center font-black text-sm text-black" x-text="inCartQuantity">1</div>
             <button 
               type="button" 
-              :disabled="isOutOfStock || inCartQuantity >= currentStock"
-              :class="{ 'opacity-30 cursor-not-allowed': isOutOfStock || inCartQuantity >= currentStock }"
+              :disabled="isOutOfStock"
+              :class="{ 'opacity-30 cursor-not-allowed': isOutOfStock }"
               @click="updateCart(inCartQuantity + 1)" 
               class="w-10 h-full bg-neutral-100 hover:bg-black hover:text-white text-black font-black text-lg flex items-center justify-center transition-colors flex-shrink-0"
             >+</button>
@@ -692,6 +707,7 @@ function generateStandaloneProductHTML(product) {
         selectedGalleryImage: null,
         inCartQuantity: 0,
         inventoryMap: {},
+        availabilityMap: {},
         loadingInventory: true,
 
         init() {
@@ -705,14 +721,21 @@ function generateStandaloneProductHTML(product) {
         loadInventory() {
           if (window.RawgadStock) {
             const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
+            const cachedAvail = (typeof window.RawgadStock.getProductAvailabilityMap === 'function')
+              ? window.RawgadStock.getProductAvailabilityMap(this.product.id)
+              : null;
             if (cachedMap && Object.keys(cachedMap).length > 0) {
               this.inventoryMap = cachedMap;
+              if (cachedAvail) this.availabilityMap = cachedAvail;
               this.loadingInventory = false;
               return;
             }
             this.loadingInventory = true;
             window.RawgadStock.fetchAndStoreAllStock().then(() => {
               this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
+              if (typeof window.RawgadStock.getProductAvailabilityMap === 'function') {
+                this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id);
+              }
               this.loadingInventory = false;
             }).catch(() => { this.loadingInventory = false; });
           } else { this.fetchInventoryFallback(); }
@@ -726,11 +749,14 @@ function generateStandaloneProductHTML(product) {
               const data = await res.json();
               if (data && Array.isArray(data.inventory)) {
                 const map = {};
+                const availMap = {};
                 for (const item of data.inventory) {
                   const key = String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
                   map[key] = typeof item.stock === 'number' ? item.stock : 0;
+                  availMap[key] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
                 }
                 this.inventoryMap = map;
+                this.availabilityMap = availMap;
               }
             }
           } catch (err) { console.warn('[Inventory] Live inventory fetch fallback error:', err); } 
@@ -793,15 +819,32 @@ function generateStandaloneProductHTML(product) {
           return 0;
         },
 
+        get isAvailable() {
+          if (this.loadingInventory) return true;
+          const type = this.selectedType;
+          const sub = this.selectedSubProduct;
+          const typeId = type ? String(type.subProductId || type.id) : 'null';
+          const subId = sub ? String(sub.subProductId || sub.id) : 'null';
+          const key = typeId + ':::' + subId;
+          if (this.availabilityMap && Object.prototype.hasOwnProperty.call(this.availabilityMap, key)) {
+            return this.availabilityMap[key] === true;
+          }
+          if (window.RawgadStock && typeof window.RawgadStock.isItemAvailable === 'function') {
+            const direct = window.RawgadStock.isItemAvailable(this.product.id, typeId, subId);
+            if (direct !== null) return direct === true;
+          }
+          return typeof this.currentStock === 'number' ? this.currentStock > 0 : true;
+        },
+
         get stockStatus() {
           if (this.loadingInventory) return 'loading';
+          if (!this.isAvailable) return 'out_of_stock';
           const s = this.currentStock;
-          if (typeof s !== 'number' || s <= 0) return 'out_of_stock';
-          if (s <= 5) return 'low_stock';
+          if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
           return 'in_stock';
         },
 
-        get isOutOfStock() { return !this.loadingInventory && (typeof this.currentStock !== 'number' || this.currentStock <= 0); },
+        get isOutOfStock() { return !this.loadingInventory && !this.isAvailable; },
 
         selectType(index) {
           this.selectedTypeIndex = Number(index) || 0;
@@ -866,11 +909,6 @@ function generateStandaloneProductHTML(product) {
           const type = this.selectedType;
           const sub = this.selectedSubProduct;
           const cart = this.getCart();
-
-          if (newQty > 0 && typeof this.currentStock === 'number' && newQty > this.currentStock) {
-            alert('Sorry, only ' + this.currentStock + ' items are currently in stock.');
-            return;
-          }
 
           if (newQty === 0) {
             delete cart[key];
@@ -948,10 +986,7 @@ function generateProductJson() {
     let tab = 'normal';
     if (data.tab !== undefined && data.tab !== null && String(data.tab).trim() !== '') {
       const rawTab = String(data.tab).trim().toLowerCase();
-      if (rawTab !== 'normal' && rawTab !== 'gadget') {
-        throw new Error(`Invalid product tab "${data.tab}" for product ${data.id}. Allowed values: normal, gadget.`);
-      }
-      tab = rawTab;
+      tab = (rawTab === 'gadget') ? 'gadget' : 'normal';
     }
 
     const htmlContent = marked.parse(content || '');
@@ -1074,7 +1109,7 @@ function buildGadgetsPage() {
   html = html.replace(/<h2 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900">\s*Featured Products\s*<\/h2>/i, `<h2 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900">\n            Featured Gadgets\n          </h2>`);
   html = html.replace(/<span class="text-xs font-bold uppercase tracking-wider text-neutral-400">\s*All Products Catalog\s*<\/span>/i, `<span class="text-xs font-bold uppercase tracking-wider text-neutral-400">\n          Gadgets Catalog\n        </span>`);
 
-  html = html.replace(/all\.filter\(p\s*=>\s*!p\.tab\s*\Vert{}\Vert{}\s*p\.tab\s*===\s*['"]normal['"]\)/g, `all.filter(p => p.tab === 'gadget')`);
+  html = html.replace(/all\.filter\(p\s*=>\s*!p\.tab\s*\|\|\s*p\.tab\s*===\s*['"]normal['"]\)/g, `all.filter(p => p.tab === 'gadget')`);
   html = html.replace(/carouselSource:\s*['"]\.\/index\.json['"]/g, `carouselSource: './gadgets.json'`);
 
   fs.writeFileSync(GADGETS_OUTPUT_FILE, html, 'utf-8');

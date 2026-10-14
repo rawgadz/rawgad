@@ -347,10 +347,17 @@ module.exports = async function handler(req, res) {
             { session }
           );
 
+          const isExplicitlyUnavailable = existingDoc && existingDoc.isAvailable === false;
+          if (isExplicitlyUnavailable) {
+            const err = new Error(`Item "${item.name}" is currently unavailable for purchase.`);
+            err.code = "ITEM_UNAVAILABLE";
+            throw err;
+          }
+
           const isAlwaysAvailable = existingDoc && (existingDoc.isAvailable === true || existingDoc.stockType === "available");
 
           if (isAlwaysAvailable) {
-            // Always Available Mode: never blocks order
+            // Always Available Mode: never blocks order, even if stock is 0
             if (existingDoc && typeof existingDoc.stock === "number" && existingDoc.stock >= item.qty) {
               await inventoryCol.updateOne(
                 { _id: existingDoc._id },
@@ -398,7 +405,7 @@ module.exports = async function handler(req, res) {
         await ordersCol.insertOne(orderDoc, { session });
       });
     } catch (txErr) {
-      if (txErr.code === "INSUFFICIENT_STOCK") {
+      if (txErr.code === "INSUFFICIENT_STOCK" || txErr.code === "ITEM_UNAVAILABLE") {
         return res.status(400).json({
           success: false,
           error: txErr.message
@@ -423,6 +430,13 @@ module.exports = async function handler(req, res) {
           typeId: item.typeId ?? null,
           subProductId: item.subProductId ?? null,
         });
+
+        const isExplicitlyUnavailable = existingDoc && existingDoc.isAvailable === false;
+        if (isExplicitlyUnavailable) {
+          const err = new Error(`Item "${item.name}" is currently unavailable for purchase.`);
+          err.code = "ITEM_UNAVAILABLE";
+          throw err;
+        }
 
         const isAlwaysAvailable = existingDoc && (existingDoc.isAvailable === true || existingDoc.stockType === "available");
 

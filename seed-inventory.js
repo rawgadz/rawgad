@@ -72,6 +72,7 @@ async function seedInventory(defaultStock = 0) {
             typeId: null,
             subProductId: null,
             stock: defaultStock,
+            isAvailable: defaultStock > 0,
             createdAt: now,
           },
           $set: {
@@ -99,6 +100,7 @@ async function seedInventory(defaultStock = 0) {
                 typeId,
                 subProductId,
                 stock: defaultStock,
+                isAvailable: defaultStock > 0,
                 createdAt: now,
               },
               $set: {
@@ -118,6 +120,7 @@ async function seedInventory(defaultStock = 0) {
               typeId,
               subProductId: null,
               stock: defaultStock,
+              isAvailable: defaultStock > 0,
               createdAt: now,
             },
             $set: {
