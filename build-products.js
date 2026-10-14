@@ -319,11 +319,23 @@ function generateStandaloneProductHTML(product) {
 
         <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
           <div class="mb-3">
-            <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-black">
-              <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
-              </template>
-            </select>
+            <div class="relative flex items-center">
+              <span class="absolute left-2.5 text-neutral-400 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                </svg>
+              </span>
+              <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg pl-9 pr-8 py-2 text-xs font-bold focus:outline-none focus:border-black">
+                <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
+                  <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
+                </template>
+              </select>
+              <span class="absolute right-2.5 text-neutral-400 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </span>
+            </div>
           </div>
         </template>
 
@@ -427,11 +439,23 @@ function generateStandaloneProductHTML(product) {
             <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
               <div class="mb-5">
                 <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Option</label>
-                <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
-                  <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                    <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
-                  </template>
-                </select>
+                <div class="relative flex items-center">
+                  <span class="absolute left-3 text-neutral-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                    </svg>
+                  </span>
+                  <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg pl-10 pr-10 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
+                    <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
+                      <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
+                    </template>
+                  </select>
+                  <span class="absolute right-3 text-neutral-400 pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
+                </div>
               </div>
             </template>
 
@@ -589,7 +613,7 @@ function generateStandaloneProductHTML(product) {
 
   <!-- Alpine.js Global Store & Component Controller -->
   <script>
-    document.addEventListener('alpine:init', () => {
+    document.addEventListener('alpine.init', () => {
       Alpine.store('cart', {
         storageKey: 'main_store_cart',
         items: {},
