@@ -309,32 +309,48 @@ function generateStandaloneProductHTML(product) {
 
         <template x-if="product.types && product.types.length > 0">
           <div class="mb-2">
-            <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-black">
-              <template x-for="(type, idx) in product.types" :key="idx">
-                <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
-              </template>
-            </select>
+            <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+              </svg>
+              Select Variant
+            </label>
+            <div class="relative">
+              <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 pr-8 text-xs font-bold focus:outline-none focus:border-black">
+                <template x-for="(type, idx) in product.types" :key="idx">
+                  <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
+                </template>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-500">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
           </div>
         </template>
 
         <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
           <div class="mb-3">
-            <div class="relative flex items-center">
-              <span class="absolute left-2.5 text-neutral-400 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                </svg>
-              </span>
-              <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg pl-9 pr-8 py-2 text-xs font-bold focus:outline-none focus:border-black">
+            <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+              </svg>
+              Select Option
+            </label>
+            <div class="relative">
+              <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-2.5 py-2 pr-8 text-xs font-bold focus:outline-none focus:border-black">
                 <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
                   <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
                 </template>
               </select>
-              <span class="absolute right-2.5 text-neutral-400 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-neutral-500">
+                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                 </svg>
-              </span>
+              </div>
             </div>
           </div>
         </template>
@@ -426,35 +442,49 @@ function generateStandaloneProductHTML(product) {
             <!-- Variant Dropdown -->
             <template x-if="product.types && product.types.length > 0">
               <div class="mb-4">
-                <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Variant</label>
-                <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
-                  <template x-for="(type, idx) in product.types" :key="idx">
-                    <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
-                  </template>
-                </select>
+                <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+                  </svg>
+                  Select Variant
+                </label>
+                <div class="relative">
+                  <select x-model.number="selectedTypeIndex" @change="selectType(selectedTypeIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 pr-10 text-sm font-bold focus:outline-none focus:border-black">
+                    <template x-for="(type, idx) in product.types" :key="idx">
+                      <option :value="idx" x-text="type.subTitle + (type.price && type.price !== product.price ? ' — BDT ' + Number(type.price).toFixed(2) : '')"></option>
+                    </template>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-neutral-500">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </template>
 
             <!-- Subproduct Dropdown -->
             <template x-if="selectedType && selectedType.subProducts && selectedType.subProducts.length > 0">
               <div class="mb-5">
-                <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Select Option</label>
-                <div class="relative flex items-center">
-                  <span class="absolute left-3 text-neutral-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                    </svg>
-                  </span>
-                  <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg pl-10 pr-10 py-2.5 text-sm font-bold focus:outline-none focus:border-black">
+                <label class="flex items-center gap-1.5 text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" />
+                  </svg>
+                  Select Option
+                </label>
+                <div class="relative">
+                  <select x-model.number="selectedSubProductIndex" @change="selectSubProduct(selectedSubProductIndex)" class="w-full appearance-none bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2.5 pr-10 text-sm font-bold focus:outline-none focus:border-black">
                     <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
                       <option :value="sIdx" x-text="sub.subTitle + (sub.price && sub.price !== (selectedType.price || product.price) ? ' — BDT ' + Number(sub.price).toFixed(2) : '')"></option>
                     </template>
                   </select>
-                  <span class="absolute right-3 text-neutral-400 pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-neutral-500">
+                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
                     </svg>
-                  </span>
+                  </div>
                 </div>
               </div>
             </template>
@@ -613,7 +643,7 @@ function generateStandaloneProductHTML(product) {
 
   <!-- Alpine.js Global Store & Component Controller -->
   <script>
-    document.addEventListener('alpine.init', () => {
+    document.addEventListener('alpine:init', () => {
       Alpine.store('cart', {
         storageKey: 'main_store_cart',
         items: {},
