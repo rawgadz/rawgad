@@ -18,6 +18,8 @@ types:
   - subProductId: MRA-3701
     subTitle: Silver 2 Piece
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791102277/O1CN01mhQxCY21XIyzHRDTg_2216861676994-0-cib_1.webp
+    images:
+      - https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.webp
     price: 1300
   - subProductId: MRA-3702
     subTitle: Black 2 Piece
