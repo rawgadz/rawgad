@@ -4,6 +4,8 @@ slug: car-wheel-top-guard-scratch-protection-of-car-body/
 tab: normal
 title: Car Wheel Top Guard Scratch Protection of Car Body
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.webp
+images:
+  - https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.webp
 description: The universal Dilano PVC Wheel Arch Protector guards against
   scratches and mud while adding a stylish accent, backed by a 6-month
   replacement warranty.
