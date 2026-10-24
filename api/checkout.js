@@ -16,9 +16,12 @@ function loadPriceJson() {
 }
 
 function loadCouponJson() {
-  const cPath = path.join(process.cwd(), "data", "coupon.json");
+  const cPath = path.join(process.cwd(), "content", "coupons.json");
   if (!fs.existsSync(cPath)) {
-    throw new Error(`data/coupon.json is missing at ${cPath}`);
+    throw new Error(`content/coupons.json is missing at ${cPath}`);
+  }
+  return JSON.parse(fs.readFileSync(cPath, "utf8"));
+}`);
   }
   return JSON.parse(fs.readFileSync(cPath, "utf8"));
 }
@@ -161,7 +164,7 @@ module.exports = async function handler(req, res) {
 
     calculatedSubtotal = Math.round(calculatedSubtotal * 100) / 100;
 
-    // Strict Coupon Validation from data/coupon.json
+    // Strict Coupon Validation from content/coupons.json
     let discountAmount = 0;
     let appliedCoupon = null;
 

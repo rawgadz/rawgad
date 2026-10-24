@@ -8,8 +8,6 @@ const ROOT_DIR = process.cwd();
 const CONTENT_DIR = path.join(ROOT_DIR, 'content', 'product');
 const PRODUCTS_OUTPUT_FILE = path.join(ROOT_DIR, 'data', 'products.json');
 const PRICE_OUTPUT_FILE = path.join(ROOT_DIR, 'data', 'price.json');
-const COUPON_CONTENT_FILE = path.join(ROOT_DIR, 'content', 'coupons.json');
-const COUPON_OUTPUT_FILE = path.join(ROOT_DIR, 'data', 'coupon.json');
 const HTML_OUTPUT_DIR = path.join(ROOT_DIR, 'product');
 const INDEX_HTML_FILE = path.join(ROOT_DIR, 'index.html');
 const GADGETS_OUTPUT_FILE = path.join(ROOT_DIR, 'gadgets.html');
@@ -473,39 +471,11 @@ function generateStandaloneProductHTML(product) {
 </html>`;
 }
 
-function processCoupons() {
-  if (!fs.existsSync(COUPON_CONTENT_FILE)) {
-    throw new Error(`content/coupons.json is missing at ${COUPON_CONTENT_FILE}`);
-  }
-  const raw = fs.readFileSync(COUPON_CONTENT_FILE, 'utf-8');
-  const coupons = JSON.parse(raw);
-  if (!Array.isArray(coupons)) {
-    throw new Error('content/coupons.json must contain a JSON array of coupons.');
-  }
-
-  const normalized = coupons.map(c => {
-    if (!c.code || typeof c.discount_percent !== 'number') {
-      throw new Error(`Invalid coupon entry in content/coupons.json: ${JSON.stringify(c)}`);
-    }
-    return {
-      code: String(c.code).trim().toUpperCase(),
-      discount_percent: c.discount_percent,
-      active: Boolean(c.active)
-    };
-  });
-
-  fs.mkdirSync(path.dirname(COUPON_OUTPUT_FILE), { recursive: true });
-  fs.writeFileSync(COUPON_OUTPUT_FILE, JSON.stringify(normalized, null, 2), 'utf-8');
-  console.log(`[build-products] Compiled ${normalized.length} coupons into ${COUPON_OUTPUT_FILE}`);
-}
-
 function generateProductJson() {
   if (!fs.existsSync(CONTENT_DIR)) {
     console.error(`[build-products] Error: Directory ${CONTENT_DIR} does not exist.`);
     process.exit(1);
   }
-
-  processCoupons();
 
   const files = fs.readdirSync(CONTENT_DIR).filter(file => file.endsWith('.md'));
   const products = [];

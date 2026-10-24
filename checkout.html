@@ -1074,7 +1074,7 @@
           this.checkingCoupon = true;
           this.couponMessage = '';
           try {
-            const res = await fetch('/data/coupon.json');
+            const res = await fetch('/content/coupons.json');
             const coupons = await res.json();
             const inputCode = this.couponCode.trim().toUpperCase();
             const matched = Array.isArray(coupons) ? coupons.find(c => c && c.code && c.code.trim().toUpperCase() === inputCode && c.active === true) : null;

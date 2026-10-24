@@ -6,32 +6,83 @@
   "trailingSlash": false,
   "functions": {
     "api/*.js": {
-      "includeFiles": "data/*.json"
+      "includeFiles": "{data/*.json,content/coupons.json}"
     }
   },
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/admin/", "destination": "/admin.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/login/", "destination": "/login.html" },
-    { "source": "/inventory", "destination": "/inventory.html" },
-    { "source": "/inventory/", "destination": "/inventory.html" },
-    { "source": "/order", "destination": "/order.html" },
-    { "source": "/order/", "destination": "/order.html" },
-    { "source": "/orders", "destination": "/order.html" },
-    { "source": "/orders/", "destination": "/order.html" },
-    { "source": "/api/create-order", "destination": "/api/pathao" },
-    { "source": "/api/pathao-webhook", "destination": "/api/pathao?action=webhook" },
-    { "source": "/api/status", "destination": "/api/inventory?status=true" }
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/login/",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/inventory",
+      "destination": "/inventory.html"
+    },
+    {
+      "source": "/inventory/",
+      "destination": "/inventory.html"
+    },
+    {
+      "source": "/order",
+      "destination": "/order.html"
+    },
+    {
+      "source": "/order/",
+      "destination": "/order.html"
+    },
+    {
+      "source": "/orders",
+      "destination": "/order.html"
+    },
+    {
+      "source": "/orders/",
+      "destination": "/order.html"
+    },
+    {
+      "source": "/api/create-order",
+      "destination": "/api/pathao"
+    },
+    {
+      "source": "/api/pathao-webhook",
+      "destination": "/api/pathao?action=webhook"
+    },
+    {
+      "source": "/api/status",
+      "destination": "/api/inventory?status=true"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     },
     {

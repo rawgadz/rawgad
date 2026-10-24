@@ -11,7 +11,7 @@ function getDbConfig() {
   if (!URI) {
     throw new Error("MONGO_URI environment variable is required.");
   }
-  const dbName = process.env.MONGODB_DB || process.env.MONGO_DB;
+  const dbName = process.env.MONGODB_DB;
   if (!dbName) {
     throw new Error("MONGODB_DB environment variable is required.");
   }

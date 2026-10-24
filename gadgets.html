@@ -1142,7 +1142,7 @@
 
         async loadCarousel() {
           try {
-            const res = await fetch(this.carouselSource || './index.json');
+            const res = await fetch(this.carouselSource || '/data/index.json');
             if (!res.ok) {
               throw new Error('HTTP ' + res.status);
             }
@@ -1584,7 +1584,7 @@
 
             const res =
               await fetch(
-                './products.json'
+                '/data/products.json'
               );
 
             if (!res.ok) {
