@@ -35,6 +35,11 @@ async function getDb() {
     socketTimeoutMS: 15000,
   });
 
+  client.on("close", () => {
+    global._mongoClient = null;
+    clientPromise = null;
+  });
+
   clientPromise = client.connect()
     .then(async (connectedClient) => {
       global._mongoClient = connectedClient;
@@ -42,6 +47,7 @@ async function getDb() {
       return connectedClient;
     })
     .catch((err) => {
+      global._mongoClient = null;
       clientPromise = null;
       throw err;
     });
@@ -61,8 +67,15 @@ async function getOrdersCollection() {
   return client.db(dbName).collection("orders");
 }
 
+async function connectToDatabase() {
+  const { dbName } = getDbConfig();
+  const client = await getDb();
+  return { client, db: client.db(dbName) };
+}
+
 module.exports = {
   getDb,
+  connectToDatabase,
   getInventoryCollection,
   getOrdersCollection,
   getDbConfig

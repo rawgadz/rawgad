@@ -134,8 +134,21 @@ module.exports = async function handler(req, res) {
         stockMap.set(key, doc);
       }
 
-      // Auto-include any missing catalog variants in admin response so they appear immediately
-      if (isAdmin) {
+      // If inventory collection is empty (e.g. unseeded database), populate with catalog items as default unavailable items
+      if (inventoryDocs.length === 0) {
+        for (const catItem of catalogItems) {
+          stockMap.set(catItem.key, {
+            productId: catItem.productId,
+            typeId: catItem.typeId,
+            subProductId: catItem.subProductId,
+            stockMode: "quantity",
+            stock: 0,
+            isAvailable: false,
+            isVirtual: true,
+          });
+        }
+      } else if (isAdmin) {
+        // Auto-include any missing catalog variants in admin response so they appear immediately
         for (const catItem of catalogItems) {
           if (!stockMap.has(catItem.key)) {
             stockMap.set(catItem.key, {
@@ -158,7 +171,7 @@ module.exports = async function handler(req, res) {
       let unavailableCount = 0;
       let orphanedCount = 0;
 
-      const itemsList = isAdmin ? Array.from(stockMap.values()) : inventoryDocs;
+      const itemsList = (isAdmin || inventoryDocs.length === 0) ? Array.from(stockMap.values()) : inventoryDocs;
 
       const mergedItems = itemsList.map((doc) => {
         const pId = String(doc.productId ?? "").trim();

@@ -320,12 +320,32 @@ function generateStandaloneProductHTML(product) {
         },
 
         get currentVariantImages() {
-          if (this.selectedSubProduct && Array.isArray(this.selectedSubProduct.images) && this.selectedSubProduct.images.length > 0) return this.selectedSubProduct.images;
-          if (this.selectedType && Array.isArray(this.selectedType.images) && this.selectedType.images.length > 0) return this.selectedType.images;
-          if (this.selectedSubProduct && this.selectedSubProduct.subImage) return [this.selectedSubProduct.subImage];
-          if (this.selectedType && this.selectedType.subImage) return [this.selectedType.subImage];
-          if (Array.isArray(this.product.images) && this.product.images.length > 0) return this.product.images;
-          return this.product.imageSrc ? [this.product.imageSrc] : [];
+          if (this.selectedSubProduct && Array.isArray(this.selectedSubProduct.images) && this.selectedSubProduct.images.length > 1) {
+            return this.selectedSubProduct.images;
+          }
+          if (this.selectedType && Array.isArray(this.selectedType.images) && this.selectedType.images.length > 1) {
+            return this.selectedType.images;
+          }
+
+          const variantImg = this.selectedSubProduct?.subImage || this.selectedSubProduct?.images?.[0]
+            || this.selectedType?.subImage || this.selectedType?.images?.[0];
+
+          const prodImages = Array.isArray(this.product.images) && this.product.images.length > 0
+            ? this.product.images
+            : (this.product.imageSrc ? [this.product.imageSrc] : []);
+
+          if (variantImg) {
+            const combined = [variantImg];
+            for (const img of prodImages) {
+              if (!combined.includes(img)) {
+                combined.push(img);
+              }
+            }
+            if (combined.length > 1) return combined;
+          }
+
+          if (prodImages.length > 0) return prodImages;
+          return variantImg ? [variantImg] : [];
         },
 
         get currentImage() {
@@ -507,8 +527,14 @@ function generateProductJson() {
     const productPrice = Number(data.price) || 0;
     const types = rawTypes.map(item => normalizeSubProduct(item, productPrice)).filter(Boolean);
 
-    const productImages = Array.isArray(data.images) ? data.images.map(img => String(img).trim()).filter(Boolean) : (data.imageSrc ? [String(data.imageSrc).trim()] : []);
-    const imageSrc = productImages[0] || data.imageSrc || '';
+    const rawImages = Array.isArray(data.images) ? data.images.map(img => String(img).trim()).filter(Boolean) : [];
+    const mainImg = data.imageSrc ? String(data.imageSrc).trim() : '';
+    const productImages = [];
+    if (mainImg) productImages.push(mainImg);
+    for (const img of rawImages) {
+      if (!productImages.includes(img)) productImages.push(img);
+    }
+    const imageSrc = mainImg || productImages[0] || '';
 
     let priceRange = null;
     if (data.priceRange && typeof data.priceRange === 'object' && data.priceRange.min !== undefined && data.priceRange.max !== undefined) {

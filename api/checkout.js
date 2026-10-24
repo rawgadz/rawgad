@@ -21,9 +21,6 @@ function loadCouponJson() {
     throw new Error(`content/coupons.json is missing at ${cPath}`);
   }
   return JSON.parse(fs.readFileSync(cPath, "utf8"));
-}`);
-  }
-  return JSON.parse(fs.readFileSync(cPath, "utf8"));
 }
 
 function generateInvoice() {
@@ -168,7 +165,7 @@ module.exports = async function handler(req, res) {
     let discountAmount = 0;
     let appliedCoupon = null;
 
-    if (coupon_code && typeof coupon_code === "string") {
+    if (coupon_code && typeof coupon_code === "string" && coupon_code.trim()) {
       const normInput = coupon_code.trim().toUpperCase();
       const coupons = loadCouponJson();
       const matched = coupons.find(c => c && c.code && c.code.trim().toUpperCase() === normInput && c.active === true);
@@ -176,6 +173,8 @@ module.exports = async function handler(req, res) {
         appliedCoupon = matched.code.trim().toUpperCase();
         const percent = Number(matched.discount_percent) || 0;
         discountAmount = Math.round((calculatedSubtotal * (percent / 100)) * 100) / 100;
+      } else {
+        return res.status(400).json({ success: false, error: "Invalid or expired coupon code" });
       }
     }
 
