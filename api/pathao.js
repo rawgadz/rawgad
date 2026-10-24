@@ -1,24 +1,17 @@
 // api/pathao.js
-// Unified Pathao Courier Aladdin API integration for Rawgadz Platform
-// Handles OAuth token issuance with in-memory caching, store listing, live tracking,
-// order dispatch, and inbound status webhook listening.
+// Pathao Courier Aladdin API integration for Rawgadz
+// Secure webhook verification + Free-tier M0 protection ($slice: -20)
 
 const { ObjectId } = require("mongodb");
-const { setCors, parseBody, ok, badRequest, notFound, serverError, requireAdminAuth } = require("../lib/lib");
-const { getOrdersCollection, loadEnvFallback } = require("../lib/db");
+const { setCors, parseBody, ok, badRequest, notFound, serverError, requireAdminAuth, unauthorized } = require("./_helpers");
+const { getOrdersCollection } = require("./_db");
 
-// In-memory token cache across warm serverless invocations (zero DB overhead)
 let tokenCache = {
   accessToken: null,
   expiresAt: 0,
 };
 
-/**
- * Retrieves a valid Pathao Access Token using in-memory caching.
- * Caches token with a 1-hour safety buffer before expiration.
- */
 async function getAccessToken() {
-  loadEnvFallback();
   if (tokenCache.accessToken && Date.now() < tokenCache.expiresAt) {
     return tokenCache.accessToken;
   }
@@ -59,10 +52,22 @@ async function getAccessToken() {
   return tokenCache.accessToken;
 }
 
-/**
- * Handles inbound Pathao status webhook events
- */
 async function handlePathaoWebhook(req, res, payload) {
+  // Webhook Security Guard: Require process.env.PATHAO_WEBHOOK_SECRET
+  const expectedSecret = process.env.PATHAO_WEBHOOK_SECRET;
+  if (!expectedSecret) {
+    return serverError(res, new Error("PATHAO_WEBHOOK_SECRET environment variable is not configured."));
+  }
+
+  const incomingSecret =
+    req.headers["x-pathao-secret"] ||
+    req.headers["x-webhook-secret"] ||
+    req.query?.secret;
+
+  if (!incomingSecret || incomingSecret !== expectedSecret) {
+    return unauthorized(res, "Unauthorized webhook request: Invalid or missing secret.");
+  }
+
   const consignmentId =
     payload.consignment_id ||
     payload.consignment_number ||
@@ -99,6 +104,17 @@ async function handlePathaoWebhook(req, res, payload) {
         }
       : { invoice_number: merchantOrderId };
 
+    const existingOrder = await ordersCol.findOne(query);
+    if (!existingOrder) {
+      return notFound(res, "Target order not found for webhook");
+    }
+
+    const compactEvent = {
+      status: eventStatus,
+      updated_at: new Date(),
+      message: payload.message || payload.data?.message || `Status changed to ${eventStatus}`
+    };
+
     const updateDoc = {
       $set: {
         courier_status: eventStatus,
@@ -106,26 +122,27 @@ async function handlePathaoWebhook(req, res, payload) {
         "courier.status": eventStatus,
         "courier.lastWebhookAt": new Date(),
         updated_at: new Date(),
-        updatedAt: new Date(),
       },
       $push: {
         courier_events: {
-          event: eventStatus,
-          payload,
-          received_at: new Date(),
-        },
-      },
+          $each: [compactEvent],
+          $slice: -20
+        }
+      }
     };
 
     const normalized = eventStatus.toLowerCase();
     if (normalized.includes("deliver") && !normalized.includes("undeliver") && !normalized.includes("failed")) {
       updateDoc.$set.status = "delivered";
-      updateDoc.$set.verified = true;
+      // ONLY verify delivery if order was Cash On Delivery (online payments verified by admin)
+      if (existingOrder.payment_method === "cod") {
+        updateDoc.$set.verified = true;
+      }
     } else if (normalized.includes("return")) {
       updateDoc.$set.status = "returned";
     }
 
-    const result = await ordersCol.updateOne(query, updateDoc);
+    const result = await ordersCol.updateOne({ _id: existingOrder._id }, updateDoc);
 
     return ok(res, {
       message: "Pathao webhook processed successfully",
@@ -137,22 +154,16 @@ async function handlePathaoWebhook(req, res, payload) {
   }
 }
 
-/**
- * Main Pathao API Request Handler
- */
 async function handler(req, res) {
   setCors(req, res);
   if (req.method === "OPTIONS") return res.status(200).end();
 
-  loadEnvFallback();
   const baseUrl = (process.env.PATHAO_BASE_URL || "https://api-hermes.pathao.com").replace(/\/+$/, "");
 
   // ====================================================
   // GET /api/pathao — Stores, Tracking, Status & Test
   // ====================================================
   if (req.method === "GET") {
-    // CRITICAL SERVER-SIDE SECURITY GUARD
-    // Querying courier stores, tracking consignments, or testing courier connection requires Admin Authorization
     const adminUser = requireAdminAuth(req, res);
     if (!adminUser) return;
 
@@ -160,7 +171,6 @@ async function handler(req, res) {
     const consignmentId = (req.query && req.query.consignment_id) || "";
     const invoiceNumber = (req.query && req.query.invoice_number) || "";
 
-    // 1. Fetch Merchant Stores
     if (action === "stores") {
       try {
         const token = await getAccessToken();
@@ -189,7 +199,6 @@ async function handler(req, res) {
       }
     }
 
-    // 2. Test Pathao API Authentication
     if (action === "test") {
       try {
         const token = await getAccessToken();
@@ -207,7 +216,6 @@ async function handler(req, res) {
       }
     }
 
-    // 3. Live Consignment Tracking
     if (consignmentId) {
       try {
         const token = await getAccessToken();
@@ -231,7 +239,6 @@ async function handler(req, res) {
       }
     }
 
-    // 4. Order Status Lookup by Invoice Number
     if (invoiceNumber) {
       try {
         const ordersCol = await getOrdersCollection();
@@ -248,7 +255,6 @@ async function handler(req, res) {
       }
     }
 
-    // Default GET: Return configuration status & default store ID
     return ok(res, {
       configured: !!(process.env.PATHAO_CLIENT_ID && process.env.PATHAO_CLIENT_SECRET),
       baseUrl,
@@ -257,13 +263,12 @@ async function handler(req, res) {
   }
 
   // ====================================================
-  // POST /api/pathao — Create Pathao Order OR Inbound Webhook
+  // POST /api/pathao — Create Order OR Webhook
   // ====================================================
   if (req.method === "POST") {
     try {
       const orderData = await parseBody(req);
 
-      // Check if this is an inbound Pathao Webhook event
       const isWebhook =
         (req.query && req.query.action === "webhook") ||
         (orderData.event && (orderData.consignment_id || orderData.merchant_order_id)) ||
@@ -273,66 +278,43 @@ async function handler(req, res) {
         return handlePathaoWebhook(req, res, orderData);
       }
 
-      // CRITICAL SERVER-SIDE SECURITY GUARD
-      // Booking courier parcels and incurring shipping fees strictly requires Admin Authorization
       const adminUser = requireAdminAuth(req, res);
       if (!adminUser) return;
 
-      // Normal Order Dispatch Flow
       const merchantOrderId = String(orderData.invoice_number || orderData.merchant_order_id || "").trim();
 
       let existingOrder = null;
-      let ordersCol = null;
-      try {
-        ordersCol = await getOrdersCollection();
-        if (merchantOrderId) {
-          const query = {
-            $or: [{ invoice_number: merchantOrderId }, { _id: merchantOrderId }],
-          };
-          if (ObjectId.isValid(merchantOrderId)) {
-            try {
-              query.$or.push({ _id: new ObjectId(merchantOrderId) });
-            } catch (_) {}
-          }
-          existingOrder = await ordersCol.findOne(query);
-        }
-      } catch (dbErr) {
-        console.warn("[Pathao DB Lookup Warning]", dbErr.message);
+      const ordersCol = await getOrdersCollection();
+      if (merchantOrderId) {
+        existingOrder = await ordersCol.findOne({ invoice_number: merchantOrderId });
       }
 
-      // Prevent duplicate dispatches
       if (existingOrder && (existingOrder.pathao_consignment_id || existingOrder.courier_status === "dispatched")) {
-        const existingConsignment = existingOrder.pathao_consignment_id || existingOrder.consignment_id;
         return res.status(409).json({
           success: false,
           error: "Order is already dispatched to Pathao Courier",
-          consignment_id: existingConsignment,
-          invoice_number: existingOrder.invoice_number || merchantOrderId,
+          consignment_id: existingOrder.pathao_consignment_id || existingOrder.consignment_id,
+          invoice_number: existingOrder.invoice_number,
         });
       }
 
-      // 1. Validate / Resolve store_id
       const rawStoreId = orderData.store_id || process.env.PATHAO_STORE_ID;
       const storeId = parseInt(rawStoreId, 10);
       if (!storeId || isNaN(storeId)) {
         return badRequest(
           res,
-          "Missing or invalid store_id. Please configure PATHAO_STORE_ID in .env or provide store_id in payload."
+          "Missing or invalid store_id. Please configure PATHAO_STORE_ID or provide store_id in payload."
         );
       }
 
-      // 2. Resolve recipient name
       const recipientName = String(
         orderData.recipient_name ||
-        orderData.custom_recipient_name ||
         existingOrder?.customer?.name ||
         "Customer"
       ).trim();
 
-      // 3. Resolve & sanitize recipient phone
       const rawPhone = String(
         orderData.recipient_phone ||
-        orderData.custom_recipient_phone ||
         existingOrder?.customer?.phone ||
         ""
       ).trim();
@@ -345,68 +327,45 @@ async function handler(req, res) {
       if (!cleanPhone || cleanPhone.length !== 11 || !cleanPhone.startsWith("01")) {
         return badRequest(
           res,
-          `Invalid recipient phone number '${rawPhone}'. Must be a valid 11-digit Bangladeshi mobile number (e.g. 01712345678).`
+          `Invalid recipient phone number '${rawPhone}'. Must be a valid 11-digit Bangladeshi mobile number.`
         );
       }
 
-      // 4. Resolve & validate recipient address (Pathao requires min 10 characters)
-      let fullAddress = String(
+      const fullAddress = String(
         orderData.recipient_address ||
-        orderData.custom_recipient_address ||
         existingOrder?.customer?.full_address ||
-        existingOrder?.customer?.address_detail ||
         ""
       ).trim();
 
-      if (fullAddress.length < 10 && existingOrder?.customer) {
-        const jelaThana = [existingOrder.customer.thana, existingOrder.customer.jela].filter(Boolean).join(", ");
-        if (jelaThana) {
-          fullAddress = `${fullAddress}, ${jelaThana}`.trim();
-        }
-      }
       if (fullAddress.length < 10) {
         return badRequest(res, "Recipient address is too short. Pathao requires at least 10 characters.");
       }
 
-      // 5. Quantity & Weight
       const items = existingOrder?.items || [];
       const itemQuantity = parseInt(
         orderData.item_quantity ||
-        (items.length > 0 ? items.reduce((sum, item) => sum + (parseInt(item.qty || item.quantity, 10) || 1), 0) : 1),
+        (items.length > 0 ? items.reduce((sum, item) => sum + (parseInt(item.qty || 1, 10) || 1), 0) : 1),
         10
       );
 
-      const rawWeight = orderData.item_weight !== undefined ? orderData.item_weight : orderData.custom_weight;
-      const itemWeight = rawWeight !== undefined && rawWeight !== null
-        ? Math.max(0.5, parseFloat(rawWeight) || 0.5)
-        : Math.max(0.5, itemQuantity * 0.5);
+      const itemWeight = Math.max(0.5, parseFloat(orderData.item_weight) || (itemQuantity * 0.5));
 
-      // 6. Amount to collect
       let amountToCollect = 0;
-      const rawCollect = orderData.amount_to_collect !== undefined ? orderData.amount_to_collect : orderData.custom_amount_to_collect;
-      if (rawCollect !== undefined && rawCollect !== null) {
-        amountToCollect = Math.max(0, Math.round(Number(rawCollect)));
+      if (orderData.amount_to_collect !== undefined) {
+        amountToCollect = Math.max(0, Math.round(Number(orderData.amount_to_collect)));
       } else if (existingOrder) {
         const pm = (existingOrder.payment_method || "").toLowerCase();
-        const isCod = pm === "cod";
-        const isPaidOnline = !isCod && (
-          existingOrder.status === "success" ||
-          existingOrder.trx_status === "success" ||
-          existingOrder.verified === true
-        );
-        amountToCollect = isPaidOnline ? 0 : Math.round(Number(existingOrder.payment_amount) || 0);
+        amountToCollect = pm === "cod" ? Math.round(Number(existingOrder.payment_amount) || 0) : 0;
       }
 
-      // 7. Description & special instructions
+      // Detailed variant description for Pathao
       const itemDescription = String(
         orderData.item_description ||
-        existingOrder?.checkout_items ||
-        (items.length > 0 ? items.map(i => `${i.name || i.productTitle || "Item"} x${i.qty || 1}`).join(", ") : "Rawgadz Order")
+        (items.length > 0
+          ? items.map(i => `${i.name || i.productId} x${i.qty || 1}`).join(", ")
+          : "Rawgadz Order")
       ).trim().slice(0, 200);
 
-      const specialInstruction = String(orderData.special_instruction || "").trim();
-
-      // 8. Build Aladdin API Payload
       const payload = {
         store_id: storeId,
         merchant_order_id: merchantOrderId || `ORD-${Date.now()}`,
@@ -415,7 +374,7 @@ async function handler(req, res) {
         recipient_address: fullAddress,
         delivery_type: parseInt(orderData.delivery_type || 48, 10),
         item_type: parseInt(orderData.item_type || 2, 10),
-        special_instruction: specialInstruction,
+        special_instruction: String(orderData.special_instruction || "").trim(),
         item_quantity: itemQuantity,
         item_weight: itemWeight,
         amount_to_collect: amountToCollect,
@@ -426,7 +385,6 @@ async function handler(req, res) {
       if (orderData.recipient_zone) payload.recipient_zone = parseInt(orderData.recipient_zone, 10);
       if (orderData.recipient_area) payload.recipient_area = parseInt(orderData.recipient_area, 10);
 
-      // 9. Request Access Token & Dispatch
       const accessToken = await getAccessToken();
 
       const pathaoResponse = await fetch(`${baseUrl}/aladdin/api/v1/orders`, {
@@ -443,9 +401,7 @@ async function handler(req, res) {
       if (!pathaoResponse.ok) {
         return res.status(pathaoResponse.status).json({
           success: false,
-          error:
-            responseData.message ||
-            (responseData.errors ? JSON.stringify(responseData.errors) : "Failed to create Pathao delivery order"),
+          error: responseData.message || "Failed to create Pathao delivery order",
           details: responseData,
         });
       }
@@ -453,52 +409,39 @@ async function handler(req, res) {
       const consignmentId =
         responseData.data?.consignment_id ||
         responseData.consignment_id ||
-        responseData.data?.consignment_number ||
-        responseData.consignment_number ||
         `PTH-${Date.now()}`;
 
       const deliveryFee = responseData.data?.delivery_fee || null;
       const orderStatus = responseData.data?.order_status || "Pending";
 
-      // 10. Synchronize MongoDB Order Document
       let orderUpdated = false;
-      if (existingOrder && ordersCol) {
-        try {
-          const now = new Date();
-          await ordersCol.updateOne(
-            { _id: existingOrder._id },
-            {
-              $set: {
-                pathao_consignment_id: consignmentId,
+      if (existingOrder) {
+        const now = new Date();
+        await ordersCol.updateOne(
+          { _id: existingOrder._id },
+          {
+            $set: {
+              pathao_consignment_id: consignmentId,
+              consignment_id: consignmentId,
+              pathao_order_status: orderStatus,
+              pathao_delivery_fee: deliveryFee,
+              pathao_dispatched_at: now,
+              courier_status: "dispatched",
+              status: existingOrder.status === "pending" ? "shipped" : existingOrder.status,
+              courier: {
+                provider: "pathao",
+                status: "dispatched",
                 consignment_id: consignmentId,
-                pathao_order_status: orderStatus,
-                pathao_delivery_fee: deliveryFee,
-                pathao_dispatched_at: now,
-                courier_status: "dispatched",
-                status:
-                  existingOrder.status === "pending" ||
-                  existingOrder.status === "confirmed" ||
-                  existingOrder.status === "processing"
-                    ? "shipped"
-                    : existingOrder.status,
-                courier: {
-                  provider: "pathao",
-                  status: "dispatched",
-                  consignment_id: consignmentId,
-                  store_id: storeId,
-                  amount_to_collect: amountToCollect,
-                  delivery_fee: deliveryFee,
-                  dispatched_at: now,
-                },
-                updated_at: now,
-                updatedAt: now,
+                store_id: storeId,
+                amount_to_collect: amountToCollect,
+                delivery_fee: deliveryFee,
+                dispatched_at: now,
               },
-            }
-          );
-          orderUpdated = true;
-        } catch (dbUpdErr) {
-          console.warn("[Pathao DB Update Warning]", dbUpdErr.message);
-        }
+              updated_at: now,
+            },
+          }
+        );
+        orderUpdated = true;
       }
 
       return ok(res, {
@@ -518,6 +461,4 @@ async function handler(req, res) {
   return res.status(405).json({ success: false, error: "Method not allowed. Use GET or POST." });
 }
 
-handler.getAccessToken = getAccessToken;
-handler.handlePathaoWebhook = handlePathaoWebhook;
 module.exports = handler;

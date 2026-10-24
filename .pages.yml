@@ -4,6 +4,26 @@ media:
   extensions: [jpg, jpeg, png, webp, gif]
 
 content:
+  - name: coupons
+    label: Coupons
+    type: file
+    path: content/coupons.json
+    format: json
+    list: true
+    fields:
+      - name: code
+        type: string
+        label: Coupon Code
+        required: true
+      - name: discount_percent
+        type: number
+        label: Discount Percent
+        required: true
+      - name: active
+        type: boolean
+        label: Active
+        required: true
+
   - name: products
     label: Products
     type: collection

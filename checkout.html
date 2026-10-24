@@ -13,10 +13,10 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <!-- Stock & Inventory 24-Hour Cache Manager -->
-  <script src="./stock.js"></script>
+  <script src="/js/stock.js"></script>
 
   <!-- Bangladesh Locations (Districts & Upazilas) -->
-  <script src="./bd-locations.js"></script>
+  <script src="/js/bd-locations.js"></script>
 
   <style>
     [x-cloak] { display: none !important; }
@@ -1074,22 +1074,20 @@
           this.checkingCoupon = true;
           this.couponMessage = '';
           try {
-            const res = await fetch('/api/coupon', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ coupon_code: this.couponCode.trim() })
-            });
-            const data = await res.json();
-            if (data && data.valid) {
-              this.discountPercent = Number(data.discount_percent) || 0;
-              this.appliedCoupon = data.coupon_code || this.couponCode.trim();
+            const res = await fetch('/data/coupon.json');
+            const coupons = await res.json();
+            const inputCode = this.couponCode.trim().toUpperCase();
+            const matched = Array.isArray(coupons) ? coupons.find(c => c && c.code && c.code.trim().toUpperCase() === inputCode && c.active === true) : null;
+            if (matched) {
+              this.discountPercent = Number(matched.discount_percent) || 0;
+              this.appliedCoupon = matched.code.trim().toUpperCase();
               this.couponSuccess = true;
               this.couponMessage = `Coupon applied! ${this.discountPercent}% discount.`;
             } else {
               this.discountPercent = 0;
               this.appliedCoupon = '';
               this.couponSuccess = false;
-              this.couponMessage = data.message || 'Invalid or expired coupon.';
+              this.couponMessage = 'Invalid or expired coupon.';
             }
           } catch (err) {
             this.discountPercent = 0;

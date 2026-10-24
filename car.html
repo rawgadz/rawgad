@@ -13,10 +13,10 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
   <!-- Stock & Inventory 24-Hour Cache Manager -->
-  <script src="./stock.js"></script>
+  <script src="/js/stock.js"></script>
 
   <!-- Hero Section Dynamic Slider Manager -->
-  <script src="./hero-slider.js"></script>
+  <script src="/js/hero-slider.js"></script>
 
   <style>
     [x-cloak] { display: none !important; }
@@ -674,7 +674,7 @@
 
         async init() {
           try {
-            const res = await fetch('./cars.json');
+            const res = await fetch('/data/cars.json');
             if (!res.ok) throw new Error('HTTP ' + res.status);
             this.allCars = await res.json();
             this.filteredCars = [...this.allCars];

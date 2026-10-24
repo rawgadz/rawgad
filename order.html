@@ -89,6 +89,19 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-3">
+        <!-- Bulk Dispatch Button -->
+        <template x-if="selectedInvoices.length > 0">
+          <button 
+            @click="bulkDispatchSelected()"
+            :disabled="bulkDispatching"
+            class="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-xl transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+            title="Dispatch selected orders to Pathao Courier"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            <span x-text="bulkDispatching ? 'Dispatching ' + bulkProgress : 'Bulk Dispatch (' + selectedInvoices.length + ')'"></span>
+          </button>
+        </template>
+
         <!-- Test Pathao Auth Connection -->
         <button 
           @click="testPathaoConnection()"
@@ -189,6 +202,15 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-neutral-50 border-b border-neutral-200 text-[11px] uppercase tracking-wider text-neutral-500 font-bold">
+              <th class="py-4 px-3 w-10 text-center">
+                <input 
+                  type="checkbox" 
+                  @change="toggleSelectAll($event)" 
+                  :checked="isAllSelected"
+                  class="rounded border-neutral-300 text-black focus:ring-black cursor-pointer"
+                  title="Select / Deselect All"
+                />
+              </th>
               <th class="py-4 px-5">Invoice & Date</th>
               <th class="py-4 px-5">Customer Profile</th>
               <th class="py-4 px-5">Items & Amount</th>
@@ -200,6 +222,15 @@
           <tbody class="divide-y divide-neutral-100 text-xs font-medium">
             <template x-for="o in filteredOrders" :key="o.invoice_number">
               <tr class="hover:bg-neutral-50/80 transition-colors">
+                <!-- Select Checkbox -->
+                <td class="py-4 px-3 text-center">
+                  <input 
+                    type="checkbox" 
+                    :value="o.invoice_number" 
+                    x-model="selectedInvoices"
+                    class="rounded border-neutral-300 text-black focus:ring-black cursor-pointer"
+                  />
+                </td>
                 
                 <!-- Invoice & Date -->
                 <td class="py-4 px-5">
@@ -240,7 +271,25 @@
                 <td class="py-4 px-5">
                   <div class="text-neutral-700 font-medium max-w-xs truncate" :title="o.checkout_items || ''" x-text="o.checkout_items || (o.items ? o.items.length + ' items' : 'Standard order')"></div>
                   
-                  <div class="flex items-center gap-2 mt-1">
+                  <!-- Full Variant Breakdown -->
+                  <template x-if="o.items && o.items.length > 0">
+                    <div class="mt-1 flex flex-col gap-0.5">
+                      <template x-for="item in o.items.slice(0, 3)" :key="item.productId + ':::' + (item.typeId || '_') + ':::' + (item.subProductId || '_')">
+                        <div class="text-[10px] text-neutral-500 font-mono truncate">
+                          <span class="text-neutral-800 font-semibold" x-text="item.name || item.productId"></span>
+                          <template x-if="(item.typeId && item.typeId !== '_') || (item.subProductId && item.subProductId !== '_')">
+                            <span class="text-neutral-400" x-text="' (' + [item.typeId !== '_' ? item.typeId : '', item.subProductId !== '_' ? item.subProductId : ''].filter(Boolean).join(' / ') + ')'"></span>
+                          </template>
+                          <span class="text-neutral-400" x-text="' × ' + (item.qty || 1)"></span>
+                        </div>
+                      </template>
+                      <template x-if="o.items.length > 3">
+                        <div class="text-[9px] text-neutral-400 italic" x-text="'+' + (o.items.length - 3) + ' more items'"></div>
+                      </template>
+                    </div>
+                  </template>
+
+                  <div class="flex items-center gap-2 mt-1.5">
                     <span class="font-black text-black text-xs" x-text="'BDT ' + (Number(o.payment_amount) || 0).toFixed(2)"></span>
                     
                     <template x-if="o.coupon_code">
@@ -275,6 +324,19 @@
                     <!-- TrxID if available -->
                     <template x-if="o.trx_id && o.payment_method !== 'cod'">
                       <div class="text-[10px] font-mono text-neutral-500">TrxID: <span class="font-bold text-black" x-text="o.trx_id"></span></div>
+                    </template>
+
+                    <!-- 1-Click Verify TrxID Button -->
+                    <template x-if="(o.payment_method || '').toLowerCase() !== 'cod' && !(o.status === 'success' || o.verified)">
+                      <button 
+                        @click="quickVerifyTrx(o.invoice_number)"
+                        :disabled="verifyingTrx[o.invoice_number]"
+                        class="mt-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1 shadow-2xs"
+                        title="1-Click Verify Payment & Transaction ID"
+                      >
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        <span x-text="verifyingTrx[o.invoice_number] ? 'Verifying...' : 'Verify TrxID'"></span>
+                      </button>
                     </template>
                   </div>
                 </td>
@@ -534,19 +596,27 @@
           </div>
         </div>
 
-        <!-- Line Items -->
+        <!-- Line Items & Variants -->
         <div>
-          <span class="font-black text-black text-xs uppercase tracking-wider block mb-2">Purchased Items</span>
+          <span class="font-black text-black text-xs uppercase tracking-wider block mb-2">Purchased Items & Variants</span>
           <div class="border border-neutral-200 rounded-2xl overflow-hidden divide-y divide-neutral-100">
-            <template x-for="item in (activeOrder?.items || [])" :key="item.id">
+            <template x-for="item in (activeOrder?.items || [])" :key="item.productId + ':::' + (item.typeId || '_') + ':::' + (item.subProductId || '_')">
               <div class="p-3 flex items-center justify-between bg-white text-xs">
                 <div>
-                  <div class="font-bold text-black" x-text="item.name || item.id"></div>
-                  <div class="text-[10px] text-neutral-400 font-mono" x-text="'SKU: ' + item.id"></div>
+                  <div class="font-bold text-black" x-text="item.name || item.productId"></div>
+                  <div class="text-[10px] text-neutral-500 font-mono flex flex-wrap gap-2 mt-0.5">
+                    <span x-text="'Product: ' + (item.productId || 'N/A')"></span>
+                    <template x-if="item.typeId && item.typeId !== '_'">
+                      <span class="bg-neutral-100 px-1.5 py-0.5 rounded text-[9px]" x-text="'Type: ' + item.typeId"></span>
+                    </template>
+                    <template x-if="item.subProductId && item.subProductId !== '_'">
+                      <span class="bg-neutral-100 px-1.5 py-0.5 rounded text-[9px]" x-text="'Variant: ' + item.subProductId"></span>
+                    </template>
+                  </div>
                 </div>
                 <div class="text-right">
-                  <div class="font-bold text-black" x-text="'BDT ' + (item.price || 0) + ' x ' + item.qty"></div>
-                  <div class="text-[10px] text-neutral-500 font-black" x-text="'= BDT ' + (item.subtotal || (item.price * item.qty))"></div>
+                  <div class="font-bold text-black" x-text="'BDT ' + (item.price || 0) + ' × ' + (item.qty || 1)"></div>
+                  <div class="text-[10px] text-neutral-500 font-black" x-text="'= BDT ' + ((item.price || 0) * (item.qty || 1))"></div>
                 </div>
               </div>
             </template>
@@ -694,6 +764,11 @@
 
         activeFilter: 'all',
         searchQuery: '',
+
+        selectedInvoices: [],
+        bulkDispatching: false,
+        bulkProgress: '',
+        verifyingTrx: {},
 
         dispatching: {},
         submittingDispatch: false,
@@ -885,6 +960,99 @@
             dispatchedCount,
             pendingPayment
           };
+        },
+
+        get isAllSelected() {
+          return this.filteredOrders.length > 0 && this.selectedInvoices.length === this.filteredOrders.length;
+        },
+
+        toggleSelectAll(e) {
+          if (e.target.checked) {
+            this.selectedInvoices = this.filteredOrders.map(o => o.invoice_number);
+          } else {
+            this.selectedInvoices = [];
+          }
+        },
+
+        async quickVerifyTrx(invoiceNumber) {
+          if (!invoiceNumber) return;
+          this.verifyingTrx = { ...this.verifyingTrx, [invoiceNumber]: true };
+          try {
+            const res = await fetch('/api/order', {
+              method: 'PATCH',
+              headers: this.getAuthHeaders(),
+              body: JSON.stringify({
+                invoice_number: invoiceNumber,
+                verified: true,
+                trx_status: 'verified',
+                status: 'confirmed'
+              })
+            });
+
+            if (res.status === 401) {
+              this.logout();
+              return;
+            }
+
+            if (res.ok) {
+              const order = this.allOrders.find(o => o.invoice_number === invoiceNumber);
+              if (order) {
+                order.verified = true;
+                order.trx_status = 'verified';
+                if (order.status === 'pending') order.status = 'confirmed';
+              }
+              this.showToast(`TrxID verified for ${invoiceNumber}!`);
+            } else {
+              const data = await res.json().catch(() => ({}));
+              this.showToast(data.error || 'Failed to verify TrxID', 'error');
+            }
+          } catch (e) {
+            this.showToast('Network error verifying TrxID', 'error');
+          } finally {
+            const upd = { ...this.verifyingTrx };
+            delete upd[invoiceNumber];
+            this.verifyingTrx = upd;
+          }
+        },
+
+        async bulkDispatchSelected() {
+          if (this.selectedInvoices.length === 0) return;
+          const count = this.selectedInvoices.length;
+          if (!confirm(`Dispatch all ${count} selected orders to Pathao Courier?`)) return;
+
+          this.bulkDispatching = true;
+          let successCount = 0;
+          let failCount = 0;
+
+          for (let i = 0; i < this.selectedInvoices.length; i++) {
+            const inv = this.selectedInvoices[i];
+            this.bulkProgress = `(${i + 1}/${count})`;
+            try {
+              const res = await fetch('/api/pathao', {
+                method: 'POST',
+                headers: this.getAuthHeaders(),
+                body: JSON.stringify({ invoice_number: inv })
+              });
+              if (res.ok) {
+                const data = await res.json().catch(() => ({}));
+                if (data.success) {
+                  successCount++;
+                } else {
+                  failCount++;
+                }
+              } else {
+                failCount++;
+              }
+            } catch (_) {
+              failCount++;
+            }
+          }
+
+          this.bulkDispatching = false;
+          this.bulkProgress = '';
+          this.selectedInvoices = [];
+          this.showToast(`Bulk dispatch: ${successCount} succeeded, ${failCount} failed.`);
+          await this.fetchOrders();
         },
 
         // 1-Click Dispatch

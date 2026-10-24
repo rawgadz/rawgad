@@ -13,10 +13,10 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 
   <!-- Stock & Inventory 24-Hour Cache Manager -->
-  <script src="./stock.js"></script>
+  <script src="/js/stock.js"></script>
 
   <!-- Hero Section Dynamic Slider Manager -->
-  <script src="./hero-slider.js"></script>
+  <script src="/js/hero-slider.js"></script>
 
   <style>
     [x-cloak] {
@@ -184,7 +184,7 @@
     >
       <a
         href="./index.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
+        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-black font-bold border-b-2 border-black pb-0.5"
       >
         Home
       </a>
@@ -198,7 +198,7 @@
 
       <a
         href="./gadgets.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-black font-bold border-b-2 border-black pb-0.5"
+        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
       >
         Gadgets
       </a>
@@ -602,7 +602,7 @@
 
         <div>
           <h2 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900">
-            Featured Gadgets
+            Featured Products
           </h2>
 
           <p class="text-neutral-500 text-xs md:text-sm mt-1">
@@ -611,7 +611,7 @@
         </div>
 
         <span class="text-xs font-bold uppercase tracking-wider text-neutral-400">
-          Gadgets Catalog
+          All Products Catalog
         </span>
 
       </div>
@@ -1006,7 +1006,7 @@
            3D CAROUSEL
         ===================================================== */
 
-        carouselSource: './gadgets.json',
+        carouselSource: '/data/gadgets.json',
 
         carouselImages: [],
 

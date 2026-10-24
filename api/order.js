@@ -1,9 +1,8 @@
 // api/order.js
-// GET    /api/order — Fetch orders, stats, and search for Admin (Protected)
-// PATCH  /api/order — Update order status, payment verification, admin notes (Protected)
-// DELETE /api/order — Delete order by invoice number (Protected)
+// Protected Admin Order Operations
+// Uses fast MongoDB aggregate pipeline and reliable variant stock restoration
 
-const { getDb } = require("../lib/db");
+const { getOrdersCollection, getInventoryCollection } = require("./_db");
 const {
   setCors,
   parseBody,
@@ -12,54 +11,28 @@ const {
   notFound,
   serverError,
   requireAdminAuth,
-} = require("../lib/lib");
+} = require("./_helpers");
 
 module.exports = async function handler(req, res) {
   setCors(req, res);
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
-  // ====================================================
-  // CRITICAL SERVER-SIDE SECURITY GUARD
-  // Enforce valid Admin JWT Bearer authentication for ALL order operations
-  // ====================================================
   const adminUser = requireAdminAuth(req, res);
-  if (!adminUser) {
-    return; // 401 sent by requireAdminAuth
-  }
+  if (!adminUser) return;
 
-  let client;
-  let ordersCol;
-  const dbName = process.env.MONGODB_DB || process.env.MONGO_DB || "paystationdemo";
   try {
-    client = await getDb();
-    ordersCol = client.db(dbName).collection("orders");
-  } catch (err) {
-    return res.status(500).json({
-      success: false,
-      error: "Database connection failed",
-      details: err.message
-    });
-  }
+    const ordersCol = await getOrdersCollection();
+    const inventoryCol = await getInventoryCollection();
 
-  // ==========================================
-  // GET: Fetch orders with filters & metrics
-  // ==========================================
-  if (req.method === "GET") {
-    try {
+    // ==========================================
+    // GET: Fetch orders with aggregate metrics
+    // ==========================================
+    if (req.method === "GET") {
       const { search, status, payment_method, courier_status, limit = 200 } = req.query || {};
-
       const query = {};
 
-      if (status && status !== "all") {
-        query.status = status;
-      }
-
-      if (payment_method && payment_method !== "all") {
-        query.payment_method = payment_method.toLowerCase();
-      }
-
+      if (status && status !== "all") query.status = status;
+      if (payment_method && payment_method !== "all") query.payment_method = payment_method.toLowerCase();
       if (courier_status && courier_status !== "all") {
         if (courier_status === "ready" || courier_status === "not_dispatched") {
           query.$or = [
@@ -89,89 +62,88 @@ module.exports = async function handler(req, res) {
       }
 
       const numLimit = Math.min(500, Math.max(1, parseInt(limit, 10) || 200));
-      const orders = await ordersCol
-        .find(query)
-        .sort({ created_at: -1 })
-        .limit(numLimit)
-        .toArray();
 
-      // Compute summary metrics across all store orders
-      const allOrders = await ordersCol.find({}).project({
-        payment_amount: 1,
-        status: 1,
-        verified: 1,
-        payment_method: 1,
-        courier_status: 1,
-        created_at: 1
-      }).toArray();
+      const [orders, metricsResult] = await Promise.all([
+        ordersCol.find(query).sort({ created_at: -1 }).limit(numLimit).toArray(),
+        ordersCol.aggregate([
+          {
+            $facet: {
+              total: [{ $count: "count" }],
+              revenue: [
+                {
+                  $match: {
+                    $or: [
+                      { status: "success" },
+                      { status: "delivered" },
+                      { payment_method: "cod" },
+                      { verified: true }
+                    ]
+                  }
+                },
+                { $group: { _id: null, total: { $sum: "$payment_amount" } } }
+              ],
+              dispatched: [
+                { $match: { courier_status: { $in: ["dispatched", "in_transit"] } } },
+                { $count: "count" }
+              ],
+              delivered: [
+                { $match: { $or: [{ courier_status: "delivered" }, { status: "delivered" }] } },
+                { $count: "count" }
+              ],
+              pendingDispatch: [
+                {
+                  $match: {
+                    courier_status: { $nin: ["dispatched", "in_transit", "delivered"] },
+                    status: { $nin: ["cancelled", "failed", "delivered"] }
+                  }
+                },
+                { $count: "count" }
+              ],
+              pendingPayment: [
+                {
+                  $match: {
+                    payment_method: { $ne: "cod" },
+                    verified: { $ne: true },
+                    status: { $nin: ["success", "delivered", "cancelled", "failed"] }
+                  }
+                },
+                { $count: "count" }
+              ]
+            }
+          }
+        ]).toArray()
+      ]);
 
-      const totalOrders = allOrders.length;
-      let totalRevenue = 0;
-      let pendingDispatch = 0;
-      let pendingPayment = 0;
-      let dispatchedCount = 0;
-      let deliveredCount = 0;
+      const facet = metricsResult[0] || {};
+      const metrics = {
+        totalOrders: facet.total?.[0]?.count || 0,
+        totalRevenue: Math.round((facet.revenue?.[0]?.total || 0) * 100) / 100,
+        pendingDispatch: facet.pendingDispatch?.[0]?.count || 0,
+        pendingPayment: facet.pendingPayment?.[0]?.count || 0,
+        dispatchedCount: facet.dispatched?.[0]?.count || 0,
+        deliveredCount: facet.delivered?.[0]?.count || 0
+      };
 
-      for (const o of allOrders) {
-        const amt = Number(o.payment_amount) || 0;
-        const isPaid = o.status === "success" || o.status === "delivered" || (o.verified && o.payment_method !== "cod");
-        if (isPaid || o.payment_method === "cod") {
-          totalRevenue += amt;
-        }
-
-        const isDispatched = o.courier_status === "dispatched" || o.courier_status === "in_transit";
-        if (isDispatched) {
-          dispatchedCount++;
-        } else if (o.courier_status !== "delivered" && o.status !== "cancelled" && o.status !== "failed") {
-          pendingDispatch++;
-        }
-
-        if (o.courier_status === "delivered" || o.status === "delivered") {
-          deliveredCount++;
-        }
-
-        if (o.payment_method !== "cod" && !isPaid) {
-          pendingPayment++;
-        }
-      }
-
-      return res.status(200).json({
-        success: true,
+      return ok(res, {
         count: orders.length,
-        orders: orders,
-        metrics: {
-          totalOrders,
-          totalRevenue: Math.round(totalRevenue * 100) / 100,
-          pendingDispatch,
-          pendingPayment,
-          dispatchedCount,
-          deliveredCount
-        }
-      });
-    } catch (err) {
-      return res.status(500).json({
-        success: false,
-        error: "Failed to fetch orders from database",
-        details: err.message
+        orders,
+        metrics
       });
     }
-  }
 
-  // ==========================================
-  // PATCH / PUT: Update order details & status
-  // ==========================================
-  if (req.method === "PATCH" || req.method === "PUT") {
-    try {
+    // ==========================================
+    // PATCH / PUT: Update Order & Restore Stock
+    // ==========================================
+    if (req.method === "PATCH" || req.method === "PUT") {
       const body = await parseBody(req);
       const { invoice_number, status, verified, trx_status, courier_status, admin_notes, customer } = body;
 
-      if (!invoice_number) {
-        return badRequest(res, "invoice_number is required");
-      }
+      if (!invoice_number) return badRequest(res, "invoice_number is required");
 
-      const updateFields = {
-        updated_at: new Date()
-      };
+      const existingOrder = await ordersCol.findOne({ invoice_number });
+      if (!existingOrder) return notFound(res, "Order not found");
+
+      const updateFields = { updated_at: new Date() };
 
       if (status !== undefined) updateFields.status = String(status).trim();
       if (verified !== undefined) updateFields.verified = Boolean(verified);
@@ -186,99 +158,69 @@ module.exports = async function handler(req, res) {
         if (customer.email) updateFields["customer.email"] = customer.email;
       }
 
-      const existingOrder = await ordersCol.findOne({ invoice_number });
-      if (!existingOrder) {
-        return notFound(res, "Order not found");
-      }
-
-      const prevStatus = existingOrder.status;
-      const isCancelling = status && String(status).toLowerCase().trim() === "cancelled";
+      const normNewStatus = String(status || "").toLowerCase().trim();
+      const isCancellingOrReturning = normNewStatus === "cancelled" || normNewStatus === "returned";
       let stockRestored = false;
       let restoredTotalQuantity = 0;
 
-      // Handle stock restoration on cancellation
-      if (isCancelling) {
-        const alreadyRestored = !!(existingOrder.stockRestored || existingOrder.stock_restored);
-        if (!alreadyRestored && prevStatus !== "cancelled") {
-          try {
-            const { getPurchasableCatalogMap, resolveOrderItemIdentity, normalizeId } = require("../lib/catalog");
-            const db = client.db(dbName);
-            const inventoryCol = db.collection("inventory");
-            const { map: catalogMap } = await getPurchasableCatalogMap();
-            const rawItems = Array.isArray(existingOrder.items) ? existingOrder.items : [];
+      if (isCancellingOrReturning && !existingOrder.stockRestored && existingOrder.status !== "cancelled" && existingOrder.status !== "returned") {
+        const rawItems = Array.isArray(existingOrder.items) ? existingOrder.items : [];
 
-            for (const item of rawItems) {
-              const qty = parseInt(item.qty || item.quantity || 1, 10);
-              if (qty > 0) {
-                const resolved = resolveOrderItemIdentity(item, catalogMap);
-                const pId = resolved.productId;
-                const tId = normalizeId(resolved.typeId);
-                const sId = normalizeId(resolved.subProductId);
+        for (const item of rawItems) {
+          const qty = parseInt(item.qty || item.quantity || 1, 10);
+          if (qty > 0 && item.productId) {
+            const filter = {
+              productId: String(item.productId).trim(),
+              typeId: item.typeId ? String(item.typeId).trim() : null,
+              subProductId: item.subProductId ? String(item.subProductId).trim() : null,
+              stockMode: "quantity"
+            };
 
-                await inventoryCol.updateOne(
-                  { productId: pId, typeId: tId, subProductId: sId },
-                  { $inc: { stock: qty }, $set: { updatedAt: new Date() } }
-                );
-                restoredTotalQuantity += qty;
-              }
-            }
-
-            updateFields.stockRestored = true;
-            updateFields.stock_restored = true;
-            updateFields.stockRestoredAt = new Date();
-            updateFields.stock_restored_at = new Date();
-            updateFields.stockRestoredQuantity = restoredTotalQuantity;
-            stockRestored = true;
-          } catch (restoreErr) {
-            console.error("[order.js] Failed to restore stock on cancellation:", restoreErr);
+            await inventoryCol.updateOne(
+              filter,
+              { $inc: { stock: qty }, $set: { updatedAt: new Date() } }
+            );
+            restoredTotalQuantity += qty;
           }
         }
+
+        updateFields.stockRestored = true;
+        updateFields.stockRestoredAt = new Date();
+        updateFields.stockRestoredQuantity = restoredTotalQuantity;
+        stockRestored = true;
       }
 
-      const result = await ordersCol.findOneAndUpdate(
+      const updated = await ordersCol.findOneAndUpdate(
         { invoice_number },
         { $set: updateFields },
         { returnDocument: "after" }
       );
 
-      const updated = result && (result.value !== undefined ? result.value : result);
-      if (!updated) {
-        return notFound(res, "Order not found");
-      }
-
       return ok(res, {
-        message: stockRestored ? `Order cancelled and ${restoredTotalQuantity} item(s) restored to inventory.` : "Order updated successfully",
+        message: stockRestored
+          ? `Order updated and ${restoredTotalQuantity} item(s) restored to inventory.`
+          : "Order updated successfully",
         order: updated,
         stockRestored
       });
-    } catch (err) {
-      return serverError(res, err);
     }
-  }
 
-  // ==========================================
-  // DELETE: Delete order
-  // ==========================================
-  if (req.method === "DELETE") {
-    try {
+    // ==========================================
+    // DELETE: Delete Order
+    // ==========================================
+    if (req.method === "DELETE") {
       const body = await parseBody(req);
       const invoice_number = body.invoice_number || req.query?.invoice_number;
-      if (!invoice_number) {
-        return badRequest(res, "invoice_number is required");
-      }
+      if (!invoice_number) return badRequest(res, "invoice_number is required");
 
       const result = await ordersCol.deleteOne({ invoice_number });
-      if (result.deletedCount === 0) {
-        return notFound(res, "Order not found");
-      }
+      if (result.deletedCount === 0) return notFound(res, "Order not found");
 
-      return ok(res, {
-        message: `Order ${invoice_number} deleted successfully`
-      });
-    } catch (err) {
-      return serverError(res, err);
+      return ok(res, { message: `Order ${invoice_number} deleted successfully` });
     }
-  }
 
-  return res.status(405).json({ success: false, error: "Method not allowed" });
+    return res.status(405).json({ success: false, error: "Method not allowed" });
+  } catch (err) {
+    return serverError(res, err);
+  }
 };

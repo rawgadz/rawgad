@@ -4,6 +4,11 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/*.js": {
+      "includeFiles": "data/*.json"
+    }
+  },
   "rewrites": [
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/admin/", "destination": "/admin.html" },
@@ -34,15 +39,15 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400"
+          "value": "public, s-maxage=20, stale-while-revalidate=40"
         },
         {
           "key": "CDN-Cache-Control",
-          "value": "public, s-maxage=86400, stale-while-revalidate=86400"
+          "value": "public, s-maxage=20, stale-while-revalidate=40"
         },
         {
           "key": "Vercel-CDN-Cache-Control",
-          "value": "public, s-maxage=86400, stale-while-revalidate=86400"
+          "value": "public, s-maxage=20, stale-while-revalidate=40"
         }
       ]
     }
