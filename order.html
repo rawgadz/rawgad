@@ -1001,6 +1001,13 @@
                 order.trx_status = 'verified';
                 if (order.status === 'pending') order.status = 'confirmed';
               }
+              if (this.activeOrder && this.activeOrder.invoice_number === invoiceNumber) {
+                this.activeOrder.verified = true;
+                this.activeOrder.trx_status = 'verified';
+                if (this.activeOrder.status === 'pending') this.activeOrder.status = 'confirmed';
+              }
+              // Trigger reactivity update across Alpine template list
+              this.allOrders = [...this.allOrders];
               this.showToast(`TrxID verified for ${invoiceNumber}!`);
             } else {
               const data = await res.json().catch(() => ({}));
@@ -1212,6 +1219,7 @@
               order.verified = newStatus;
               order.trx_status = newStatus ? 'verified' : 'under_verification';
               if (newStatus && order.status === 'pending') order.status = 'confirmed';
+              this.allOrders = [...this.allOrders];
               this.showToast(newStatus ? 'Payment marked as Verified!' : 'Payment marked Unverified');
             }
           } catch (e) {
