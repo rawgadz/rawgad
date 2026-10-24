@@ -313,12 +313,12 @@
                       <span class="bg-blue-50 text-blue-800 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-blue-200">COD Collect</span>
                     </template>
 
-                    <template x-if="(o.payment_method || '').toLowerCase() !== 'cod' && (o.status === 'success' || o.verified)">
+                    <template x-if="(o.payment_method || '').toLowerCase() !== 'cod' && (o.status === 'success' || o.verified || o.trx_status === 'verified')">
                       <span class="bg-emerald-50 text-emerald-800 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-emerald-200">Paid & Verified</span>
                     </template>
 
-                    <template x-if="(o.payment_method || '').toLowerCase() !== 'cod' && !(o.status === 'success' || o.verified)">
-                      <span class="bg-amber-50 text-amber-800 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-amber-200">Pending Verification</span>
+                    <template x-if="(o.payment_method || '').toLowerCase() !== 'cod' && !(o.status === 'success' || o.verified || o.trx_status === 'verified')">
+                      <span class="bg-amber-50 text-amber-800 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border border-amber-200">Under Verification</span>
                     </template>
 
                     <!-- TrxID if available -->
@@ -326,16 +326,16 @@
                       <div class="text-[10px] font-mono text-neutral-500">TrxID: <span class="font-bold text-black" x-text="o.trx_id"></span></div>
                     </template>
 
-                    <!-- 1-Click Verify TrxID Button -->
-                    <template x-if="(o.payment_method || '').toLowerCase() !== 'cod' && !(o.status === 'success' || o.verified)">
+                    <!-- Verify Payment Status Button (bKash/Nagad under verification) -->
+                    <template x-if="['bkash', 'nagad'].includes((o.payment_method || '').toLowerCase()) && !(o.status === 'success' || o.verified || o.trx_status === 'verified')">
                       <button 
                         @click="quickVerifyTrx(o.invoice_number)"
                         :disabled="verifyingTrx[o.invoice_number]"
                         class="mt-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1 shadow-2xs"
-                        title="1-Click Verify Payment & Transaction ID"
+                        title="Verify bKash / Nagad Payment Status"
                       >
                         <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        <span x-text="verifyingTrx[o.invoice_number] ? 'Verifying...' : 'Verify TrxID'"></span>
+                        <span x-text="verifyingTrx[o.invoice_number] ? 'Verifying...' : 'Verify Payment Status'"></span>
                       </button>
                     </template>
                   </div>
@@ -1198,6 +1198,7 @@
               body: JSON.stringify({
                 invoice_number: order.invoice_number,
                 verified: newStatus,
+                trx_status: newStatus ? 'verified' : 'under_verification',
                 status: newStatus ? 'confirmed' : order.status
               })
             });
@@ -1209,6 +1210,7 @@
 
             if (res.ok) {
               order.verified = newStatus;
+              order.trx_status = newStatus ? 'verified' : 'under_verification';
               if (newStatus && order.status === 'pending') order.status = 'confirmed';
               this.showToast(newStatus ? 'Payment marked as Verified!' : 'Payment marked Unverified');
             }
