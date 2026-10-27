@@ -5,6 +5,9 @@ tab: normal
 title: Microfiber Leather Steering Wheel Cover 38cm – Universal Fit for All
   Cars, Integrated Crafted Design
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-3.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082334/white-2-piece-4.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082333/white-2-piece-3.webp
 description: Premium Microfiber Leather Steering Wheel Cover
 price: 1899
 tags: Car Accessories
