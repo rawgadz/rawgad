@@ -5,6 +5,9 @@ tab: normal
 title: Breathable Glossy Non-Slip Peach Wood Grain Steering Cover – All Season
   Universal Fit
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081590/O1CN01CFl46O25tz6FnivDC_2756927585-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081589/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp
 description: Upgrade your car's interior with the elegant, all-season, anti-slip
   Rawgadz Peach Wood Grain Steering Cover.
 price: 1847
