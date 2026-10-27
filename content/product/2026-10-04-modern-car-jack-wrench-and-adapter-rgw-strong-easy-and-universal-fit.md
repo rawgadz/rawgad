@@ -4,6 +4,10 @@ slug: modern-wrench-for-car-jack-and-waterproof-stickers-during-rain/
 tab: normal
 title: Modern Car Jack Wrench and Adapter (RGW) – Strong, Easy & Universal Fit!
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791101143/jack-plus-wrench-1-1024x1024.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088698/Untitled-design-46.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088696/Untitled-design-47.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088693/Weight-270grams-2-1.webp
 description: Built from high-strength alloy steel, the ergonomic RGW Car Jack
   Wrench makes emergency tire lifting effortless, fast, and completely
   slip-free.
