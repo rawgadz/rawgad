@@ -4,6 +4,9 @@ slug: car-ac-vent-cleaning-brush-remove-interior-dust-easily/
 tab: normal
 title: Car AC Vent Cleaning Brush – Remove Interior Dust Easily | avc1
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1790524205/car-ac-cleaner.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089065/1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089085/20.webp
 description: Keep your car’s AC vents and interior spotless with the Rawgadaz
   Car AC Vent Cleaning Brush.
 price: 150
