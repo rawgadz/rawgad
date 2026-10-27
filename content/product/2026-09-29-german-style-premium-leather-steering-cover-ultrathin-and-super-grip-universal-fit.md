@@ -5,6 +5,8 @@ tab: normal
 title: German Style Premium Leather Steering Cover Ultrathin and Super Grip
   (Universal Fit)
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083963/Upload-to-rawgadz-increase-price-2.webp
 description: Drive in luxury with the non-slip Rawgadaz Nappa Leather Steering
   Cover, backed by a 3-month replacement warranty.
 price: 1990
