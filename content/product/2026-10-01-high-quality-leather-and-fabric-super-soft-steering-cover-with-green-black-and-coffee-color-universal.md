@@ -4,7 +4,7 @@ slug: high-quality-leather-and-fabric-super-soft-steering-cover-with-green-black
 tab: normal
 title: High Quality Leather and Fabric Super Soft Steering cover with green,
   black and coffee color – Universal
-imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
+imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086813/green-1-1.webp
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086799/Upload-to-rawgadz-increase-price-4.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086800/O1CN014J8oei1CnITJp4b0c_2217254080125-0-cib.webp
