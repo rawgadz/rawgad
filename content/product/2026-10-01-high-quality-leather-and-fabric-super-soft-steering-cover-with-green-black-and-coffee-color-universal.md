@@ -5,6 +5,13 @@ tab: normal
 title: High Quality Leather and Fabric Super Soft Steering cover with green,
   black and coffee color – Universal
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086799/Upload-to-rawgadz-increase-price-4.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086800/O1CN014J8oei1CnITJp4b0c_2217254080125-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086801/O1CN01lh6MXh1CnITLuHM34_2217254080125-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086810/green-3.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086811/green-2.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086813/green-1-1.webp
 description: This ultra-slim cowhide leather steering cover delivers a
   breathable, non-slip grip backed by a 3-month replacement warranty.
 price: 1650
