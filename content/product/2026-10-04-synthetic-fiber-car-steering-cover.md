@@ -4,6 +4,11 @@ slug: synthetic-fiber-car-steering-cover/
 tab: normal
 title: Synthetic Fiber Car Steering Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791089292/Untitled-design-35.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087727/Untitled-design-39.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087729/Untitled-design-37.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087733/Untitled-design-36.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087736/Untitled-design-35.webp
 description: The ultra-thin ice silk and leather steering cover keeps your grip
   cool, sweat-free, and slip-resistant.
 price: 899
