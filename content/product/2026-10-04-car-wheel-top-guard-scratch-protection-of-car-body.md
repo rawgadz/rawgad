@@ -7,6 +7,8 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.w
 images:
   - https://res.cloudinary.com/escprwdb/image/upload/v1792648363/O1CN01tytHTo21XIyxdmEZ1_2216861676994-0-cib.webp
   - https://res.cloudinary.com/escprwdb/image/upload/v1792649780/O1CN01hHWl5b21XIyr8QdEf_2216861676994-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793071418/O1CN01THWdrm1x10iWeA4bB_2219093776382-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793071419/O1CN01boW4Jv1x10iTivpTX_2219093776382-0-cib.webp
 description: The universal Dilano PVC Wheel Arch Protector guards against
   scratches and mud while adding a stylish accent, backed by a 6-month
   replacement warranty.
