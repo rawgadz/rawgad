@@ -7,6 +7,8 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/61H-myi9Y
 images:
   - https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/61dap6qix4L._AC_SL1000_-1.webp
   - https://res.cloudinary.com/mltcbcft/image/upload/v1791097346/81gCeWPHlyL._AC_SL1500_-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088372/Untitled-design-20.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088370/Untitled-design-18.webp
 description: " Elevate your car’s interior ambiance with the Premium Imported
   Crystal Hanging Charm, featuring durable suspension cords and radiant
   light-reflecting crystals."
