@@ -7,7 +7,6 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN01gbE
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083173/Upload-to-rawgadz-increase-price-8.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083171/Upload-to-rawgadz-increase-price-7.webp
-  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083170/Upload-to-rawgadz-increase-price-7_1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083170/O1CN011UAdnb1JKAcSMgCCw_2206426561009-0-cib-1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083168/O1CN01ShHtBA20x7fIdSVJs_3326506915.webp
 description: Premium universal steering wheel cover with slim design, anti-slip
