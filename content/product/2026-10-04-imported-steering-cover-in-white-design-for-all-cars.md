@@ -4,6 +4,8 @@ slug: imported-steering-cover-in-white-design-for-all-cars/
 tab: normal
 title: Imported Steering Cover in White Design for All cars
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-29.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088543/Untitled-design-23.webp
 description: Crafted from ultra-thin, breathable artificial leather, this
   elegant white steering cover prevents sweaty palms while delivering a secure
   non-slip grip.
