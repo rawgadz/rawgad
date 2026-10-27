@@ -4,6 +4,8 @@ slug: car-steering-cover-of-suede-fur-ultra-thin-premium/
 tab: normal
 title: Car Steering cover of suede fur ultra thin premium
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083299/Upload-to-rawgadz-increase-price-5.webp
 description: Elevate your drive with the luxurious, ultra-durable, and non-slip
   Rawgadaz Authentic Suede Steering Wheel Cover.
 price: 1690
