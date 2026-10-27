@@ -4,6 +4,12 @@ slug: anti-skid-dashboard-mat-with-360-rotating-phone-holder-and-number-plate/
 tab: normal
 title: Anti-Skid Dashboard Mat with 360° Rotating Phone Holder and Number Plate
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01xhvoYo1WC0cypPbv3_976492751-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081396/O1CN01isX37p1WC0dHC04tu_976492751-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081396/O1CN015PaivN1WC0bXgHEJZ_976492751-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081396/O1CN01XGctkq1WC0bYhszuG_976492751-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081396/O1CN013Su7se1WC0dG5kNDx_976492751-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081395/O1CN01eWF8ZN1WC0bZO1k0p_976492751-0-cib.webp
 description: Secure your phone and essentials with the anti-skid Rawgadaz
   Dashboard Mat featuring a 360° rotating holder and parking number display.
 price: 900
