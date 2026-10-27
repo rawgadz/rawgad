@@ -4,6 +4,19 @@ slug: classic-universal-steering-cover/
 tab: normal
 title: Classic Universal Steering Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790686772/gallery-image-2.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083811/b-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083810/c.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083809/h-2.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083807/h-4.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083806/d.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083804/E.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083803/h-5.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083797/L.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083796/product-photo-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083783/gallery-image-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083782/gallery-image.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083781/product-photo.webp
 description: "Reliable, budget-friendly, and all-season: get steady anti-slip
   control with the universal Rawgadaz Basic Steering Cover."
 price: 750
