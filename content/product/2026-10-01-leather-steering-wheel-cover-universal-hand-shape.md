@@ -4,6 +4,10 @@ slug: leather-steering-wheel-cover-universal-hand-shape/
 tab: normal
 title: Leather steering Wheel Cover Universal Hand Shape
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087313/5.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087366/2.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087368/4.webp
 description: This ergonomic leather steering cover delivers a contoured,
   non-slip hand grip and durable all-season wheel protection.
 price: 1450
