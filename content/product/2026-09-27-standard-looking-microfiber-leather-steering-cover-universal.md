@@ -4,6 +4,9 @@ slug: microfiber-leather-steering-wheel-cover-38cm/
 tab: normal
 title: Standard looking Microfiber Leather Steering Cover Universal
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081972/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081972/O1CN01AFZCvv26HLEWDMCcU_2215748707636-0-cib.webp
 description: Premium mahogany grain steering wheel cover with luxurious feel,
   anti-slip grip, slim design and long-lasting durability.
 price: 1699
