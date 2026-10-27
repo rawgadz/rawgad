@@ -7,7 +7,6 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01UvO
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082203/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082202/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp
-  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082202/O1CN01UvOUiH2GvK02ncaTh_3025299077-0-cib.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082169/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp
 description: Premium leather steering wheel cover with comfortable grip,
   anti-slip protection, and stylish design.
