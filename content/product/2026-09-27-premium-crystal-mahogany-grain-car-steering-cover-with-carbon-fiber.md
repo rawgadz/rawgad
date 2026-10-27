@@ -4,6 +4,10 @@ slug: premium-crystal-mahogany-grain-car-steering-cover/
 tab: normal
 title: Premium Crystal Mahogany Grain Car Steering Cover with Carbon Fiber
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082682/Untitled-design-34.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082681/Untitled-design-33-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082680/Untitled-design-32-1.webp
 description: Premium carbon fiber & microfiber steering cover with super grip,
   slim design, luxurious feel and long-lasting durability.
 price: 2400
@@ -11,7 +15,7 @@ tags: Car Accessories
 types:
   - subProductId: MRA-1101
     subTitle: Black and Red
-    subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/Upload-to-rawgadz-increase-price-1.webp
+    subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082590/Upload-to-rawgadz-increase-price-1.webp
     price: 2400
   - subProductId: MRA-1102
     subTitle: Black and Brown
