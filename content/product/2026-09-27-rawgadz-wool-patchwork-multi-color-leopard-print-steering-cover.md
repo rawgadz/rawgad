@@ -4,6 +4,10 @@ slug: rawgadz-wool-patchwork-multi-color-leopard-print-steering-cover/
 tab: normal
 title: Rawgadz Wool Patchwork Multi-Color Leopard Print Steering Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-51.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082077/Untitled-design-50.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082076/Untitled-design-49.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082080/Untitled-design-51.webp
 description: Unique wool patchwork steering cover with stylish leopard print,
   all-season comfort, anti-slip grip and easy installation.
 price: 920
