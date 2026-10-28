@@ -27,7 +27,7 @@ types:
       - subProductId: SH-020101
         subTitle: Black
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp
-        price: 981
+        price: 950
       - subProductId: SH-020102
         subTitle: Coffee
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp
