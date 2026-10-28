@@ -1,6 +1,6 @@
 ---
-tag: "keyboard"
-label: "Keyboards"
-image: "https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/7d4d2641-d6a8-4fef-e85c-b12ed100d500/w=800"
+tag: keyboard
+label: Keyboards
+image: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793161136/Rawgadz_Half_Cover_Steering_Wheel_Cover_RGHG.png
 order: 5
 ---
