@@ -1,5 +1,5 @@
 ---
-id: 3d-dot-grip-leather-carbon-fiber-splicing-universal-steering-cover
+id: pro_test
 slug: cable-organizers-for-charging-cable-and-other-cables-slider-magnet
 tab: gadget
 title: Cable Organizers For Charging Cable and other cables slider magnet
