@@ -5,6 +5,10 @@ tab: normal
 title: Green car Steering cover of suede fur ultra thin premium Universal Fit
   (red and orange)
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793084286/Upload-to-rawgadz-increase-price-6.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083299/Upload-to-rawgadz-increase-price-5.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793084353/Untitled-design-42.webp
 description: Crafted from authentic suede, this ultra-thin steering wheel cover
   prevents sweaty slips while delivering a luxurious, non-slip grip.
 price: 1690

@@ -4,6 +4,8 @@ slug: leather-semi-perforated-steering-wheel-cover-rawgadz/
 tab: normal
 title: Leather Semi-Perforated Steering Wheel Cover | Rawgadz
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087090/Untitled-design-48.webp
 description: This breathable massage-grip steering cover relieves driving
   fatigue and shields against sun damage with a cool, non-slip hold.
 price: 1860

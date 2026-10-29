@@ -4,6 +4,8 @@ slug: classic-brown-universal-steering-cover/
 tab: normal
 title: Classic Brown Universal Steering Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083638/h-1.webp
 description: Get reliable, all-season anti-slip grip on a budget with the
   universal Rawgadaz Basic Steering Cover.
 price: 1050

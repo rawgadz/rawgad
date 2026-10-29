@@ -4,6 +4,10 @@ slug: high-quality-iphone-speaker-dust-protector/
 tab: normal
 title: High Quality iPhone Speaker Dust Protector
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/IMG_5603.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088922/IMG_5603.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088928/IMG_5604.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088925/12-16-base-pro-and-promax.webp
 description: Precision metal dust grills for iPhone 12–16 protect speakers from
   dirt with zero audio loss and easy installation.
 price: 80

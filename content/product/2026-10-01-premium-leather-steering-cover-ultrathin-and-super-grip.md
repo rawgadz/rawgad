@@ -4,6 +4,10 @@ slug: leather-premium-steering-cover-ultrathin-and-super-grip/
 tab: normal
 title: Premium Leather Steering Cover Ultrathin and Super Grip
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790834130/Upload-to-rawgadz-increase-price-9.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087627/Upload-to-rawgadz-increase-price-10.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087625/Upload-to-rawgadz-increase-price-9.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087622/O1CN01VHnTYo1JKAcUFF22a_2206426561009-0-cib.webp
 description: This ultra-thin Nappa leather steering cover delivers a luxurious,
   slip-proof grip backed by a 3-month replacement warranty.
 price: 1650

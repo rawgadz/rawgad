@@ -7,6 +7,13 @@ title: Universal Car AC Decoration Strips (নিজ হাতে ফিট ক�
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791089575/71ar05bdvxL._AC_SL1500_-1024x1017.webp
 images:
   - https://res.cloudinary.com/mltcbcft/image/upload/v1791089576/71GUihEbJ8L._AC_SL1500_-1024x1024.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087881/710m-staDuL._AC_SL1200_-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087879/717pMabD2XL._AC_SL1500_.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087876/gold.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087874/green.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087857/O1CN01nn0cev1ykBInkPlwJ_3298946616-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087855/purple.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087853/silver.webp
 description: These flexible, tool-free clip-on AC vent strips deliver an
   instant, heat-resistant interior style upgrade for any car.
 price: 399

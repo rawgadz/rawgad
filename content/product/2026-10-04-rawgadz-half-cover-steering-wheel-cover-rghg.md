@@ -4,6 +4,11 @@ slug: rawgadz-half-cover-steering-wheel-cover-rghg/
 tab: normal
 title: Rawgadz Half Cover Steering Wheel Cover – RGHG
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE_1.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088175/RED-WINE-1-1.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088191/RED-WINE-2.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088193/RED-WINE.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088196/RED-WINE-4-1.webp
 description: The RawGadz Nappa leather and silicone half-grip steering cover
   prevents sweaty slips while delivering firm, universal driving control.
 price: 1500

@@ -4,6 +4,8 @@ slug: glossy-handshape-dragon-skin-steering-cover/
 tab: normal
 title: Glossy Handshape Dragon Skin Steering cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01BOmfnH25typd8KVPw_2756927585-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793084031/O1CN013BchY625tyqovMRLi_2756927585-0-cib.webp
 description: Elevate your car’s interior with the bold Dragon Skin texture,
   classy peach wood accents, and ergonomic anti-slip grip of the Rawgadaz
   Steering Cover.

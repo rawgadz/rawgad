@@ -1,6 +1,6 @@
 ---
-tag: "audio"
-label: "Audio"
-image: "https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/eec164e9-23f8-4f87-b48a-a208fa806100/w=800"
+tag: audio
+label: Audio
+image: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793161150/Car_steering_cover_anti-slip_artificial_leather.png
 order: 2
 ---

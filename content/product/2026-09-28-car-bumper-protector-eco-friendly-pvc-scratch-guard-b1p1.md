@@ -4,6 +4,8 @@ slug: car-bumper-protector-eco-friendly-pvc-scratch-guard/
 tab: normal
 title: Car Bumper Protector – Eco-Friendly PVC Scratch Guard b1p1
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790598116/white-2-piece.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082814/white-2-piece-2.webp
 description: Durable, waterproof bumper protector for scratch and impact protection.
 price: 950
 tags: Car Accessories

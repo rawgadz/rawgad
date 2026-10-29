@@ -1,8 +1,9 @@
 ---
 id: 3d-dot-grip-leather-carbon-fiber-splicing-universal-steering-cover
 slug: cable-organizers-for-charging-cable-and-other-cables-slider-magnet
-tab: normal
+tab: gadget
 title: Cable Organizers For Charging Cable and other cables slider magnet
+imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089323/O1CN01i3cew61lBIFIP8Rfx_2210908094780-0-cib.webp
 images:
   - https://placehold.co/600x400/262626/ffffff?text=Cable+Organizer+Black
   - https://placehold.co/600x400/525252/ffffff?text=Cable+Organizer+Gray
@@ -14,6 +15,8 @@ priceRange:
   min: 100
   max: 100
 tags: wearables
+types:
+  - {}
 ---
 Eliminate desk clutter and keep your charging cords neatly secured with the Magnetic Adjustable Cable Organiser Clips.
 

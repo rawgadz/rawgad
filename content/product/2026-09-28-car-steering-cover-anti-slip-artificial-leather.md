@@ -4,6 +4,11 @@ slug: car-steering-cover-anti-slip-artificial-leather/
 tab: normal
 title: Car steering cover anti-slip artificial leather
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01yUvX2Q238gkA87fYA_2211268807211-0-cib.webp
+images:
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082928/O1CN01iW1zfY238gkGuUTMX_2211268807211-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082927/O1CN01vcCRrD238gkGuWHaF_2211268807211-0-cib.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082926/Untitled-design-43.webp
+  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082907/Untitled-design-44.webp
 description: Ultra-thin artificial leather steering cover with super grip,
   breathable comfort and a stylish anti-slip design.
 price: 1100
