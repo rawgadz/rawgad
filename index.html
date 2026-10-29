@@ -1597,8 +1597,9 @@
             const all =
               await res.json();
 
+            // MODIFIED: Include both 'normal' (car accessories) and 'gadgets' tabs
             this.allProducts =
-              all.filter(p => !p.tab || p.tab === 'normal');
+              all.filter(p => !p.tab || p.tab === 'normal' || p.tab === 'gadgets');
 
             this.filteredProducts =
               [...this.allProducts];
