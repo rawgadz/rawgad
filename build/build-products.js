@@ -516,10 +516,11 @@ function generateProductJson() {
     }
     if (!slug) slug = slugify(String(data.id));
 
+    // FIX: Accept both 'gadget' and 'gadgets', normalize to 'gadget'
     let tab = 'normal';
     if (data.tab) {
       const rawTab = String(data.tab).trim().toLowerCase();
-      tab = (rawTab === 'gadget') ? 'gadget' : 'normal';
+      tab = (rawTab === 'gadget' || rawTab === 'gadgets') ? 'gadget' : 'normal';
     }
 
     const htmlContent = marked.parse(content || '');
@@ -639,7 +640,8 @@ function generateProductJson() {
   console.log(`[build-products] Compiled ${Object.keys(priceCatalog).length} purchasable items into ${PRICE_OUTPUT_FILE}`);
 
   buildStandaloneProductPages(products);
-  buildGadgetsPage();
+  // FIX: Commented out to prevent overwriting your manual gadgets.html
+  // buildGadgetsPage();
 
   return products;
 }
@@ -658,6 +660,7 @@ function buildStandaloneProductPages(products) {
   console.log(`[build-products] Generated ${count} standalone product pages in ${HTML_OUTPUT_DIR}`);
 }
 
+// FIX: Improved regex patterns for more robust replacement
 function buildGadgetsPage() {
   if (!fs.existsSync(INDEX_HTML_FILE)) {
     throw new Error(`[build-products] Cannot generate gadgets.html: ${INDEX_HTML_FILE} does not exist.`);
@@ -665,19 +668,23 @@ function buildGadgetsPage() {
 
   let html = fs.readFileSync(INDEX_HTML_FILE, 'utf-8');
 
+  // Update Title and Meta
   html = html.replace(/<title>.*?<\/title>/i, '<title>Rawgadz - Minimalist Gadgets</title>');
   html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/i, '<meta name="description" content="Explore our curated collection of minimalist gadgets and car accessories at Rawgadz.">');
 
+  // Update Navbar Active States
   html = html.replace(/(<nav class="hidden md:flex[^>]*>[\s\S]*?<a\s+href="\.\/index\.html"\s+class=")[^"]*(")/i, '$1hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600$2');
   html = html.replace(/(<nav class="hidden md:flex[^>]*>[\s\S]*?<a\s+href="\.\/gadgets\.html"\s+class=")[^"]*(")/i, '$1hover:text-black transition-colors font-bold text-xs tracking-wider uppercase text-black border-b-2 border-black pb-0.5$2');
 
+  // Update Hero Slider
   html = html.replace(/heroSlider\(['"]index['"]\)/g, `heroSlider('gadgets')`);
   html = html.replace(/aria-label="Hero Slider"/g, `aria-label="Gadgets Hero Slider"`);
 
-  html = html.replace(/all\.filter\(p\s*=>\s*!p\.tab\s*\|\|\s*p\.tab\s*===\s*['"]normal['"]\)/g, `all.filter(p => p.tab === 'gadget')`);
-  html = html.replace(/carouselSource:\s*['"]\/data\/index\.json['"]/g, `carouselSource: '/data/gadgets.json'`);
-  html = html.replace(/carouselSource:\s*['"]\.\/data\/index\.json['"]/g, `carouselSource: '/data/gadgets.json'`);
-  html = html.replace(/carouselSource:\s*['"]\.\/index\.json['"]/g, `carouselSource: '/data/gadgets.json'`);
+  // FIX: Broader regex to catch the filter regardless of spacing
+  html = html.replace(/all\.filter\(\s*p\s*=>[^)]+\)/g, `all.filter(p => p.tab === 'gadget')`);
+  
+  // FIX: More flexible carousel source replacement
+  html = html.replace(/carouselSource:\s*['"][^'"]+['"]/g, `carouselSource: '/data/gadgets.json'`);
 
   fs.writeFileSync(GADGETS_OUTPUT_FILE, html, 'utf-8');
   console.log(`[build-products] Generated ${GADGETS_OUTPUT_FILE}`);
@@ -691,4 +698,4 @@ module.exports = {
   generateProductJson,
   buildStandaloneProductPages,
   buildGadgetsPage
-};
+}; 
