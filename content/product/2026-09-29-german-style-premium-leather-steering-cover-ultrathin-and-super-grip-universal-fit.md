@@ -10,7 +10,7 @@ images:
 description: Drive in luxury with the non-slip Rawgadaz Nappa Leather Steering
   Cover, backed by a 3-month replacement warranty.
 price: 1990
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1901
     subTitle: With Toyota Logo
