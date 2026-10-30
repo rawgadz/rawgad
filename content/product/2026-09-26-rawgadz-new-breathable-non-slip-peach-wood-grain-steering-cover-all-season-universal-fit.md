@@ -11,7 +11,7 @@ images:
 description: The Rawgadz Peach Wood Grain Steering Cover offers an elegant,
   comfortable, all-season grip and easy installation for most cars.
 price: 1850
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0601
     subTitle: RedWine Glossy
