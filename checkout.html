@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout - Rawgadz</title>
-  <meta name="description" content="Complete your purchase with Cash on Delivery (COD), bKash, or Nagad at Rawgadz.">
+  <meta name="description" content="Complete your purchase with Cash on Delivery (COD) at Rawgadz.">
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,190 +28,52 @@
   <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-neutral-200 w-full shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
 
-      <a
-        href="./index.html"
-        class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex-shrink-0"
-      >
+      <a href="./index.html" class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex-shrink-0">
         RAWGADZ
       </a>
 
       <nav class="hidden md:flex md:flex-row md:items-center md:gap-6 flex-grow justify-center">
-        <a
-          href="./index.html"
-          class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-        >
-          Home
-        </a>
-
-        <a
-          href="./car_accessories.html"
-          class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-        >
-          Car accessories
-        </a>
-
-        <a
-          href="./gadgets.html"
-          class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-        >
-          Gadgets
-        </a>
-
-        <a
-          href="./car.html"
-          class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-        >
-          Cars
-        </a>
-
-        <a
-          href="./blog.html"
-          class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-        >
-          Blog
-        </a>
-
-        <a
-          href="./contact.html"
-          class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-        >
-          Contact
-        </a>
+        <a href="./index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
+        <a href="./car_accessories.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Car accessories</a>
+        <a href="./gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
+        <a href="./car.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Cars</a>
+        <a href="./blog.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Blog</a>
+        <a href="./contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
       </nav>
 
       <div class="flex items-center gap-3 ml-auto flex-shrink-0">
-
-        <button
-          @click="$store.cart.isOpen = true"
-          type="button"
-          aria-label="View Cart"
-          class="relative p-2.5 text-black hover:bg-neutral-100 rounded-full transition-colors border border-neutral-300 focus:outline-none flex items-center justify-center cursor-pointer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            class="w-5 h-5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1-1.5 0Z"
-            />
+        <button @click="$store.cart.isOpen = true" type="button" aria-label="View Cart" class="relative p-2.5 text-black hover:bg-neutral-100 rounded-full transition-colors border border-neutral-300 focus:outline-none flex items-center justify-center cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1-1.5 0Z" />
           </svg>
-
-          <span
-            x-show="$store.cart.totalCount > 0"
-            x-text="$store.cart.totalCount"
-            class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-black rounded-full border-2 border-white"
-            style="display: none;"
-          ></span>
+          <span x-show="$store.cart.totalCount > 0" x-text="$store.cart.totalCount" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-black rounded-full border-2 border-white" style="display: none;"></span>
         </button>
 
-        <button
-          @click="mobileMenuOpen = !mobileMenuOpen"
-          aria-label="Toggle Navigation Menu"
-          class="md:hidden p-2 rounded-xl text-neutral-700 hover:text-black hover:bg-neutral-100 transition-colors focus:outline-none"
-        >
-          <svg
-            x-show="!mobileMenuOpen"
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-          >
+        <button @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Toggle Navigation Menu" class="md:hidden p-2 rounded-xl text-neutral-700 hover:text-black hover:bg-neutral-100 transition-colors focus:outline-none">
+          <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
-
-          <svg
-            x-show="mobileMenuOpen"
-            class="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            style="display: none;"
-          >
+          <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display: none;">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-
       </div>
     </div>
 
-    <div
-      x-show="mobileMenuOpen"
-      x-transition
-      @click.away="mobileMenuOpen = false"
-      class="md:hidden flex flex-col absolute top-16 left-0 right-0 bg-white border-b border-neutral-200 p-6 shadow-xl z-50 gap-4"
-      style="display: none;"
-    >
-      <a
-        href="./index.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-      >
-        Home
-      </a>
-
-      <a
-        href="./car_accessories.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-      >
-        Car accessories
-      </a>
-
-      <a
-        href="./gadgets.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-      >
-        Gadgets
-      </a>
-
-      <a
-        href="./car.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-      >
-        Cars
-      </a>
-
-      <a
-        href="./blog.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-      >
-        Blog
-      </a>
-
-      <a
-        href="./contact.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
-      >
-        Contact
-      </a>
+    <div x-show="mobileMenuOpen" x-transition @click.away="mobileMenuOpen = false" class="md:hidden flex flex-col absolute top-16 left-0 right-0 bg-white border-b border-neutral-200 p-6 shadow-xl z-50 gap-4" style="display: none;">
+      <a href="./index.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Home</a>
+      <a href="./car_accessories.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Car accessories</a>
+      <a href="./gadgets.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Gadgets</a>
+      <a href="./car.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Cars</a>
+      <a href="./blog.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Blog</a>
+      <a href="./contact.html" class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600">Contact</a>
     </div>
   </header>
 
   <!-- Slide-Over Cart Drawer -->
-  <div 
-    x-show="$store.cart.isOpen" 
-    class="fixed inset-0 bg-black/60 z-50 transition-opacity" 
-    @click="$store.cart.isOpen = false"
-    style="display: none;"
-  ></div>
+  <div x-show="$store.cart.isOpen" class="fixed inset-0 bg-black/60 z-50 transition-opacity" @click="$store.cart.isOpen = false" style="display: none;"></div>
 
-  <div 
-    x-show="$store.cart.isOpen" 
-    x-transition:enter="transform transition ease-in-out duration-300"
-    x-transition:enter-start="translate-x-full"
-    x-transition:enter-end="translate-x-0"
-    x-transition:leave="transform transition ease-in-out duration-300"
-    x-transition:leave-start="translate-x-0"
-    x-transition:leave-end="translate-x-full"
-    class="fixed inset-y-0 right-0 max-w-sm w-full bg-white border-l border-neutral-200 z-50 flex flex-col shadow-2xl"
-    style="display: none;"
-  >
+  <div x-show="$store.cart.isOpen" x-transition:enter="transform transition ease-in-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="fixed inset-y-0 right-0 max-w-sm w-full bg-white border-l border-neutral-200 z-50 flex flex-col shadow-2xl" style="display: none;">
     <div class="flex items-center justify-between p-6 border-b border-neutral-200">
       <h2 class="text-base font-black text-black uppercase tracking-wider">Your Cart</h2>
       <button @click="$store.cart.isOpen = false" class="p-1 text-neutral-400 hover:text-black focus:outline-none transition-colors">
@@ -244,10 +106,7 @@
         <span class="font-semibold text-neutral-600 text-xs uppercase tracking-wider">Total</span>
         <span class="font-extrabold text-2xl text-black" x-text="'BDT ' + $store.cart.totalPrice.toFixed(2)">BDT 0.00</span>
       </div>
-      <button 
-        @click="$store.cart.isOpen = false"
-        class="w-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all block text-center shadow-sm cursor-pointer"
-      >
+      <button @click="$store.cart.isOpen = false" class="w-full bg-black hover:bg-neutral-800 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all block text-center shadow-sm cursor-pointer">
         Close Cart
       </button>
     </div>
@@ -264,185 +123,15 @@
         <!-- Left: Payment Method & Customer Information Form -->
         <div class="lg:col-span-7 space-y-6">
           
-          <!-- 1. Payment Method Selector -->
+          <!-- 1. Payment Method Selector (COD Only) -->
           <div class="bg-white p-6 sm:p-8 rounded-3xl border border-neutral-200 shadow-sm space-y-6">
             <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
               <h2 class="text-sm font-black text-black uppercase tracking-wider">1. Select Payment Method</h2>
-              <span class="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">COD • bKash • Nagad</span>
+              <span class="text-[11px] font-bold text-neutral-400 uppercase tracking-wider">COD Only</span>
             </div>
             
-            <!-- 3 Payment Choice Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <!-- Cash on Delivery Card -->
-              <label 
-                :class="paymentMethod === 'cod' ? 'border-black bg-neutral-50 ring-2 ring-black shadow-sm' : 'border-neutral-200 bg-white hover:border-neutral-400'"
-                class="cursor-pointer border-2 rounded-2xl p-4 flex flex-col justify-between transition-all relative overflow-hidden"
-              >
-                <div>
-                  <div class="flex items-center gap-2 mb-2">
-                    <input type="radio" name="payment_method" value="cod" x-model="paymentMethod" class="accent-black w-4 h-4 cursor-pointer">
-                    <span class="font-bold text-xs sm:text-sm text-neutral-900">Cash on Delivery</span>
-                  </div>
-                  <p class="text-[11px] text-neutral-500 font-medium leading-relaxed">Pay in cash upon doorstep delivery</p>
-                </div>
-                <span class="mt-3 inline-block self-start text-[10px] font-bold uppercase tracking-wider bg-neutral-200 text-neutral-800 px-2 py-0.5 rounded-full">COD</span>
-              </label>
-
-              <!-- bKash Card -->
-              <label 
-                :class="paymentMethod === 'bkash' ? 'border-[#E2136E] bg-pink-50/50 ring-2 ring-[#E2136E] shadow-sm' : 'border-neutral-200 bg-white hover:border-pink-300'"
-                class="cursor-pointer border-2 rounded-2xl p-4 flex flex-col justify-between transition-all relative overflow-hidden"
-              >
-                <div>
-                  <div class="flex items-center gap-2 mb-2">
-                    <input type="radio" name="payment_method" value="bkash" x-model="paymentMethod" class="accent-[#E2136E] w-4 h-4 cursor-pointer">
-                    <span class="font-bold text-xs sm:text-sm text-neutral-900 flex items-center gap-1.5">
-                      bKash
-                      <span class="text-[10px] bg-[#E2136E] text-white px-1.5 py-0.2 rounded font-bold">বিকাশ</span>
-                    </span>
-                  </div>
-                  <p class="text-[11px] text-neutral-500 font-medium leading-relaxed">Send Money & enter TrxID</p>
-                </div>
-                <span class="mt-3 inline-block self-start text-[10px] font-bold uppercase tracking-wider bg-pink-100 text-[#E2136E] px-2 py-0.5 rounded-full">TrxID Verification</span>
-              </label>
-
-              <!-- Nagad Card -->
-              <label 
-                :class="paymentMethod === 'nagad' ? 'border-[#F7941D] bg-amber-50/50 ring-2 ring-[#F7941D] shadow-sm' : 'border-neutral-200 bg-white hover:border-amber-300'"
-                class="cursor-pointer border-2 rounded-2xl p-4 flex flex-col justify-between transition-all relative overflow-hidden"
-              >
-                <div>
-                  <div class="flex items-center gap-2 mb-2">
-                    <input type="radio" name="payment_method" value="nagad" x-model="paymentMethod" class="accent-[#F7941D] w-4 h-4 cursor-pointer">
-                    <span class="font-bold text-xs sm:text-sm text-neutral-900 flex items-center gap-1.5">
-                      Nagad
-                      <span class="text-[10px] bg-[#F7941D] text-white px-1.5 py-0.2 rounded font-bold">নগদ</span>
-                    </span>
-                  </div>
-                  <p class="text-[11px] text-neutral-500 font-medium leading-relaxed">Send Money & enter TrxID</p>
-                </div>
-                <span class="mt-3 inline-block self-start text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-[#D87010] px-2 py-0.5 rounded-full">TrxID Verification</span>
-              </label>
-            </div>
-
-            <!-- bKash Instructions & Verification Inputs -->
-            <div x-show="paymentMethod === 'bkash'" x-transition class="bg-pink-50/80 border border-pink-200 rounded-2xl p-5 space-y-4">
-              <!-- Number Box with Copy Button -->
-              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-3.5 rounded-xl border border-pink-200">
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#E2136E]">bKash Send Money Number</span>
-                  <div class="flex items-center gap-2 mt-0.5">
-                    <span class="font-mono text-base sm:text-lg font-black text-black" x-text="bkashNumber">01700-000000</span>
-                    <span class="text-[11px] bg-pink-100 text-[#E2136E] px-2 py-0.5 rounded-md font-bold" x-text="bkashType">Personal (Send Money)</span>
-                  </div>
-                </div>
-                <button 
-                  type="button" 
-                  @click="copyNumber(bkashNumber, 'bkash')" 
-                  class="bg-[#E2136E] hover:bg-[#c0105d] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer flex-shrink-0"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                  </svg>
-                  <span x-text="copiedKey === 'bkash' ? 'Copied Number!' : 'Copy Number'"></span>
-                </button>
-              </div>
-
-              <!-- Steps -->
-              <div class="text-xs text-neutral-700 space-y-1.5 bg-white/70 p-3.5 rounded-xl border border-pink-100">
-                <p class="font-bold text-neutral-900 text-xs mb-1">bKash Payment Steps:</p>
-                <p>1. Open your <strong>bKash App</strong> or dial <strong>*247#</strong></p>
-                <p>2. Select <strong>Send Money</strong> to: <strong class="text-[#E2136E] font-mono" x-text="bkashNumber">01700-000000</strong></p>
-                <p>3. Enter Total Amount: <strong class="text-black font-extrabold" x-text="'BDT ' + finalAmount.toFixed(2)"></strong></p>
-                <p>4. Put Reference: <strong>RAWGADZ</strong> and complete payment</p>
-                <p>5. Copy your <strong>Transaction ID (TrxID)</strong> and input below:</p>
-              </div>
-
-              <!-- Inputs for bKash -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                <div>
-                  <label class="block text-[11px] font-bold text-neutral-700 uppercase tracking-wider mb-1">Your bKash Number *</label>
-                  <input 
-                    type="tel" 
-                    x-model="form.sender_phone" 
-                    :placeholder="form.cust_phone || '01XXXXXXXXX'" 
-                    class="w-full border border-pink-300 bg-white rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#E2136E] focus:ring-1 focus:ring-[#E2136E]"
-                  >
-                  <p class="text-[10px] text-neutral-500 mt-1">bKash number used to send money</p>
-                </div>
-                <div>
-                  <label class="block text-[11px] font-bold text-neutral-700 uppercase tracking-wider mb-1">bKash Transaction ID (TrxID) *</label>
-                  <input 
-                    type="text" 
-                    x-model="form.trx_id" 
-                    placeholder="e.g. 9J87A2KX or BL..." 
-                    class="w-full border border-pink-300 bg-white rounded-xl px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-[#E2136E] focus:ring-1 focus:ring-[#E2136E]"
-                  >
-                  <p class="text-[10px] text-neutral-500 mt-1">Alphanumeric TrxID from bKash SMS</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Nagad Instructions & Verification Inputs -->
-            <div x-show="paymentMethod === 'nagad'" x-transition class="bg-amber-50/80 border border-amber-200 rounded-2xl p-5 space-y-4" style="display: none;">
-              <!-- Number Box with Copy Button -->
-              <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-3.5 rounded-xl border border-amber-200">
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#D87010]">Nagad Send Money Number</span>
-                  <div class="flex items-center gap-2 mt-0.5">
-                    <span class="font-mono text-base sm:text-lg font-black text-black" x-text="nagadNumber">01700-000000</span>
-                    <span class="text-[11px] bg-amber-100 text-[#D87010] px-2 py-0.5 rounded-md font-bold" x-text="nagadType">Personal (Send Money)</span>
-                  </div>
-                </div>
-                <button 
-                  type="button" 
-                  @click="copyNumber(nagadNumber, 'nagad')" 
-                  class="bg-[#F7941D] hover:bg-[#d87010] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer flex-shrink-0"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                  </svg>
-                  <span x-text="copiedKey === 'nagad' ? 'Copied Number!' : 'Copy Number'"></span>
-                </button>
-              </div>
-
-              <!-- Steps -->
-              <div class="text-xs text-neutral-700 space-y-1.5 bg-white/70 p-3.5 rounded-xl border border-amber-100">
-                <p class="font-bold text-neutral-900 text-xs mb-1">Nagad Payment Steps:</p>
-                <p>1. Open your <strong>Nagad App</strong> or dial <strong>*167#</strong></p>
-                <p>2. Select <strong>Send Money</strong> to: <strong class="text-[#D87010] font-mono" x-text="nagadNumber">01700-000000</strong></p>
-                <p>3. Enter Total Amount: <strong class="text-black font-extrabold" x-text="'BDT ' + finalAmount.toFixed(2)"></strong></p>
-                <p>4. Put Reference: <strong>RAWGADZ</strong> and complete payment</p>
-                <p>5. Copy your <strong>Transaction ID (TrxID)</strong> and input below:</p>
-              </div>
-
-              <!-- Inputs for Nagad -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                <div>
-                  <label class="block text-[11px] font-bold text-neutral-700 uppercase tracking-wider mb-1">Your Nagad Number *</label>
-                  <input 
-                    type="tel" 
-                    x-model="form.sender_phone" 
-                    :placeholder="form.cust_phone || '01XXXXXXXXX'" 
-                    class="w-full border border-amber-300 bg-white rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#F7941D] focus:ring-1 focus:ring-[#F7941D]"
-                  >
-                  <p class="text-[10px] text-neutral-500 mt-1">Nagad number used to send money</p>
-                </div>
-                <div>
-                  <label class="block text-[11px] font-bold text-neutral-700 uppercase tracking-wider mb-1">Nagad Transaction ID (TrxID) *</label>
-                  <input 
-                    type="text" 
-                    x-model="form.trx_id" 
-                    placeholder="e.g. 7HN35MK9" 
-                    class="w-full border border-amber-300 bg-white rounded-xl px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-[#F7941D] focus:ring-1 focus:ring-[#F7941D]"
-                  >
-                  <p class="text-[10px] text-neutral-500 mt-1">Transaction ID from Nagad confirmation SMS</p>
-                </div>
-              </div>
-            </div>
-
             <!-- Cash on Delivery Notice -->
-            <div x-show="paymentMethod === 'cod'" x-transition class="bg-neutral-100/80 border border-neutral-200 rounded-2xl p-4 flex items-center gap-3">
+            <div class="bg-neutral-100/80 border border-neutral-200 rounded-2xl p-4 flex items-center gap-3">
               <div class="w-10 h-10 rounded-xl bg-white border border-neutral-300 flex items-center justify-center flex-shrink-0 text-black font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V3.75c0-.621-.504-1.125-1.125-1.125h-9.75c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125Z" />
@@ -453,60 +142,34 @@
                 <p>Pay total amount of <strong class="text-black" x-text="'BDT ' + finalAmount.toFixed(2)"></strong> in cash directly to the delivery person when your parcel arrives at your address.</p>
               </div>
             </div>
-
           </div>
 
           <!-- 2. Customer Delivery / Billing Form -->
           <form @submit.prevent="submitOrder" class="bg-white p-6 sm:p-8 rounded-3xl border border-neutral-200 shadow-sm space-y-4">
-            <h2 class="text-sm font-bold text-black uppercase tracking-wider">
-              2. Delivery & Contact Details
-            </h2>
+            <h2 class="text-sm font-bold text-black uppercase tracking-wider">2. Delivery & Contact Details</h2>
 
             <div class="space-y-4">
               <div>
                 <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Full Name *</label>
-                <input 
-                  type="text" 
-                  x-model="form.cust_name" 
-                  placeholder="John Doe" 
-                  required 
-                  class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                >
+                <input type="text" x-model="form.cust_name" placeholder="John Doe" required class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Phone Number (11 Digits) *</label>
-                  <input 
-                    type="tel" 
-                    x-model="form.cust_phone" 
-                    placeholder="01XXXXXXXXX" 
-                    required 
-                    class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                  >
+                  <input type="tel" x-model="form.cust_phone" placeholder="01XXXXXXXXX" required class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                 </div>
                 <div>
                   <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Email Address (Optional)</label>
-                  <input 
-                    type="email" 
-                    x-model="form.cust_email" 
-                    placeholder="name@example.com (optional)" 
-                    class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                  >
+                  <input type="email" x-model="form.cust_email" placeholder="name@example.com (optional)" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                 </div>
               </div>
 
               <!-- Delivery Address Section -->
               <div class="border-t border-neutral-100 pt-4 space-y-3">
                 <div class="flex items-center justify-between">
-                  <label class="block text-[11px] font-bold text-neutral-700 uppercase tracking-wider">
-                    Delivery Address *
-                  </label>
-                  <button 
-                    type="button" 
-                    @click="form.is_custom_address = !form.is_custom_address" 
-                    class="text-[11px] font-semibold text-neutral-500 hover:text-black transition-colors underline cursor-pointer"
-                  >
+                  <label class="block text-[11px] font-bold text-neutral-700 uppercase tracking-wider">Delivery Address *</label>
+                  <button type="button" @click="form.is_custom_address = !form.is_custom_address" class="text-[11px] font-semibold text-neutral-500 hover:text-black transition-colors underline cursor-pointer">
                     <span x-show="!form.is_custom_address">+ Add Custom Address</span>
                     <span x-show="form.is_custom_address" style="display: none;">← Select from Districts</span>
                   </button>
@@ -515,17 +178,10 @@
                 <!-- Standard Selector: Jela (District) & Upozela (Upazila/Thana) -->
                 <div x-show="!form.is_custom_address" class="space-y-3">
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Jela (District) Dropdown -->
                     <div>
-                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                        District (জেলা) *
-                      </label>
+                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">District (জেলা) *</label>
                       <div class="relative">
-                        <select 
-                          x-model="form.jela" 
-                          @change="onJelaChange()" 
-                          class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors bg-white appearance-none cursor-pointer"
-                        >
+                        <select x-model="form.jela" @change="onJelaChange()" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors bg-white appearance-none cursor-pointer">
                           <option value="">Select District (জেলা)...</option>
                           <template x-for="d in districtList" :key="d">
                             <option :value="d" x-text="d" :selected="d === form.jela"></option>
@@ -543,17 +199,10 @@
                       </p>
                     </div>
 
-                    <!-- Upozela (Upazila / Thana) Dropdown -->
                     <div>
-                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                        Upazila / Thana (উপজেলা) *
-                      </label>
+                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Upazila / Thana (উপজেলা) *</label>
                       <div class="relative">
-                        <select 
-                          x-model="form.upozela" 
-                          :disabled="!form.jela || form.jela === 'Other'" 
-                          class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors bg-white disabled:bg-neutral-100 disabled:text-neutral-400 appearance-none cursor-pointer"
-                        >
+                        <select x-model="form.upozela" :disabled="!form.jela || form.jela === 'Other'" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors bg-white disabled:bg-neutral-100 disabled:text-neutral-400 appearance-none cursor-pointer">
                           <option value="">Select Upazila / Thana (উপজেলা)...</option>
                           <template x-for="u in availableUpazilas" :key="u">
                             <option :value="u" x-text="u"></option>
@@ -570,40 +219,19 @@
                   <!-- Custom inputs if 'Other' selected in District dropdown -->
                   <div x-show="form.jela === 'Other'" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1" style="display: none;">
                     <div>
-                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                        Custom District Name *
-                      </label>
-                      <input 
-                        type="text" 
-                        x-model="form.custom_jela" 
-                        placeholder="Enter your district" 
-                        class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                      >
+                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Custom District Name *</label>
+                      <input type="text" x-model="form.custom_jela" placeholder="Enter your district" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                     </div>
                     <div>
-                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                        Custom Upazila / Thana Name *
-                      </label>
-                      <input 
-                        type="text" 
-                        x-model="form.custom_upozela" 
-                        placeholder="Enter your upazila / thana" 
-                        class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                      >
+                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Custom Upazila / Thana Name *</label>
+                      <input type="text" x-model="form.custom_upozela" placeholder="Enter your upazila / thana" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                     </div>
                   </div>
 
                   <!-- Custom input if 'Other' selected in Upazila dropdown -->
                   <div x-show="form.jela !== 'Other' && form.upozela === 'Other'" class="pt-1" style="display: none;">
-                    <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                      Custom Upazila / Thana Name *
-                    </label>
-                    <input 
-                      type="text" 
-                      x-model="form.custom_upozela" 
-                      placeholder="Enter your upazila, thana, or area" 
-                      class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                    >
+                    <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Custom Upazila / Thana Name *</label>
+                    <input type="text" x-model="form.custom_upozela" placeholder="Enter your upazila, thana, or area" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                   </div>
                 </div>
 
@@ -615,41 +243,20 @@
                   </div>
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                        District (Jela) *
-                      </label>
-                      <input 
-                        type="text" 
-                        x-model="form.custom_jela" 
-                        placeholder="e.g. Dhaka, Gazipur, Sylhet" 
-                        class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                      >
+                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">District (Jela) *</label>
+                      <input type="text" x-model="form.custom_jela" placeholder="e.g. Dhaka, Gazipur, Sylhet" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                     </div>
                     <div>
-                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                        Upazila / Thana / Area (Upozela) *
-                      </label>
-                      <input 
-                        type="text" 
-                        x-model="form.custom_upozela" 
-                        placeholder="e.g. Mirpur, Uttara, Sadar" 
-                        class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors"
-                      >
+                      <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Upazila / Thana / Area (Upozela) *</label>
+                      <input type="text" x-model="form.custom_upozela" placeholder="e.g. Mirpur, Uttara, Sadar" class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium transition-colors">
                     </div>
                   </div>
                 </div>
 
                 <!-- Section for Rest of the Address -->
                 <div>
-                  <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">
-                    Street Address & Specific Details (House #, Road #, Flat, Landmark) *
-                  </label>
-                  <textarea 
-                    x-model="form.address_detail" 
-                    rows="2" 
-                    placeholder="House #, Road #, Flat/Floor, Block/Sector, Area landmark..." 
-                    class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium resize-none transition-colors"
-                  ></textarea>
+                  <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Street Address & Specific Details (House #, Road #, Flat, Landmark) *</label>
+                  <textarea x-model="form.address_detail" rows="2" placeholder="House #, Road #, Flat/Floor, Block/Sector, Area landmark..." class="w-full border border-neutral-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-black font-medium resize-none transition-colors"></textarea>
                 </div>
 
                 <!-- Merged Delivery Address Live Preview -->
@@ -663,31 +270,21 @@
             <!-- Error Banner -->
             <div x-show="errorMessage" x-text="errorMessage" class="bg-red-50 text-red-600 border border-red-200 p-3 rounded-xl text-xs font-bold" style="display: none;"></div>
 
-            <!-- Submit Button Desktop & Mobile -->
+            <!-- Submit Button -->
             <div class="pt-4">
               <div x-show="cartItems.some(i => getItemAvailability(i) === false)" class="bg-rose-50 text-rose-700 border border-rose-200 p-3 rounded-xl text-xs font-bold mb-3" style="display: none;">
                 One or more items in your cart are currently unavailable. Please remove them to proceed.
               </div>
-              <button 
-                type="submit" 
-                :disabled="submitting || cartItems.length === 0 || cartItems.some(i => getItemAvailability(i) === false)" 
-                class="w-full bg-black hover:bg-neutral-800 disabled:opacity-40 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span x-show="!submitting">
-                  <span x-show="paymentMethod === 'cod'">Confirm Cash On Delivery Order (BDT <span x-text="finalAmount.toFixed(2)"></span>)</span>
-                  <span x-show="paymentMethod === 'bkash'" style="display: none;">Verify & Confirm bKash Order (BDT <span x-text="finalAmount.toFixed(2)"></span>)</span>
-                  <span x-show="paymentMethod === 'nagad'" style="display: none;">Verify & Confirm Nagad Order (BDT <span x-text="finalAmount.toFixed(2)"></span>)</span>
-                </span>
+              <button type="submit" :disabled="submitting || cartItems.length === 0 || cartItems.some(i => getItemAvailability(i) === false)" class="w-full bg-black hover:bg-neutral-800 disabled:opacity-40 text-white font-bold text-xs uppercase tracking-wider py-4 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                <span x-show="!submitting">Confirm Cash On Delivery Order (BDT <span x-text="finalAmount.toFixed(2)"></span>)</span>
                 <span x-show="submitting" style="display: none;">Processing Order...</span>
               </button>
             </div>
           </form>
-
         </div>
 
         <!-- Right: Order Summary & Coupon -->
         <div class="lg:col-span-5 space-y-6">
-          
           <div class="bg-white p-6 sm:p-8 rounded-3xl border border-neutral-200 shadow-sm space-y-6">
             <div class="flex justify-between items-center border-b border-neutral-100 pb-4">
               <h2 class="text-sm font-bold text-black uppercase tracking-wider">Order Summary</h2>
@@ -728,18 +325,8 @@
             <div class="border-t border-neutral-100 pt-4">
               <label class="block text-[11px] font-bold text-neutral-500 uppercase tracking-wider mb-2">Discount Coupon</label>
               <div class="flex gap-2">
-                <input 
-                  type="text" 
-                  x-model="couponCode" 
-                  placeholder="Enter coupon code..." 
-                  class="w-full border border-neutral-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-black font-semibold uppercase"
-                >
-                <button 
-                  type="button" 
-                  @click="applyCoupon" 
-                  :disabled="checkingCoupon || !couponCode"
-                  class="bg-black hover:bg-neutral-800 disabled:opacity-40 text-white font-bold text-xs uppercase px-4 py-2 rounded-xl transition-all flex-shrink-0 cursor-pointer"
-                >
+                <input type="text" x-model="couponCode" placeholder="Enter coupon code..." class="w-full border border-neutral-300 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-black font-semibold uppercase">
+                <button type="button" @click="applyCoupon" :disabled="checkingCoupon || !couponCode" class="bg-black hover:bg-neutral-800 disabled:opacity-40 text-white font-bold text-xs uppercase px-4 py-2 rounded-xl transition-all flex-shrink-0 cursor-pointer">
                   <span x-text="checkingCoupon ? '...' : 'Apply'"></span>
                 </button>
               </div>
@@ -761,11 +348,7 @@
               <div class="flex justify-between text-neutral-600 font-medium items-center">
                 <div class="flex items-center gap-1.5">
                   <span>Estimated Shipping</span>
-                  <span 
-                    class="text-[10px] px-2 py-0.5 rounded font-bold border border-neutral-200"
-                    :class="isDhaka ? 'bg-neutral-100 text-neutral-800' : 'bg-neutral-100 text-neutral-800'"
-                    x-text="isDhaka ? 'Inside Dhaka (৳60)' : 'Outside Dhaka (৳90)'"
-                  ></span>
+                  <span class="text-[10px] px-2 py-0.5 rounded font-bold border border-neutral-200 bg-neutral-100 text-neutral-800" x-text="isDhaka ? 'Inside Dhaka (৳60)' : 'Outside Dhaka (৳90)'"></span>
                 </div>
                 <span class="font-bold text-neutral-900" x-text="'BDT ' + shippingCharge.toFixed(2)"></span>
               </div>
@@ -775,27 +358,19 @@
                 <span class="text-xl font-extrabold" x-text="'BDT ' + finalAmount.toFixed(2)"></span>
               </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   </main>
 
   <!-- Footer -->
   <footer class="bg-black text-neutral-400 py-16 border-t border-neutral-800 mt-auto">
     <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
-      
       <div class="flex flex-col gap-4">
         <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-2">Rawgadz</h3>
-        <p class="text-xs text-neutral-400 leading-relaxed">
-          Premier e-commerce platform for gadgets and car accessories.
-        </p>
+        <p class="text-xs text-neutral-400 leading-relaxed">Premier e-commerce platform for gadgets and car accessories.</p>
       </div>
-
       <div class="flex flex-col gap-4">
         <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-2">Connect</h3>
         <div class="flex flex-col gap-2.5 text-xs">
@@ -804,35 +379,17 @@
           <a href="https://youtube.com" target="_blank" rel="noopener" class="text-neutral-400 hover:text-white transition-colors">YouTube</a>
         </div>
       </div>
-
       <div class="flex flex-col gap-4" x-data="newsletterForm()">
         <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-4">Newsletter</h3>
         <form @submit.prevent="submitNewsletter" class="flex flex-col gap-2">
-          <input 
-            type="email" 
-            x-model="email" 
-            placeholder="Enter your email..." 
-            required 
-            class="border border-neutral-800 bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-xs focus:outline-none focus:border-white w-full mb-2"
-          >
-          <button 
-            type="submit" 
-            :disabled="submitting" 
-            class="bg-white hover:bg-neutral-200 disabled:opacity-40 text-black font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-all"
-          >
+          <input type="email" x-model="email" placeholder="Enter your email..." required class="border border-neutral-800 bg-neutral-900 text-white px-4 py-2.5 rounded-xl text-xs focus:outline-none focus:border-white w-full mb-2">
+          <button type="submit" :disabled="submitting" class="bg-white hover:bg-neutral-200 disabled:opacity-40 text-black font-bold text-xs uppercase tracking-wider py-2.5 rounded-xl transition-all">
             <span x-text="submitting ? 'Subscribing...' : 'Subscribe'">Subscribe</span>
           </button>
-          <div 
-            x-show="message" 
-            x-text="message" 
-            class="text-xs text-center font-bold uppercase tracking-wider py-1.5 rounded-lg border border-neutral-700 bg-neutral-900 text-white mt-1"
-            style="display: none;"
-          ></div>
+          <div x-show="message" x-text="message" class="text-xs text-center font-bold uppercase tracking-wider py-1.5 rounded-lg border border-neutral-700 bg-neutral-900 text-white mt-1" style="display: none;"></div>
         </form>
       </div>
-
     </div>
-    
     <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-neutral-900 text-center text-xs text-neutral-500 font-medium">
       &copy; 2026 Rawgadz. All rights reserved.
     </div>
@@ -923,7 +480,7 @@
         }
       }));
 
-      // Checkout Page Component
+      // Checkout Page Component (COD Only)
       Alpine.data('checkoutPage', () => ({
         paymentMethod: 'cod',
         form: {
@@ -936,15 +493,8 @@
           address_detail: '',
           is_custom_address: false,
           custom_jela: '',
-          custom_upozela: '',
-          sender_phone: '',
-          trx_id: ''
+          custom_upozela: ''
         },
-        bkashNumber: '01700-000000',
-        bkashType: 'Personal (Send Money)',
-        nagadNumber: '01700-000000',
-        nagadType: 'Personal (Send Money)',
-        copiedKey: null,
         couponCode: '',
         appliedCoupon: '',
         discountPercent: 0,
@@ -1054,24 +604,6 @@
             if (direct !== null) return direct;
           }
           return null;
-        },
-
-        copyNumber(num, key) {
-          if (!num) return;
-          const cleanNum = num.replace(/[^0-9]/g, '');
-          const target = cleanNum.length === 11 ? cleanNum : num;
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(target);
-          } else {
-            const el = document.createElement('textarea');
-            el.value = target;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-          }
-          this.copiedKey = key;
-          setTimeout(() => { this.copiedKey = null; }, 2500);
         },
 
         validateBDPhone(phone) {
@@ -1270,27 +802,6 @@
           }
           this.form.cust_address = completeAddress;
 
-          // Validate bKash / Nagad specific fields
-          if (this.paymentMethod === 'bkash' || this.paymentMethod === 'nagad') {
-            const methodName = this.paymentMethod === 'bkash' ? 'bKash' : 'Nagad';
-            const senderPhone = (this.form.sender_phone || this.form.cust_phone).trim();
-
-            if (!this.validateBDPhone(senderPhone)) {
-              this.errorMessage = `Please enter a valid 11-digit ${methodName} mobile number (01XXXXXXXXX).`;
-              return;
-            }
-
-            if (!this.form.trx_id.trim()) {
-              this.errorMessage = `Please enter the ${methodName} Transaction ID (TrxID).`;
-              return;
-            }
-
-            if (this.form.trx_id.trim().length < 4) {
-              this.errorMessage = `Please enter a valid ${methodName} Transaction ID.`;
-              return;
-            }
-          }
-
           this.submitting = true;
           this.errorMessage = '';
 
@@ -1310,9 +821,7 @@
             cust_email: finalEmail,
             cust_phone: this.form.cust_phone.trim().replace(/[\s-]/g, ''),
             cust_address: completeAddress,
-            payment_method: this.paymentMethod,
-            trx_id: (this.paymentMethod === 'bkash' || this.paymentMethod === 'nagad') ? this.form.trx_id.trim().toUpperCase() : undefined,
-            sender_number: (this.paymentMethod === 'bkash' || this.paymentMethod === 'nagad') ? (this.form.sender_phone.trim() || this.form.cust_phone.trim()).replace(/[\s-]/g, '') : undefined,
+            payment_method: 'cod',
             coupon_code: this.appliedCoupon || undefined
           };
 
@@ -1338,7 +847,7 @@
             if (result.redirect_url) {
               window.location.href = result.redirect_url;
             } else if (result.invoice_number) {
-              window.location.href = './thank.html?invoice_number=' + encodeURIComponent(result.invoice_number) + '&method=' + encodeURIComponent(this.paymentMethod) + (result.trx_id ? '&trx_id=' + encodeURIComponent(result.trx_id) : '');
+              window.location.href = './thank.html?invoice_number=' + encodeURIComponent(result.invoice_number) + '&method=cod';
             } else {
               window.location.href = './thank.html';
             }
@@ -1352,6 +861,5 @@
       }));
     });
   </script>
-
 </body>
 </html>

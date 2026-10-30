@@ -59,7 +59,7 @@
           <div class="text-neutral-600 text-sm leading-relaxed mb-6" x-text="car.description"></div>
 
           <div class="border-t border-neutral-200 pt-6 mt-6">
-            <a href="../contact.html" class="w-full bg-black hover:bg-neutral-800 text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition-all">
+            <a :href="inquiryUrl" class="w-full bg-black hover:bg-neutral-800 text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition-all">
               Inquire About Vehicle
             </a>
           </div>
@@ -84,6 +84,14 @@
         },
         get currentImage() {
           return this.selectedGalleryImage || this.galleryImages[0] || '';
+        },
+        get inquiryUrl() {
+          const params = new URLSearchParams();
+          if (this.car.id) params.set('car_id', this.car.id);
+          if (this.car.title) params.set('vehicle', this.car.title);
+          if (this.car.subtitle) params.set('trim', this.car.subtitle);
+          if (this.car.price) params.set('est_price', this.car.price);
+          return '../contact.html?' + params.toString();
         }
       }));
     });
