@@ -23,7 +23,7 @@ images:
 description: This budget-friendly all-season steering cover offers durable
   protection and a steady anti-slip rubber grip for daily driving.
 price: 750
-tags: Car Accessories
+tags: Car Accessories, steering cover
 ---
 Protect your steering wheel with dependable, everyday performance using the Budget-Friendly All-Season Steering Wheel Cover.
 
