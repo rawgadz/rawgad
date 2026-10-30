@@ -34,48 +34,40 @@ content:
         type: string
         label: Product ID
         required: true
-
       - name: slug
         type: string
         label: Slug / URL
         required: false
         description: "URL slug for standalone product page (e.g. minimalist-smart-watch)"
-
       - name: tab
         type: string
         label: Product Classification
         required: false
         default: normal
         description: "Product category: normal for Home & Shop, gadget for Gadgets catalog."
-
       - name: title
         type: string
         label: Title
         required: true
-
       - name: imageSrc
         type: string
         label: Main Image URL
         required: false
         description: "Paste the full image link (e.g., https://example.com/image.png)"
-
       - name: images
         type: string
         label: Product Images Gallery
         list: true
         required: false
         description: "List of image links for the product"
-
       - name: description
         type: string
         label: Description
         required: true
-
       - name: price
         type: number
         label: Price
         required: true
-
       - name: priceRange
         type: object
         label: Price Range
@@ -84,17 +76,14 @@ content:
           - name: min
             type: number
             label: Minimum Price
-
           - name: max
             type: number
             label: Maximum Price
-
       - name: tags
         type: string
         label: Tags
         required: false
         description: "Comma-separated tags (e.g., wearables, tech, fitness)"
-
       - name: types
         type: object
         label: Product Variants
@@ -104,30 +93,25 @@ content:
             type: string
             label: Variant ID
             required: true
-
           - name: subTitle
             type: string
             label: Variant Title
             required: true
-
           - name: subImage
             type: string
             label: Variant Image URL
             required: false
             description: "Paste the full image link"
-
           - name: images
             type: string
             label: Variant Images
             list: true
             required: false
             description: "List of image links for this variant"
-
           - name: price
             type: number
             label: Variant Price (Optional)
             required: false
-
           - name: subProducts
             type: object
             label: Sub-Variants / Options
@@ -137,30 +121,25 @@ content:
                 type: string
                 label: Sub-Variant ID
                 required: true
-
               - name: subTitle
                 type: string
                 label: Sub-Variant Title
                 required: true
-
               - name: subImage
                 type: string
                 label: Sub-Variant Image URL
                 required: false
                 description: "Paste the full image link"
-
               - name: images
                 type: string
                 label: Option Images
                 list: true
                 required: false
                 description: "List of image links for this option"
-
               - name: price
                 type: number
                 label: Option Price (Optional)
                 required: false
-
       - name: body
         type: rich-text
         label: Body
@@ -176,47 +155,39 @@ content:
         type: string
         label: Post ID
         required: true
-
       - name: slug
         type: string
         label: Slug / URL
         required: false
         description: "URL slug for standalone blog post (e.g. building-modern-web-applications)"
-
       - name: title
         type: string
         label: Title
         required: true
-
       - name: date
         type: string
         label: Date
         required: true
         description: "Use YYYY-MM-DD format (e.g., 2026-08-08) so the build script sorts them correctly."
-
       - name: author
         type: string
         label: Author
         required: true
-
       - name: excerpt
         type: string
         label: Excerpt
         required: true
         description: "Short summary that will appear on the blog cards."
-
       - name: imageSrc
         type: string
         label: Main Image URL
         required: true
         description: "Paste the full image link (e.g., https://example.com/image.png)"
-
       - name: tags
         type: string
         label: Tags
         required: false
         description: "Comma-separated list of tags"
-
       - name: body
         type: rich-text
         label: Content
@@ -232,83 +203,65 @@ content:
         type: string
         label: Car ID
         required: true
-
       - name: slug
         type: string
         label: Slug / URL
         required: false
         description: "URL slug for standalone vehicle page (e.g. porsche-911-gt3-rs)"
-
       - name: title
         type: string
         label: Vehicle Title
         required: true
-
       - name: mediaType
-        type: select
+        type: string
         label: Card Media Type
         required: false
         default: both
-        options:
-          - both
-          - youtube
-          - video
-          - image
-        description: "Choose media type to display on car card: both (interactive toggle), youtube, video, or image"
-
+        description: "Enter media type manually: both, youtube, video, or image"
       - name: imageSrc
         type: string
         label: Main Vehicle Image URL
         required: false
         description: "Paste the full image link"
-
       - name: images
         type: string
         label: Vehicle Images Gallery
         list: true
         required: false
         description: "List of image links for the vehicle"
-
       - name: youtube
         type: string
         label: YouTube Video ID or URL
         required: false
         description: "Paste the YouTube video ID or full URL"
-
       - name: youtubeUrl
         type: string
         label: YouTube URL
         required: false
         description: "Paste the full YouTube video link"
-
       - name: video
         type: string
         label: Direct Video URL
         required: false
         description: "Direct video link (.mp4/.webm)"
-
       - name: videoUrl
         type: string
         label: Direct Video URL (Alternative)
         required: false
         description: "Direct video link (.mp4/.webm)"
-
       - name: description
         type: string
         label: Description / Summary
         required: true
-
       - name: price
         type: number
         label: Starting MSRP / Price
         required: true
-
       - name: tags
         type: string
         label: Tags
         required: false
         description: "Comma-separated tags (e.g., sports, track, v8)"
-
       - name: types
         type: object
         label: Vehicle Trims & Editions
@@ -318,29 +271,24 @@ content:
             type: string
             label: Trim ID
             required: true
-
           - name: subTitle
             type: string
             label: Trim / Edition Title
             required: true
-
           - name: subImage
             type: string
             label: Trim Image URL
             required: false
-
           - name: images
             type: string
             label: Variant Images Gallery
             list: true
             required: false
             description: "List of image links for this variant"
-
           - name: price
             type: number
             label: Trim Price (Optional)
             required: false
-
           - name: subProducts
             type: object
             label: Options & Packages
@@ -350,29 +298,24 @@ content:
                 type: string
                 label: Option ID
                 required: true
-
               - name: subTitle
                 type: string
                 label: Package / Option Title
                 required: true
-
               - name: subImage
                 type: string
                 label: Option Image URL
                 required: false
-
               - name: images
                 type: string
                 label: Option Images Gallery
                 list: true
                 required: false
                 description: "List of image links for this option"
-
               - name: price
                 type: number
                 label: Package Price (Optional)
                 required: false
-
       - name: content
         type: rich-text
         label: Vehicle Specifications & Details
@@ -385,39 +328,31 @@ content:
     format: yaml-frontmatter
     fields:
       - name: page
-        type: select
+        type: string
         label: Target Page
         required: true
-        options:
-          - index
-          - gadgets
-          - car
-
+        description: "Target page for the hero slide (e.g., index, gadgets, car)"
       - name: order
         type: number
         label: Display Order
         required: false
         default: 1
-
       - name: type
         type: string
         label: Media Type
         required: true
         default: image
         description: "Enter the media type manually, e.g. image, video, youtube"
-
       - name: src
         type: string
         label: Media URL
         required: true
         description: "Image URL, direct video file (.mp4/.webm), or YouTube URL"
-
       - name: poster
         type: string
         label: Video Poster URL
         required: false
         description: "Fallback thumbnail image shown before video loads"
-
       - name: alt
         type: string
         label: Alt / Title Description
@@ -433,17 +368,14 @@ content:
         type: string
         label: Filter Tag
         required: true
-
       - name: label
         type: string
         label: Display Label
         required: true
-
       - name: image
         type: string
         label: Category Image URL
         required: true
-
       - name: order
         type: number
         label: Display Order
@@ -460,17 +392,14 @@ content:
         type: string
         label: Filter Tag
         required: true
-
       - name: label
         type: string
         label: Display Label
         required: true
-
       - name: image
         type: string
         label: Category Image URL
         required: true
-
       - name: order
         type: number
         label: Display Order
