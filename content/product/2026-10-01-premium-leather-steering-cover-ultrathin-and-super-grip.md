@@ -11,7 +11,7 @@ images:
 description: This ultra-thin Nappa leather steering cover delivers a luxurious,
   slip-proof grip backed by a 3-month replacement warranty.
 price: 1650
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2701
     subTitle: Premium Brown
