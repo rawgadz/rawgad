@@ -9,7 +9,7 @@ images:
 description: Get reliable, all-season anti-slip grip on a budget with the
   universal Rawgadaz Basic Steering Cover.
 price: 1050
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1701
     subTitle: Light Brown
