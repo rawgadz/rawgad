@@ -11,7 +11,7 @@ images:
 description: This ergonomic leather steering cover delivers a contoured,
   non-slip hand grip and durable all-season wheel protection.
 price: 1450
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2501
     subTitle: Red Wine
