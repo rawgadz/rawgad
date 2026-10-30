@@ -11,7 +11,7 @@ images:
 description: Drive in comfort with the breathable, UV-protective, anti-slip
   Rawgadaz Massage Grip Steering Cover.
 price: 1860
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0501
     subTitle: Black and Red
