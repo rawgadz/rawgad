@@ -9,7 +9,7 @@ images:
 description: Elevate your drive with the luxurious, ultra-durable, and non-slip
   Rawgadaz Authentic Suede Steering Wheel Cover.
 price: 1690
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1501
     subTitle: Red Texture
