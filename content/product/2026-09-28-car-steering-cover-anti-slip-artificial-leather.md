@@ -12,7 +12,7 @@ images:
 description: Ultra-thin artificial leather steering cover with super grip,
   breathable comfort and a stylish anti-slip design.
 price: 1100
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1301
     subTitle: Red Wine
