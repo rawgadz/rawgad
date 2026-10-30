@@ -10,7 +10,7 @@ description: Elevate your car’s interior with the bold Dragon Skin texture,
   classy peach wood accents, and ergonomic anti-slip grip of the Rawgadaz
   Steering Cover.
 price: 1550
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2001
     subTitle: Red Dragon

@@ -13,7 +13,7 @@ price: 0
 priceRange:
   min: 1550
   max: 1800
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-3401
     subTitle: White and Black Leather

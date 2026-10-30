@@ -20,7 +20,7 @@ images:
 description: "Reliable, budget-friendly, and all-season: get steady anti-slip
   control with the universal Rawgadaz Basic Steering Cover."
 price: 750
-tags: Car Accessories
+tags: Car Accessories, steering cover
 ---
 Upgrade your daily drive affordably with the Rawgadaz Everyday Basic Steering Wheel Cover.
 

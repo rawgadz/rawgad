@@ -9,7 +9,7 @@ description: The Rawgadaz Premium Steering Wheel Cover offers a durable,
   sweat-absorbent, anti-slip grip with a classy finish and a 3-month replacement
   warranty for all standard cars.
 price: 1900
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0201
     subTitle: White Dots

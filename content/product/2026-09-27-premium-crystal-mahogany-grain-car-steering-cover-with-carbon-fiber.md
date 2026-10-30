@@ -11,7 +11,7 @@ images:
 description: Premium carbon fiber & microfiber steering cover with super grip,
   slim design, luxurious feel and long-lasting durability.
 price: 2400
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1101
     subTitle: Black and Red

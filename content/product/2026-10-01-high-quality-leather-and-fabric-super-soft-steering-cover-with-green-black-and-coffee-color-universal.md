@@ -15,7 +15,7 @@ images:
 description: This ultra-slim cowhide leather steering cover delivers a
   breathable, non-slip grip backed by a 3-month replacement warranty.
 price: 1650
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2301
     subTitle: Green

@@ -11,7 +11,7 @@ images:
 description: Premium leather steering wheel cover with comfortable grip,
   anti-slip protection, and stylish design.
 price: 1450
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0901
     subTitle: Red Wine

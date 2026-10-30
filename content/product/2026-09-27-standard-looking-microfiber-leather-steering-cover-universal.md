@@ -10,7 +10,7 @@ images:
 description: Premium mahogany grain steering wheel cover with luxurious feel,
   anti-slip grip, slim design and long-lasting durability.
 price: 1699
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0701
     subTitle: Red Black

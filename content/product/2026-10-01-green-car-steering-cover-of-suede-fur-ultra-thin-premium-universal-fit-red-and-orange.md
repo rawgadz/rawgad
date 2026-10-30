@@ -12,7 +12,7 @@ images:
 description: Crafted from authentic suede, this ultra-thin steering wheel cover
   prevents sweaty slips while delivering a luxurious, non-slip grip.
 price: 1690
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2201
     subTitle: Green Texture

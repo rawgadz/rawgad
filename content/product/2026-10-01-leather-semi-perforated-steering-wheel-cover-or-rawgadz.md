@@ -9,7 +9,7 @@ images:
 description: This breathable massage-grip steering cover relieves driving
   fatigue and shields against sun damage with a cool, non-slip hold.
 price: 1860
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2401
     subTitle: Black and Red

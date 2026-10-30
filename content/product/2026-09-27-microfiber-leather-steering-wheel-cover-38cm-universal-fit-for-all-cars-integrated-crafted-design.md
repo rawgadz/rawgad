@@ -10,7 +10,7 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082333/white-2-piece-3.webp
 description: Premium Microfiber Leather Steering Wheel Cover
 price: 1899
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1001
     subTitle: Red Wine

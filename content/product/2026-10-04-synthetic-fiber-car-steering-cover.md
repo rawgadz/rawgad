@@ -12,7 +12,7 @@ images:
 description: The ultra-thin ice silk and leather steering cover keeps your grip
   cool, sweat-free, and slip-resistant.
 price: 899
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2901
     subTitle: Green
