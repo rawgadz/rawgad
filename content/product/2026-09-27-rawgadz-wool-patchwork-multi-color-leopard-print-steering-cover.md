@@ -11,7 +11,7 @@ images:
 description: Unique wool patchwork steering cover with stylish leopard print,
   all-season comfort, anti-slip grip and easy installation.
 price: 920
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0801
     subTitle: Beige
