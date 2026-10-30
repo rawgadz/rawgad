@@ -11,7 +11,7 @@ images:
 description: The ultra-thin RawGadz carbon fiber and 3D polka-dot steering cover
   delivers breathable, sweat-free handling and a sporty interior upgrade.
 price: 2790
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2801
     subTitle: White
