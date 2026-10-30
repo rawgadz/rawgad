@@ -12,7 +12,7 @@ images:
 description: Premium universal steering wheel cover with slim design, anti-slip
   grip, luxurious feel and long-lasting durability.
 price: 1650
-tags: Car Accessories
+tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1401
     subTitle: With Toyota Logo Red
