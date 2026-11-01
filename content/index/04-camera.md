@@ -1,6 +1,6 @@
 ---
 tag: camera
 label: Cameras
-image: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793161141/Car_Steering_cover_with_sports_look_leather_with_super_grip.jpg
+image: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083503/O1CN01dXzcQD1nsSjLEaDo5_2214997935145-0-cib.webp
 order: 4
 ---
