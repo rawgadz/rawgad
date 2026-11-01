@@ -1,6 +1,6 @@
 ---
 tag: speaker
 label: Speakers
-image: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793161125/Short_Plush_Patchwork_Multi-Color_Leopard_Print_Steering_Cover.png
+image: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082077/Untitled-design-50.webp
 order: 7
 ---
