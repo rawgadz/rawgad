@@ -12,7 +12,7 @@ images:
 description: The RawGadz Nappa leather and silicone half-grip steering cover
   prevents sweaty slips while delivering firm, universal driving control.
 price: 1500
-tags: Car Accessories, steering cover
+tags: Car Accessories, steering cover, HALF COVER
 types:
   - subProductId: MRA-3201
     subTitle: Red Wine
