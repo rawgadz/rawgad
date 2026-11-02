@@ -1,6 +1,6 @@
 ---
-tag: "audio"
-label: "Audio & Sound"
-image: "https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/eec164e9-23f8-4f87-b48a-a208fa806100/w=800"
+tag: audio
+label: Audio & Sound
+image: https://res.cloudinary.com/ostvuxgl/image/upload/v1793613124/Untitled_Design_61.jpg
 order: 1
 ---
