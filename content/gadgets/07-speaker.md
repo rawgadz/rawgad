@@ -1,6 +1,6 @@
 ---
-tag: "speaker"
-label: "Speakers"
-image: "https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/31afae9c-5ba3-4ec3-2534-ed8198ed1100/w=800"
+tag: speaker
+label: Speakers
+image: https://res.cloudinary.com/ostvuxgl/image/upload/v1793612157/Untitled_Design_57.jpg
 order: 7
 ---
