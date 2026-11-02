@@ -1,6 +1,6 @@
 ---
-tag: "wireless"
-label: "Wireless Audio"
-image: "https://imagedelivery.net/IEUjvl3YUlxY-MrTpOAWDQ/ed7b1c40-3332-43d8-a9eb-4615ef341b00/w=800"
+tag: Smart watch
+label: Smart watch
+image: https://res.cloudinary.com/ostvuxgl/image/upload/v1793612638/Untitled_Design_59.jpg
 order: 5
 ---
