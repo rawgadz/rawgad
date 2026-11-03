@@ -15,6 +15,9 @@
   <!-- Stock & Inventory 24-Hour Cache Manager -->
   <script src="/js/stock.js"></script>
 
+  <!-- Meta Pixel Shared Module -->
+  <script src="/js/meta-pixel.js"></script>
+
   <!-- Hero Section Dynamic Slider Manager -->
   <script src="/js/hero-slider.js"></script>
 
@@ -638,6 +641,7 @@
 
   <!-- Alpine.js Global Store & Component Controller -->
   <script>
+    if (window.RawgadzPixel) { window.RawgadzPixel.trackViewCategory({"category_name":"Cars","content_category":"Cars","category_slug":"car"}); }
     document.addEventListener('alpine:init', () => {
       // Shared Global Cart Store
       Alpine.store('cart', {
@@ -671,15 +675,24 @@
           return this.itemsArray.reduce((sum, item) => sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0);
         },
 
-        updateQuantity(id, qty) {
+        updateQuantity(idOrKey, qty) {
           if (qty < 0) return;
+          let targetKey = idOrKey;
+          if (!this.items[targetKey]) {
+            targetKey = Object.keys(this.items).find(k => k === idOrKey || this.items[k]?.cartKey === idOrKey || this.items[k]?.subProductId === idOrKey || this.items[k]?.id === idOrKey);
+          }
+          if (!targetKey) return;
+          const prevQty = Number(this.items[targetKey]?.quantity) || 0;
           if (qty === 0) {
-            delete this.items[id];
-          } else if (this.items[id]) {
-            this.items[id].quantity = qty;
+            delete this.items[targetKey];
+          } else {
+            this.items[targetKey].quantity = qty;
           }
           localStorage.setItem(this.storageKey, JSON.stringify(this.items));
           window.dispatchEvent(new Event('cart-update-' + this.storageKey));
+          if (qty > prevQty && this.items[targetKey] && window.RawgadzPixel) {
+            window.RawgadzPixel.trackAddToCart(this.items[targetKey], qty - prevQty);
+          }
         }
       });
 

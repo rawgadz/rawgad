@@ -9,6 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/js/stock.js"></script>
+  <script src="/js/meta-pixel.js"></script>
 
   <style>
     [x-cloak] { display: none !important; }
@@ -68,7 +69,8 @@
       <!-- Info Column -->
       <div class="lg:col-span-5 flex flex-col justify-between">
         <div>
-          <div class="flex flex-wrap gap-2 mb-3"><span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">Car Accessories</span></div>
+          <div class="flex flex-wrap gap-2 mb-3"><span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">Car Accessories</span>
+             <span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">steering cover</span></div>
           <h1 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900 mb-2" x-text="product.title"></h1>
           
           <div class="flex items-baseline gap-3 mb-6">
@@ -150,229 +152,250 @@
   </main>
 
   <script>
-    document.addEventListener('alpine:init', () => {
-      Alpine.data('productPage', () => ({
-        product: {"id":"MRA-17","slug":"classic-brown-universal-steering-cover","tab":"normal","imageSrc":"https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp"],"title":"Classic Brown Universal Steering Cover","description":"Get reliable, all-season anti-slip grip on a budget with the universal Rawgadaz Basic Steering Cover.","price":1050,"priceRange":{"min":1050,"max":1050},"tags":"Car Accessories","types":[{"subProductId":"MRA-1701","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp"],"subTitle":"Light Brown","price":1050}],"content":"\u003cp>Protect your steering wheel and improve your grip affordably with the Rawgadaz Basic Steering Wheel Cover.\u003c/p>\n\u003cp>Budget-Friendly Quality\u003c/p>\n\u003cp>\u003cstrong>✅ Anti-slip rubber outer:\u003c/strong> Textured rubber exterior ensures steady, reliable steering control while driving\u003cbr>\u003cstrong>✅ Durable construction:\u003c/strong> Built to withstand daily wear and tear for dependable, long-term use\u003cbr>\u003cstrong>✅ All-season reliability:\u003c/strong> Delivers comfortable handling across hot summer days and chilly winters\u003cbr>\u003cstrong>✅ Universal fit:\u003c/strong> Simple, flexible design compatible with most standard car models\u003cbr>\u003cstrong>✅ Functional inner surface:\u003c/strong> Practical interior build designed for hassle-free daily driving\u003cbr>\u003cstrong>✅ Budget-smart choice:\u003c/strong> The perfect everyday option for drivers seeking decent aesthetics at an accessible price\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling high-quality and unique products is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>📞 For Returns &amp; Refunds: 01608-331322\u003c/strong>\u003c/p>\n"},
-        selectedTypeIndex: 0,
-        selectedSubProductIndex: 0,
-        selectedGalleryImage: null,
-        inCartQuantity: 0,
-        inventoryMap: {},
-        availabilityMap: {},
-        loadingInventory: true,
+    (function() {
+      const pageProduct = {"id":"MRA-17","slug":"classic-brown-universal-steering-cover","tab":"normal","imageSrc":"https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083638/h-1.webp"],"title":"Classic Brown Universal Steering Cover","description":"Get reliable, all-season anti-slip grip on a budget with the universal Rawgadaz Basic Steering Cover.","price":1050,"priceRange":{"min":1050,"max":1050},"tags":"Car Accessories, steering cover","types":[{"subProductId":"MRA-1701","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp"],"subTitle":"Light Brown","price":1050}],"content":"\u003cp>Protect your steering wheel and improve your grip affordably with the Rawgadaz Basic Steering Wheel Cover.\u003c/p>\n\u003cp>Budget-Friendly Quality\u003c/p>\n\u003cp>\u003cstrong>✅ Anti-slip rubber outer:\u003c/strong> Textured rubber exterior ensures steady, reliable steering control while driving\u003cbr>\u003cstrong>✅ Durable construction:\u003c/strong> Built to withstand daily wear and tear for dependable, long-term use\u003cbr>\u003cstrong>✅ All-season reliability:\u003c/strong> Delivers comfortable handling across hot summer days and chilly winters\u003cbr>\u003cstrong>✅ Universal fit:\u003c/strong> Simple, flexible design compatible with most standard car models\u003cbr>\u003cstrong>✅ Functional inner surface:\u003c/strong> Practical interior build designed for hassle-free daily driving\u003cbr>\u003cstrong>✅ Budget-smart choice:\u003c/strong> The perfect everyday option for drivers seeking decent aesthetics at an accessible price\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling high-quality and unique products is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>📞 For Returns &amp; Refunds: 01608-331322\u003c/strong>\u003c/p>\n"};
+      if (window.RawgadzPixel) {
+        window.RawgadzPixel.trackViewContent(pageProduct);
+      }
+      document.addEventListener('alpine:init', () => {
+        Alpine.data('productPage', () => ({
+          product: pageProduct,
+          selectedTypeIndex: 0,
+          selectedSubProductIndex: 0,
+          selectedGalleryImage: null,
+          inCartQuantity: 0,
+          inventoryMap: {},
+          availabilityMap: {},
+          loadingInventory: true,
 
-        init() {
-          this.syncCart();
-          this.loadInventory();
-          window.addEventListener('storage', () => this.syncCart());
-          window.addEventListener('cart-update-main_store_cart', () => this.syncCart());
-          window.addEventListener('rawgad-stock-updated', () => this.loadInventory());
-        },
-
-        loadInventory() {
-          if (window.RawgadStock) {
-            const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
-            const cachedAvail = window.RawgadStock.getProductAvailabilityMap(this.product.id);
-            if (cachedMap && Object.keys(cachedMap).length > 0) {
-              this.inventoryMap = cachedMap;
-              this.availabilityMap = cachedAvail;
-              this.loadingInventory = false;
-              return;
+          init() {
+            this.syncCart();
+            this.loadInventory();
+            if (window.RawgadzPixel) {
+              window.RawgadzPixel.trackViewContent(this.product, {
+                contentId: this.getCartKey(),
+                price: this.currentPrice,
+                contentName: this.product.title
+              });
             }
-            window.RawgadStock.fetchAndStoreAllStock().then(() => {
-              this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
-              this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id);
-              this.loadingInventory = false;
-            }).catch(() => { this.loadingInventory = false; });
-          }
-        },
+            window.addEventListener('storage', () => this.syncCart());
+            window.addEventListener('cart-update-main_store_cart', () => this.syncCart());
+            window.addEventListener('rawgad-stock-updated', () => this.loadInventory());
+          },
 
-        get selectedType() {
-          if (!this.product.types || this.product.types.length === 0) return null;
-          return this.product.types[this.selectedTypeIndex] || this.product.types[0];
-        },
-
-        get selectedSubProduct() {
-          const type = this.selectedType;
-          if (!type || !type.subProducts || type.subProducts.length === 0) return null;
-          return type.subProducts[this.selectedSubProductIndex] || type.subProducts[0];
-        },
-
-        get activeVariantTitle() {
-          const type = this.selectedType;
-          const sub = this.selectedSubProduct;
-          if (type && sub) return type.subTitle + ' - ' + sub.subTitle;
-          if (type) return type.subTitle;
-          return this.product.title;
-        },
-
-        get currentVariantImages() {
-          if (this.selectedSubProduct && Array.isArray(this.selectedSubProduct.images) && this.selectedSubProduct.images.length > 1) {
-            return this.selectedSubProduct.images;
-          }
-          if (this.selectedType && Array.isArray(this.selectedType.images) && this.selectedType.images.length > 1) {
-            return this.selectedType.images;
-          }
-
-          const variantImg = this.selectedSubProduct?.subImage || this.selectedSubProduct?.images?.[0]
-            || this.selectedType?.subImage || this.selectedType?.images?.[0];
-
-          const prodImages = Array.isArray(this.product.images) && this.product.images.length > 0
-            ? this.product.images
-            : (this.product.imageSrc ? [this.product.imageSrc] : []);
-
-          if (variantImg) {
-            const combined = [variantImg];
-            for (const img of prodImages) {
-              if (!combined.includes(img)) {
-                combined.push(img);
+          loadInventory() {
+            if (window.RawgadStock) {
+              const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
+              const cachedAvail = window.RawgadStock.getProductAvailabilityMap(this.product.id);
+              if (cachedMap && Object.keys(cachedMap).length > 0) {
+                this.inventoryMap = cachedMap;
+                this.availabilityMap = cachedAvail;
+                this.loadingInventory = false;
+                return;
               }
+              window.RawgadStock.fetchAndStoreAllStock().then(() => {
+                this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
+                this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id);
+                this.loadingInventory = false;
+              }).catch(() => { this.loadingInventory = false; });
             }
-            if (combined.length > 1) return combined;
+          },
+
+          get selectedType() {
+            if (!this.product.types || this.product.types.length === 0) return null;
+            return this.product.types[this.selectedTypeIndex] || this.product.types[0];
+          },
+
+          get selectedSubProduct() {
+            const type = this.selectedType;
+            if (!type || !type.subProducts || type.subProducts.length === 0) return null;
+            return type.subProducts[this.selectedSubProductIndex] || type.subProducts[0];
+          },
+
+          get activeVariantTitle() {
+            const type = this.selectedType;
+            const sub = this.selectedSubProduct;
+            if (type && sub) return type.subTitle + ' - ' + sub.subTitle;
+            if (type) return type.subTitle;
+            return this.product.title;
+          },
+
+          get currentVariantImages() {
+            if (this.selectedSubProduct && Array.isArray(this.selectedSubProduct.images) && this.selectedSubProduct.images.length > 1) {
+              return this.selectedSubProduct.images;
+            }
+            if (this.selectedType && Array.isArray(this.selectedType.images) && this.selectedType.images.length > 1) {
+              return this.selectedType.images;
+            }
+
+            const variantImg = this.selectedSubProduct?.subImage || this.selectedSubProduct?.images?.[0]
+              || this.selectedType?.subImage || this.selectedType?.images?.[0];
+
+            const prodImages = Array.isArray(this.product.images) && this.product.images.length > 0
+              ? this.product.images
+              : (this.product.imageSrc ? [this.product.imageSrc] : []);
+
+            if (variantImg) {
+              const combined = [variantImg];
+              for (const img of prodImages) {
+                if (!combined.includes(img)) {
+                  combined.push(img);
+                }
+              }
+              if (combined.length > 1) return combined;
+            }
+
+            if (prodImages.length > 0) return prodImages;
+            return variantImg ? [variantImg] : [];
+          },
+
+          get currentImage() {
+            if (this.selectedGalleryImage && this.currentVariantImages.includes(this.selectedGalleryImage)) return this.selectedGalleryImage;
+            return this.currentVariantImages[0] || this.product.imageSrc;
+          },
+
+          get currentPrice() {
+            if (this.selectedSubProduct && typeof this.selectedSubProduct.price === 'number') return this.selectedSubProduct.price;
+            if (this.selectedType && typeof this.selectedType.price === 'number') return this.selectedType.price;
+            return Number(this.product.price) || 0;
+          },
+
+          get currentStock() {
+            const type = this.selectedType;
+            const sub = this.selectedSubProduct;
+            const typeId = type ? String(type.subProductId || type.id) : '_';
+            const subId = sub ? String(sub.subProductId || sub.id) : '_';
+            if (window.RawgadStock) {
+              return window.RawgadStock.getItemStock(this.product.id, typeId, subId);
+            }
+            return 0;
+          },
+
+          get isAvailable() {
+            const type = this.selectedType;
+            const sub = this.selectedSubProduct;
+            const typeId = type ? String(type.subProductId || type.id) : '_';
+            const subId = sub ? String(sub.subProductId || sub.id) : '_';
+            if (window.RawgadStock) {
+              return window.RawgadStock.isItemAvailable(this.product.id, typeId, subId);
+            }
+            return true;
+          },
+
+          get stockStatus() {
+            if (this.loadingInventory) return 'in_stock';
+            if (!this.isAvailable) return 'out_of_stock';
+            const s = this.currentStock;
+            if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
+            return 'in_stock';
+          },
+
+          get isOutOfStock() { return !this.loadingInventory && !this.isAvailable; },
+
+          selectType(index) {
+            this.selectedTypeIndex = Number(index) || 0;
+            this.selectedSubProductIndex = 0;
+            this.selectedGalleryImage = null;
+            this.syncCart();
+          },
+
+          selectSubProduct(index) {
+            this.selectedSubProductIndex = Number(index) || 0;
+            this.selectedGalleryImage = null;
+            this.syncCart();
+          },
+
+          prevGalleryImage() {
+            const imgs = this.currentVariantImages;
+            if (!imgs || imgs.length <= 1) return;
+            const idx = imgs.indexOf(this.currentImage);
+            this.selectedGalleryImage = imgs[(idx <= 0 ? imgs.length - 1 : idx - 1)];
+          },
+
+          nextGalleryImage() {
+            const imgs = this.currentVariantImages;
+            if (!imgs || imgs.length <= 1) return;
+            const idx = imgs.indexOf(this.currentImage);
+            this.selectedGalleryImage = imgs[(idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1)];
+          },
+
+          getCartKey() {
+            const type = this.selectedType;
+            const sub = this.selectedSubProduct;
+            const pId = this.product.id;
+            const tId = type ? String(type.subProductId || type.id) : '_';
+            const sId = sub ? String(sub.subProductId || sub.id) : '_';
+            return pId + ':::' + tId + ':::' + sId;
+          },
+
+          getCart() { try { return JSON.parse(localStorage.getItem('main_store_cart')) || {}; } catch (e) { return {}; } },
+
+          setCart(cart) {
+            try {
+              localStorage.setItem('main_store_cart', JSON.stringify(cart));
+              window.dispatchEvent(new Event('cart-update-main_store_cart'));
+              return true;
+            } catch (e) {
+              console.error('Failed to save cart:', e);
+              return false;
+            }
+          },
+
+          syncCart() {
+            const key = this.getCartKey();
+            const cart = this.getCart();
+            const item = cart[key];
+            this.inCartQuantity = (item && item.quantity) ? item.quantity : 0;
+          },
+
+          updateCart(newQty) {
+            if (newQty < 0) return;
+            if (this.isOutOfStock && newQty > 0) return;
+
+            const key = this.getCartKey();
+            const type = this.selectedType;
+            const sub = this.selectedSubProduct;
+            const cart = this.getCart();
+            const prevQty = (cart[key] && Number(cart[key].quantity)) ? Number(cart[key].quantity) : 0;
+
+            if (newQty === 0) {
+              delete cart[key];
+            } else {
+              let titleSuffix = '';
+              if (type && sub) titleSuffix = ' (' + type.subTitle + ' - ' + sub.subTitle + ')';
+              else if (type) titleSuffix = ' (' + type.subTitle + ')';
+
+              const typeId = type ? String(type.subProductId || type.id) : null;
+              const subProductId = sub ? String(sub.subProductId || sub.id) : null;
+              const itemName = sub ? sub.subTitle : (type ? type.subTitle : this.product.title);
+
+              cart[key] = {
+                cartKey: key,
+                id: this.product.id,
+                typeId: typeId,
+                subProductId: subProductId,
+                name: itemName,
+                title: this.product.title + titleSuffix,
+                price: this.currentPrice,
+                imageSrc: this.currentImage,
+                quantity: newQty
+              };
+            }
+            const saved = this.setCart(cart);
+            this.syncCart();
+            if (saved && newQty > prevQty && cart[key] && window.RawgadzPixel) {
+              window.RawgadzPixel.trackAddToCart(cart[key], newQty - prevQty);
+            }
+          },
+
+          buyNow() {
+            if (this.isOutOfStock) return;
+            if (this.inCartQuantity === 0) this.updateCart(1);
+            if (this.inCartQuantity > 0) window.location.href = '../checkout.html';
           }
-
-          if (prodImages.length > 0) return prodImages;
-          return variantImg ? [variantImg] : [];
-        },
-
-        get currentImage() {
-          if (this.selectedGalleryImage && this.currentVariantImages.includes(this.selectedGalleryImage)) return this.selectedGalleryImage;
-          return this.currentVariantImages[0] || this.product.imageSrc;
-        },
-
-        get currentPrice() {
-          if (this.selectedSubProduct && typeof this.selectedSubProduct.price === 'number') return this.selectedSubProduct.price;
-          if (this.selectedType && typeof this.selectedType.price === 'number') return this.selectedType.price;
-          return Number(this.product.price) || 0;
-        },
-
-        get currentStock() {
-          const type = this.selectedType;
-          const sub = this.selectedSubProduct;
-          const typeId = type ? String(type.subProductId || type.id) : '_';
-          const subId = sub ? String(sub.subProductId || sub.id) : '_';
-          if (window.RawgadStock) {
-            return window.RawgadStock.getItemStock(this.product.id, typeId, subId);
-          }
-          return 0;
-        },
-
-        get isAvailable() {
-          const type = this.selectedType;
-          const sub = this.selectedSubProduct;
-          const typeId = type ? String(type.subProductId || type.id) : '_';
-          const subId = sub ? String(sub.subProductId || sub.id) : '_';
-          if (window.RawgadStock) {
-            return window.RawgadStock.isItemAvailable(this.product.id, typeId, subId);
-          }
-          return true;
-        },
-
-        get stockStatus() {
-          if (this.loadingInventory) return 'in_stock';
-          if (!this.isAvailable) return 'out_of_stock';
-          const s = this.currentStock;
-          if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
-          return 'in_stock';
-        },
-
-        get isOutOfStock() { return !this.loadingInventory && !this.isAvailable; },
-
-        selectType(index) {
-          this.selectedTypeIndex = Number(index) || 0;
-          this.selectedSubProductIndex = 0;
-          this.selectedGalleryImage = null;
-          this.syncCart();
-        },
-
-        selectSubProduct(index) {
-          this.selectedSubProductIndex = Number(index) || 0;
-          this.selectedGalleryImage = null;
-          this.syncCart();
-        },
-
-        prevGalleryImage() {
-          const imgs = this.currentVariantImages;
-          if (!imgs || imgs.length <= 1) return;
-          const idx = imgs.indexOf(this.currentImage);
-          this.selectedGalleryImage = imgs[(idx <= 0 ? imgs.length - 1 : idx - 1)];
-        },
-
-        nextGalleryImage() {
-          const imgs = this.currentVariantImages;
-          if (!imgs || imgs.length <= 1) return;
-          const idx = imgs.indexOf(this.currentImage);
-          this.selectedGalleryImage = imgs[(idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1)];
-        },
-
-        getCartKey() {
-          const type = this.selectedType;
-          const sub = this.selectedSubProduct;
-          const pId = this.product.id;
-          const tId = type ? String(type.subProductId || type.id) : '_';
-          const sId = sub ? String(sub.subProductId || sub.id) : '_';
-          return pId + ':::' + tId + ':::' + sId;
-        },
-
-        getCart() { try { return JSON.parse(localStorage.getItem('main_store_cart')) || {}; } catch (e) { return {}; } },
-
-        setCart(cart) {
-          try {
-            localStorage.setItem('main_store_cart', JSON.stringify(cart));
-            window.dispatchEvent(new Event('cart-update-main_store_cart'));
-          } catch (e) { console.error('Failed to save cart:', e); }
-        },
-
-        syncCart() {
-          const key = this.getCartKey();
-          const cart = this.getCart();
-          const item = cart[key];
-          this.inCartQuantity = (item && item.quantity) ? item.quantity : 0;
-        },
-
-        updateCart(newQty) {
-          if (newQty < 0) return;
-          if (this.isOutOfStock && newQty > 0) return;
-
-          const key = this.getCartKey();
-          const type = this.selectedType;
-          const sub = this.selectedSubProduct;
-          const cart = this.getCart();
-
-          if (newQty === 0) {
-            delete cart[key];
-          } else {
-            let titleSuffix = '';
-            if (type && sub) titleSuffix = ' (' + type.subTitle + ' - ' + sub.subTitle + ')';
-            else if (type) titleSuffix = ' (' + type.subTitle + ')';
-
-            const typeId = type ? String(type.subProductId || type.id) : null;
-            const subProductId = sub ? String(sub.subProductId || sub.id) : null;
-            const itemName = sub ? sub.subTitle : (type ? type.subTitle : this.product.title);
-
-            cart[key] = {
-              cartKey: key,
-              id: this.product.id,
-              typeId: typeId,
-              subProductId: subProductId,
-              name: itemName,
-              title: this.product.title + titleSuffix,
-              price: this.currentPrice,
-              imageSrc: this.currentImage,
-              quantity: newQty
-            };
-          }
-          this.setCart(cart);
-          this.syncCart();
-        },
-
-        buyNow() {
-          if (this.isOutOfStock) return;
-          if (this.inCartQuantity === 0) this.updateCart(1);
-          if (this.inCartQuantity > 0) window.location.href = '../checkout.html';
-        }
-      }));
-    });
+        }));
+      });
+    })();
   </script>
 </body>
 </html>

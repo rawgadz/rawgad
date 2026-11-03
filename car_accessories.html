@@ -15,6 +15,9 @@
   <!-- Stock & Inventory 24-Hour Cache Manager -->
   <script src="/js/stock.js"></script>
 
+  <!-- Meta Pixel Shared Module -->
+  <script src="/js/meta-pixel.js"></script>
+
   <!-- Hero Section Dynamic Slider Manager -->
   <script src="/js/hero-slider.js"></script>
 
@@ -839,6 +842,7 @@
   </footer>
 
   <script>
+    if (window.RawgadzPixel) { window.RawgadzPixel.trackViewCategory({"category_name":"Car Accessories","content_category":"Car Accessories","category_slug":"car_accessories"}); }
     document.addEventListener('alpine:init', () => {
 
       /* =========================================================
@@ -898,39 +902,23 @@
         },
 
         updateQuantity(idOrKey, qty) {
-
           if (qty < 0) return;
-
           let targetKey = idOrKey;
-
           if (!this.items[targetKey]) {
-            targetKey = Object.keys(this.items).find(
-              k =>
-                k === idOrKey ||
-                this.items[k]?.cartKey === idOrKey ||
-                this.items[k]?.subProductId === idOrKey ||
-                this.items[k]?.id === idOrKey
-            );
+            targetKey = Object.keys(this.items).find(k => k === idOrKey || this.items[k]?.cartKey === idOrKey || this.items[k]?.subProductId === idOrKey || this.items[k]?.id === idOrKey);
           }
-
           if (!targetKey) return;
-
+          const prevQty = Number(this.items[targetKey]?.quantity) || 0;
           if (qty === 0) {
             delete this.items[targetKey];
           } else {
             this.items[targetKey].quantity = qty;
           }
-
-          localStorage.setItem(
-            this.storageKey,
-            JSON.stringify(this.items)
-          );
-
-          window.dispatchEvent(
-            new Event(
-              'cart-update-' + this.storageKey
-            )
-          );
+          localStorage.setItem(this.storageKey, JSON.stringify(this.items));
+          window.dispatchEvent(new Event('cart-update-' + this.storageKey));
+          if (qty > prevQty && this.items[targetKey] && window.RawgadzPixel) {
+            window.RawgadzPixel.trackAddToCart(this.items[targetKey], qty - prevQty);
+          }
         }
       });
 

@@ -6,12 +6,6 @@
       "alt": "Next Gen Tech Showcase"
     },
     {
-      "type": "video",
-      "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-      "poster": "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?q=80&w=2000&auto=format&fit=crop",
-      "alt": "Tech Innovation in Motion"
-    },
-    {
       "type": "image",
       "src": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2000&auto=format&fit=crop",
       "alt": "Premium Minimalist Audio"
