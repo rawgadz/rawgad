@@ -27,14 +27,6 @@
       "destination": "/login.html"
     },
     {
-      "source": "/inventory",
-      "destination": "/inventory.html"
-    },
-    {
-      "source": "/inventory/",
-      "destination": "/inventory.html"
-    },
-    {
       "source": "/order",
       "destination": "/order.html"
     },
@@ -57,10 +49,6 @@
     {
       "source": "/api/pathao-webhook",
       "destination": "/api/pathao?action=webhook"
-    },
-    {
-      "source": "/api/status",
-      "destination": "/api/inventory?status=true"
     }
   ],
   "headers": [
@@ -82,23 +70,6 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
-        }
-      ]
-    },
-    {
-      "source": "/api/inventory",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=20, stale-while-revalidate=40"
-        },
-        {
-          "key": "CDN-Cache-Control",
-          "value": "public, s-maxage=20, stale-while-revalidate=40"
-        },
-        {
-          "key": "Vercel-CDN-Cache-Control",
-          "value": "public, s-maxage=20, stale-while-revalidate=40"
         }
       ]
     }

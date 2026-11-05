@@ -93,7 +93,7 @@ function resolveProductAvailability(product, contextPrefix = "") {
 }
 
 /**
- * Computes priceRange { min, max } across available variants (or base price if no variants).
+ * Computes priceRange { min, max } across available variants (or all variants/base price if none are available).
  */
 function computeAvailablePriceRange(product) {
   const basePrice = typeof product.price === "number" && !Number.isNaN(product.price) ? product.price : 0;
@@ -119,6 +119,21 @@ function computeAvailablePriceRange(product) {
   }
 
   if (prices.length === 0) {
+    for (const type of types) {
+      const subs = Array.isArray(type.subProducts) ? type.subProducts : [];
+      if (subs.length > 0) {
+        for (const sub of subs) {
+          const p = typeof sub.price === "number" ? sub.price : (typeof type.price === "number" ? type.price : basePrice);
+          if (typeof p === "number" && !Number.isNaN(p)) prices.push(p);
+        }
+      } else {
+        const p = typeof type.price === "number" ? type.price : basePrice;
+        if (typeof p === "number" && !Number.isNaN(p)) prices.push(p);
+      }
+    }
+  }
+
+  if (prices.length === 0) {
     return { min: basePrice, max: basePrice };
   }
   return {
@@ -127,77 +142,12 @@ function computeAvailablePriceRange(product) {
   };
 }
 
-/**
- * Filters a single product for customer-facing storefront usage:
- * - Returns null if the product is effectively unavailable.
- * - Filters out unavailable types and unavailable subProducts.
- * - Returns null if a variant product has no available variants left.
- * - Recomputes priceRange from remaining available variants.
- */
-function filterProductForStorefront(product) {
-  if (!product || typeof product !== "object") return null;
-  const resolved = resolveProductAvailability(product);
-  if (!resolved.available) return null;
-
-  const rawTypes = Array.isArray(resolved.types) ? resolved.types : [];
-  if (rawTypes.length === 0) {
-    return resolved;
-  }
-
-  const availableTypes = [];
-  for (const type of rawTypes) {
-    if (!type.available) continue;
-    const rawSubs = Array.isArray(type.subProducts) ? type.subProducts : [];
-    if (rawSubs.length > 0) {
-      const availableSubs = rawSubs.filter((s) => s.available === true);
-      if (availableSubs.length === 0) continue;
-      availableTypes.push({
-        ...type,
-        available: true,
-        subProducts: availableSubs,
-      });
-    } else {
-      availableTypes.push({
-        ...type,
-        available: true,
-      });
-    }
-  }
-
-  if (availableTypes.length === 0) return null;
-
-  const filteredProduct = {
-    ...resolved,
-    available: true,
-    types: availableTypes,
-  };
-  filteredProduct.priceRange = computeAvailablePriceRange(filteredProduct);
-  return filteredProduct;
+function isVariantAvailable(catalogAvailable = true) {
+  return Boolean(catalogAvailable);
 }
 
-/**
- * Centrally filters an array of products for storefront listings, search, and pages.
- */
-function filterAvailableProducts(products) {
-  if (!Array.isArray(products)) return [];
-  const result = [];
-  for (const p of products) {
-    const filtered = filterProductForStorefront(p);
-    if (filtered) result.push(filtered);
-  }
-  return result;
-}
-
-function isVariantAvailable(stock, catalogAvailable = true) {
-  return Boolean(catalogAvailable) && Number(stock) > 0;
-}
-
-function getStockStatus(stock, catalogAvailable = true) {
-  if (!catalogAvailable) return "out_of_stock";
-  const s = Number(stock) || 0;
-  if (s <= 0) return "out_of_stock";
-  if (s <= 5) return "low_stock";
-  return "in_stock";
+function getStockStatus(catalogAvailable = true) {
+  return catalogAvailable ? "in_stock" : "out_of_stock";
 }
 
 function loadProductsJson() {
@@ -219,7 +169,7 @@ function extractPurchasableItems(products) {
 
     const slug = String(product.slug || "").trim();
     const tab = String(product.tab || "").trim();
-    const productUrl = slug && product.available ? `/product/${slug}` : "";
+    const productUrl = slug ? `/product/${slug}` : "";
     const types = Array.isArray(product.types) ? product.types : [];
 
     if (types.length === 0) {
@@ -299,179 +249,6 @@ function extractPurchasableItems(products) {
   return items;
 }
 
-function buildNestedCatalog(products, stockMap = new Map()) {
-  if (!Array.isArray(products)) return [];
-
-  return products.map((rawProduct) => {
-    const product = resolveProductAvailability(rawProduct);
-    const productId = String(product.id ?? "").trim();
-    const slug = String(product.slug || "").trim();
-    const tab = String(product.tab || "").trim();
-    const productUrl = slug && product.available ? `/product/${slug}` : "";
-    const types = Array.isArray(product.types) ? product.types : [];
-
-    if (types.length === 0) {
-      const key = makeCanonicalKey(productId, "_", "_");
-      const stockDoc = stockMap.get(key);
-      const stock = typeof stockDoc?.stock === "number" ? Math.max(0, stockDoc.stock) : 0;
-      const catalogAvailable = Boolean(product.available);
-      const available = isVariantAvailable(stock, catalogAvailable);
-      const status = getStockStatus(stock, catalogAvailable);
-
-      return {
-        key,
-        productId,
-        typeId: null,
-        subProductId: null,
-        title: product.title || "Untitled Product",
-        productTitle: product.title || "Untitled Product",
-        slug,
-        tab,
-        productUrl,
-        imageSrc: product.imageSrc || "",
-        description: product.description || "",
-        price: Number(product.price) || 0,
-        tags: product.tags || "",
-        hasTypes: false,
-        hasSubProducts: false,
-        totalVariants: 0,
-        stock,
-        totalStock: stock,
-        catalogAvailable,
-        available,
-        status,
-        updatedAt: stockDoc ? (stockDoc.updatedAt || stockDoc.createdAt) : null,
-        types: [],
-      };
-    }
-
-    let productTotalStock = 0;
-    let totalVariants = 0;
-    let productAnyInStock = false;
-
-    const mappedTypes = types.map((type) => {
-      const typeId = String(type.subProductId || type.id || "").trim();
-      const subProducts = Array.isArray(type.subProducts) ? type.subProducts : [];
-      let typeTotalStock = 0;
-      let typeAnyInStock = false;
-
-      if (subProducts.length > 0) {
-        const mappedSubs = subProducts.map((sub) => {
-          totalVariants++;
-          const subProductId = String(sub.subProductId || sub.id || "").trim();
-          const key = makeCanonicalKey(productId, typeId, subProductId);
-          const stockDoc = stockMap.get(key);
-          const stock = typeof stockDoc?.stock === "number" ? Math.max(0, stockDoc.stock) : 0;
-          const catalogAvailable = Boolean(product.available && type.available && sub.available);
-          const available = isVariantAvailable(stock, catalogAvailable);
-
-          typeTotalStock += stock;
-          if (available) typeAnyInStock = true;
-          const status = getStockStatus(stock, catalogAvailable);
-
-          const itemPrice = typeof sub.price === "number" ? sub.price : (typeof type.price === "number" ? type.price : Number(product.price) || 0);
-          const itemImage = sub.subImage || type.subImage || product.imageSrc || "";
-
-          return {
-            key,
-            productId,
-            typeId,
-            subProductId,
-            title: sub.subTitle || "Default Subproduct",
-            subTitle: sub.subTitle || "Default Subproduct",
-            typeTitle: type.subTitle || "Default Type",
-            displayName: `${product.title} - ${type.subTitle || "Type"} (${sub.subTitle || "Option"})`,
-            price: itemPrice,
-            imageSrc: itemImage,
-            stock,
-            catalogAvailable,
-            available,
-            status,
-            slug,
-            tab,
-            productUrl,
-            updatedAt: stockDoc ? (stockDoc.updatedAt || stockDoc.createdAt) : null,
-          };
-        });
-
-        productTotalStock += typeTotalStock;
-        if (typeAnyInStock) productAnyInStock = true;
-
-        return {
-          typeId,
-          title: type.subTitle || "Default Type",
-          subTitle: type.subTitle || "Default Type",
-          hasSubProducts: true,
-          subProductsCount: mappedSubs.length,
-          totalStock: typeTotalStock,
-          catalogAvailable: Boolean(product.available && type.available),
-          available: typeAnyInStock,
-          subProducts: mappedSubs,
-        };
-      } else {
-        totalVariants++;
-        const key = makeCanonicalKey(productId, typeId, "_");
-        const stockDoc = stockMap.get(key);
-        const stock = typeof stockDoc?.stock === "number" ? Math.max(0, stockDoc.stock) : 0;
-        const catalogAvailable = Boolean(product.available && type.available);
-        const available = isVariantAvailable(stock, catalogAvailable);
-
-        productTotalStock += stock;
-        if (available) productAnyInStock = true;
-        const status = getStockStatus(stock, catalogAvailable);
-
-        const itemPrice = typeof type.price === "number" ? type.price : Number(product.price) || 0;
-        const itemImage = type.subImage || product.imageSrc || "";
-
-        return {
-          typeId,
-          title: type.subTitle || "Default Type",
-          subTitle: type.subTitle || "Default Type",
-          hasSubProducts: false,
-          subProductsCount: 0,
-          key,
-          productId,
-          subProductId: null,
-          displayName: `${product.title} - ${type.subTitle || "Type"}`,
-          price: itemPrice,
-          imageSrc: itemImage,
-          stock,
-          totalStock: stock,
-          catalogAvailable,
-          available,
-          status,
-          slug,
-          tab,
-          productUrl,
-          updatedAt: stockDoc ? (stockDoc.updatedAt || stockDoc.createdAt) : null,
-          subProducts: [],
-        };
-      }
-    });
-
-    return {
-      productId,
-      title: product.title || "Untitled Product",
-      productTitle: product.title || "Untitled Product",
-      slug,
-      tab,
-      productUrl,
-      imageSrc: product.imageSrc || "",
-      description: product.description || "",
-      price: Number(product.price) || 0,
-      tags: product.tags || "",
-      hasTypes: true,
-      hasSubProducts: mappedTypes.some((t) => t.hasSubProducts),
-      totalVariants,
-      totalStock: productTotalStock,
-      catalogAvailable: Boolean(product.available),
-      available: productAnyInStock,
-      status: productAnyInStock ? "in_stock" : "out_of_stock",
-      types: mappedTypes,
-    };
-  });
-}
-
 function getPurchasableCatalogMap() {
   const products = loadProductsJson();
   const items = extractPurchasableItems(products);
@@ -488,12 +265,9 @@ module.exports = {
   validateBooleanField,
   resolveProductAvailability,
   computeAvailablePriceRange,
-  filterProductForStorefront,
-  filterAvailableProducts,
   isVariantAvailable,
   getStockStatus,
   loadProductsJson,
   extractPurchasableItems,
-  buildNestedCatalog,
   getPurchasableCatalogMap,
 };

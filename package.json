@@ -12,7 +12,6 @@
     "build-car": "node build/build-car.js",
     "build-html-cars": "node build/build-html-cars.js",
     "build-sitemap": "node build/build-sitemap.js",
-    "seed-inventory": "node build/seed-inventory.js",
     "predev": "node build/build-index.js && node build/build-gadgets.js && node build/build-hero.js && node build/build-products.js && node build/build-blog.js && node build/build-html-blog.js && node build/build-car.js && node build/build-html-cars.js && node build/build-sitemap.js",
     "dev": "npx vercel dev",
     "build": "node build/build-index.js && node build/build-gadgets.js && node build/build-hero.js && node build/build-products.js && node build/build-blog.js && node build/build-html-blog.js && node build/build-car.js && node build/build-html-cars.js && node build/build-sitemap.js"

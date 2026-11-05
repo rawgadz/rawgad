@@ -19,7 +19,7 @@ function getDbConfig() {
 }
 
 async function getDb() {
-  const { URI, dbName } = getDbConfig();
+  const { URI } = getDbConfig();
 
   if (global._mongoClient) {
     return global._mongoClient;
@@ -55,12 +55,6 @@ async function getDb() {
   return clientPromise;
 }
 
-async function getInventoryCollection() {
-  const { dbName } = getDbConfig();
-  const client = await getDb();
-  return client.db(dbName).collection("inventory");
-}
-
 async function getOrdersCollection() {
   const { dbName } = getDbConfig();
   const client = await getDb();
@@ -76,7 +70,6 @@ async function connectToDatabase() {
 module.exports = {
   getDb,
   connectToDatabase,
-  getInventoryCollection,
   getOrdersCollection,
   getDbConfig
 };

@@ -676,6 +676,11 @@
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               >
+              <template x-if="p.available === false">
+                <span class="absolute top-2.5 right-2.5 z-10 bg-rose-600 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+                  Out of Stock
+                </span>
+              </template>
             </a>
 
             <div class="p-3 sm:p-5 flex flex-col flex-grow">
@@ -718,7 +723,9 @@
 
                 <a
                   :href="'./product/' + p.slug + '.html'"
-                  class="bg-black hover:bg-neutral-800 text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all text-center shadow-xs"
+                  :class="p.available === false ? 'bg-neutral-200 text-neutral-600 hover:bg-neutral-300' : 'bg-black hover:bg-neutral-800 text-white'"
+                  class="font-bold text-[10px] sm:text-xs uppercase tracking-wider px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all text-center shadow-xs"
+                  x-text="p.available === false ? 'Out of Stock' : 'Select'"
                 >
                   Select
                 </a>
@@ -1541,9 +1548,8 @@
             const all =
               await res.json();
 
-            const available = window.RawgadStock ? window.RawgadStock.filterAvailableProducts(all) : all.filter(p => p.available !== false);
-            this.allProducts =
-              available.filter(p => !p.tab || p.tab === 'normal' || p.tab === 'gadget');
+            const resolved = window.RawgadStock && typeof window.RawgadStock.resolveProductAvailability === 'function' ? all.map(p => window.RawgadStock.resolveProductAvailability(p)) : all;
+            this.allProducts = resolved.filter(p => !p.tab || p.tab === 'normal' || p.tab === 'gadget');
 
             this.filteredProducts =
               [...this.allProducts];

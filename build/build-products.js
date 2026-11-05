@@ -5,7 +5,8 @@ const matter = require('gray-matter');
 const { marked } = require('marked');
 const {
   validateBooleanField,
-  filterProductForStorefront,
+  resolveProductAvailability,
+  computeAvailablePriceRange,
 } = require('../api/_catalog');
 
 const ROOT_DIR = process.cwd();
@@ -117,6 +118,10 @@ function normalizeSubProduct(sub, parentPrice = null, parentAvailable = true, co
 function buildProductJsonLd(product) {
   const canonicalUrl = `https://www.rawgadz.com/product/${product.slug}.html`;
   const priceRange = product.priceRange || { min: product.price, max: product.price };
+  const schemaAvailability = product.available === false
+    ? 'https://schema.org/OutOfStock'
+    : 'https://schema.org/InStock';
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -131,27 +136,36 @@ function buildProductJsonLd(product) {
           priceCurrency: 'BDT',
           lowPrice: priceRange.min,
           highPrice: priceRange.max,
-          availability: 'https://schema.org/InStock',
+          availability: schemaAvailability,
           url: canonicalUrl
         }
       : {
           '@type': 'Offer',
           priceCurrency: 'BDT',
           price: product.price,
-          availability: 'https://schema.org/InStock',
+          availability: schemaAvailability,
           url: canonicalUrl
         }
   };
   return JSON.stringify(schema).replace(/</g, '\\u003c');
 }
 
-function generateStandaloneProductHTML(product) {
+function generateStandaloneProductHTML(rawProduct) {
+  const product = resolveProductAvailability(rawProduct);
   const types = Array.isArray(product.types) ? product.types : [];
-  const firstType = types.length > 0 ? types[0] : null;
-  const firstSub = (firstType && firstType.subProducts && firstType.subProducts.length > 0) ? firstType.subProducts[0] : null;
+
+  const initialTypeIdx = types.length > 0
+    ? Math.max(0, types.findIndex(t => t.available !== false))
+    : 0;
+  const firstType = types.length > 0 ? types[initialTypeIdx] : null;
+
+  const firstTypeSubs = (firstType && Array.isArray(firstType.subProducts)) ? firstType.subProducts : [];
+  const initialSubIdx = firstTypeSubs.length > 0
+    ? Math.max(0, firstTypeSubs.findIndex(s => s.available !== false))
+    : 0;
+  const firstSub = firstTypeSubs.length > 0 ? firstTypeSubs[initialSubIdx] : null;
 
   const initialImage = firstSub?.images?.[0] || firstSub?.subImage || firstType?.images?.[0] || firstType?.subImage || product.images?.[0] || product.imageSrc;
-  const initialPrice = firstSub?.price ?? firstType?.price ?? product.price;
 
   const tagsHtml = product.tags
     ? product.tags.split(',').map(tag => `<span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">${escapeHtml(tag.trim())}</span>`).join('\n             ')
@@ -215,6 +229,12 @@ function generateStandaloneProductHTML(product) {
         <div class="sticky top-24">
           <div class="aspect-square bg-neutral-100 rounded-3xl overflow-hidden border border-neutral-200 mb-4 shadow-sm relative">
             <img :src="currentImage" :alt="activeVariantTitle" class="w-full h-full object-cover">
+
+            <template x-if="isOutOfStock">
+              <span class="absolute top-4 right-4 z-10 bg-rose-600 text-white text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md">
+                Out of Stock
+              </span>
+            </template>
             
             <template x-if="currentVariantImages.length > 1">
               <div class="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
@@ -251,10 +271,9 @@ function generateStandaloneProductHTML(product) {
             <span class="text-[11px] font-black uppercase px-2.5 py-1 rounded-full border"
               :class="{
                 'bg-emerald-50 text-emerald-700 border-emerald-200': stockStatus === 'in_stock',
-                'bg-amber-50 text-amber-700 border-amber-200': stockStatus === 'low_stock',
                 'bg-rose-50 text-rose-700 border-rose-200': stockStatus === 'out_of_stock'
               }"
-              x-text="stockStatus === 'in_stock' ? 'In Stock' : (stockStatus === 'low_stock' ? ('Low Stock (' + currentStock + ')') : 'Out of Stock')">
+              x-text="stockStatus === 'in_stock' ? 'In Stock' : 'Out of Stock'">
             </span>
           </div>
 
@@ -266,8 +285,19 @@ function generateStandaloneProductHTML(product) {
               </label>
               <div class="flex flex-wrap gap-2.5">
                 <template x-for="(type, tIdx) in product.types" :key="tIdx">
-                  <button @click="selectType(tIdx)" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2" :class="selectedTypeIndex === tIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400'">
-                    <span x-text="type.subTitle"></span>
+                  <button
+                    type="button"
+                    @click="selectType(tIdx)"
+                    :disabled="type.available === false"
+                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2"
+                    :class="type.available === false
+                      ? 'border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-75'
+                      : (selectedTypeIndex === tIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
+                  >
+                    <span :class="type.available === false ? 'line-through' : ''" x-text="type.subTitle"></span>
+                    <template x-if="type.available === false">
+                      <span class="bg-rose-100 text-rose-700 border border-rose-200 text-[9px] font-black uppercase px-1.5 py-0.5 rounded">Out of Stock</span>
+                    </template>
                   </button>
                 </template>
               </div>
@@ -282,8 +312,19 @@ function generateStandaloneProductHTML(product) {
               </label>
               <div class="flex flex-wrap gap-2.5">
                 <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                  <button @click="selectSubProduct(sIdx)" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all" :class="selectedSubProductIndex === sIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400'">
-                    <span x-text="sub.subTitle"></span>
+                  <button
+                    type="button"
+                    @click="selectSubProduct(sIdx)"
+                    :disabled="sub.available === false"
+                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2"
+                    :class="sub.available === false
+                      ? 'border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-75'
+                      : (selectedSubProductIndex === sIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
+                  >
+                    <span :class="sub.available === false ? 'line-through' : ''" x-text="sub.subTitle"></span>
+                    <template x-if="sub.available === false">
+                      <span class="bg-rose-100 text-rose-700 border border-rose-200 text-[9px] font-black uppercase px-1.5 py-0.5 rounded">Out of Stock</span>
+                    </template>
                   </button>
                 </template>
               </div>
@@ -292,23 +333,31 @@ function generateStandaloneProductHTML(product) {
 
           <!-- Action Buttons -->
           <div class="space-y-3 pt-4 border-t border-neutral-200">
-            <template x-if="!isOutOfStock">
-              <div class="flex gap-3">
-                <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden">
-                  <button @click="updateCart(inCartQuantity - 1)" class="px-3.5 py-3 hover:bg-neutral-100 transition-colors font-bold text-neutral-600">-</button>
-                  <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
-                  <button @click="updateCart(inCartQuantity + 1)" class="px-3.5 py-3 hover:bg-neutral-100 transition-colors font-bold text-neutral-600">+</button>
-                </div>
-                <button @click="buyNow" class="flex-1 bg-black hover:bg-neutral-800 text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition-all">
-                  Buy Now
-                </button>
+            <div class="flex flex-wrap sm:flex-nowrap gap-3">
+              <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
+                <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
               </div>
-            </template>
-            <template x-if="isOutOfStock">
-              <button disabled class="w-full bg-neutral-200 text-neutral-500 font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider cursor-not-allowed">
-                Out of Stock
+              <button
+                type="button"
+                @click="updateCart(inCartQuantity + 1)"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider transition-all border"
+                :class="isOutOfStock ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed' : 'bg-white hover:bg-neutral-100 text-black border-black cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Add to Cart'"></span>
               </button>
-            </template>
+              <button
+                type="button"
+                @click="buyNow"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider transition-all"
+                :class="isOutOfStock ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Buy Now'"></span>
+              </button>
+            </div>
           </div>
 
           <div class="mt-8 text-neutral-600 text-sm leading-relaxed" x-text="product.description"></div>
@@ -326,23 +375,25 @@ function generateStandaloneProductHTML(product) {
   <script>
     (function() {
       const pageProduct = ${sanitizedProductJson};
+      if (window.RawgadStock && typeof window.RawgadStock.registerProduct === 'function') {
+        window.RawgadStock.registerProduct(pageProduct);
+      }
       if (window.RawgadzPixel) {
         window.RawgadzPixel.trackViewContent(pageProduct);
       }
       document.addEventListener('alpine:init', () => {
         Alpine.data('productPage', () => ({
           product: pageProduct,
-          selectedTypeIndex: 0,
-          selectedSubProductIndex: 0,
+          selectedTypeIndex: ${initialTypeIdx},
+          selectedSubProductIndex: ${initialSubIdx},
           selectedGalleryImage: null,
           inCartQuantity: 0,
-          inventoryMap: {},
           availabilityMap: {},
-          loadingInventory: true,
 
           init() {
+            this.ensureValidSelection();
             this.syncCart();
-            this.loadInventory();
+            this.loadAvailability();
             if (window.RawgadzPixel) {
               window.RawgadzPixel.trackViewContent(this.product, {
                 contentId: this.getCartKey(),
@@ -352,24 +403,30 @@ function generateStandaloneProductHTML(product) {
             }
             window.addEventListener('storage', () => this.syncCart());
             window.addEventListener('cart-update-main_store_cart', () => this.syncCart());
-            window.addEventListener('rawgad-stock-updated', () => this.loadInventory());
+            window.addEventListener('rawgad-stock-updated', () => this.loadAvailability());
           },
 
-          loadInventory() {
-            if (window.RawgadStock) {
-              const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
-              const cachedAvail = window.RawgadStock.getProductAvailabilityMap(this.product.id);
-              if (cachedMap && Object.keys(cachedMap).length > 0) {
-                this.inventoryMap = cachedMap;
-                this.availabilityMap = cachedAvail;
-                this.loadingInventory = false;
-                return;
+          ensureValidSelection() {
+            if (Array.isArray(this.product.types) && this.product.types.length > 0) {
+              const curType = this.product.types[this.selectedTypeIndex];
+              if (!curType || curType.available === false) {
+                const availIdx = this.product.types.findIndex(t => t.available !== false);
+                if (availIdx >= 0) this.selectedTypeIndex = availIdx;
               }
-              window.RawgadStock.fetchAndStoreAllStock().then(() => {
-                this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
-                this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id);
-                this.loadingInventory = false;
-              }).catch(() => { this.loadingInventory = false; });
+              const activeType = this.product.types[this.selectedTypeIndex];
+              if (activeType && Array.isArray(activeType.subProducts) && activeType.subProducts.length > 0) {
+                const curSub = activeType.subProducts[this.selectedSubProductIndex];
+                if (!curSub || curSub.available === false) {
+                  const availSubIdx = activeType.subProducts.findIndex(s => s.available !== false);
+                  if (availSubIdx >= 0) this.selectedSubProductIndex = availSubIdx;
+                }
+              }
+            }
+          },
+
+          loadAvailability() {
+            if (window.RawgadStock) {
+              this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id) || {};
             }
           },
 
@@ -432,47 +489,49 @@ function generateStandaloneProductHTML(product) {
             return Number(this.product.price) || 0;
           },
 
-          get currentStock() {
-            const type = this.selectedType;
-            const sub = this.selectedSubProduct;
-            const typeId = type ? String(type.subProductId || type.id) : '_';
-            const subId = sub ? String(sub.subProductId || sub.id) : '_';
-            if (window.RawgadStock) {
-              return window.RawgadStock.getItemStock(this.product.id, typeId, subId);
-            }
-            return 0;
-          },
-
           get itemInStock() {
+            if (this.product.available === false) return false;
             const type = this.selectedType;
+            if (type && type.available === false) return false;
             const sub = this.selectedSubProduct;
+            if (sub && sub.available === false) return false;
             const typeId = type ? String(type.subProductId || type.id) : '_';
             const subId = sub ? String(sub.subProductId || sub.id) : '_';
-            if (window.RawgadStock) {
+            if (window.RawgadStock && typeof window.RawgadStock.isItemAvailable === 'function') {
               return window.RawgadStock.isItemAvailable(this.product.id, typeId, subId);
             }
             return true;
           },
 
           get stockStatus() {
-            if (this.loadingInventory) return 'in_stock';
-            if (!this.itemInStock) return 'out_of_stock';
-            const s = this.currentStock;
-            if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
-            return 'in_stock';
+            return this.itemInStock ? 'in_stock' : 'out_of_stock';
           },
 
-          get isOutOfStock() { return !this.loadingInventory && !this.itemInStock; },
+          get isOutOfStock() {
+            return !this.itemInStock;
+          },
 
           selectType(index) {
-            this.selectedTypeIndex = Number(index) || 0;
-            this.selectedSubProductIndex = 0;
+            const idx = Number(index) || 0;
+            const targetType = this.product.types && this.product.types[idx];
+            if (!targetType || targetType.available === false) return;
+            this.selectedTypeIndex = idx;
+            if (Array.isArray(targetType.subProducts) && targetType.subProducts.length > 0) {
+              const firstAvailSub = targetType.subProducts.findIndex(s => s.available !== false);
+              this.selectedSubProductIndex = firstAvailSub >= 0 ? firstAvailSub : 0;
+            } else {
+              this.selectedSubProductIndex = 0;
+            }
             this.selectedGalleryImage = null;
             this.syncCart();
           },
 
           selectSubProduct(index) {
-            this.selectedSubProductIndex = Number(index) || 0;
+            const idx = Number(index) || 0;
+            const type = this.selectedType;
+            const targetSub = type && type.subProducts && type.subProducts[idx];
+            if (!targetSub || targetSub.available === false) return;
+            this.selectedSubProductIndex = idx;
             this.selectedGalleryImage = null;
             this.syncCart();
           },
@@ -631,24 +690,7 @@ function generateProductJson() {
     if (data.priceRange && typeof data.priceRange === 'object' && data.priceRange.min !== undefined && data.priceRange.max !== undefined) {
       priceRange = { min: Number(data.priceRange.min) || 0, max: Number(data.priceRange.max) || 0 };
     } else {
-      const availablePrices = [];
-      if (types.length === 0) {
-        availablePrices.push(productPrice);
-      } else {
-        for (const t of types) {
-          if (t.available === false) continue;
-          const subs = Array.isArray(t.subProducts) ? t.subProducts.filter(s => s.available !== false) : [];
-          if (Array.isArray(t.subProducts) && t.subProducts.length > 0) {
-            for (const s of subs) {
-              if (typeof s.price === 'number') availablePrices.push(s.price);
-            }
-          } else if (typeof t.price === 'number') {
-            availablePrices.push(t.price);
-          }
-        }
-      }
-      if (availablePrices.length === 0) availablePrices.push(productPrice);
-      priceRange = { min: Math.min(...availablePrices), max: Math.max(...availablePrices) };
+      priceRange = computeAvailablePriceRange({ price: productPrice, types });
     }
 
     const tags = Array.isArray(data.tags) ? data.tags.filter(Boolean).join(', ') : (typeof data.tags === 'string' ? data.tags : '');
@@ -752,11 +794,9 @@ function buildStandaloneProductPages(products) {
 
   let count = 0;
   for (const product of products) {
-    const storefrontProduct = filterProductForStorefront(product);
-    if (!storefrontProduct) continue;
-
-    const filePath = path.join(HTML_OUTPUT_DIR, `${storefrontProduct.slug}.html`);
-    fs.writeFileSync(filePath, generateStandaloneProductHTML(storefrontProduct));
+    if (!product || !product.slug) continue;
+    const filePath = path.join(HTML_OUTPUT_DIR, `${product.slug}.html`);
+    fs.writeFileSync(filePath, generateStandaloneProductHTML(product));
     count++;
   }
   console.log(`[build-products] Generated ${count} standalone product pages in ${HTML_OUTPUT_DIR}`);
@@ -778,7 +818,7 @@ function buildGadgetsPage() {
   html = html.replace(/heroSlider\(['"]index['"]\)/g, `heroSlider('gadgets')`);
   html = html.replace(/aria-label="Hero Slider"/g, `aria-label="Gadgets Hero Slider"`);
 
-  html = html.replace(/all\.filter\(\s*p\s*=>[^)]+\)/g, `all.filter(p => p.tab === 'gadget')`);
+  html = html.replace(/(?:all|resolved)\.filter\(\s*p\s*=>[^)]+\)/g, `resolved.filter(p => p.tab === 'gadget')`);
   html = html.replace(/carouselSource:\s*['"][^'"]+['"]/g, `carouselSource: '/data/gadgets.json'`);
 
   fs.writeFileSync(GADGETS_OUTPUT_FILE, html, 'utf-8');

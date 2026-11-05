@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rawgad Admin - Order Management & Pathao Courier</title>
-  <meta name="description" content="Rawgad Order Management & 1-Click Pathao Courier Integration Dashboard">
+  <meta name="description" content="Rawgad Order Management & Pathao Courier Integration">
   <meta name="robots" content="noindex,nofollow">
 
   <!-- Tailwind CSS CDN -->
@@ -25,29 +25,21 @@
       
       <!-- Brand Logo -->
       <div class="flex items-center gap-3">
-        <a href="./admin.html" class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex items-center gap-2">
+        <a href="./order.html" class="font-black text-xl tracking-wider text-black uppercase hover:opacity-80 transition-opacity flex items-center gap-2">
           <span>RAWGAD</span>
-          <span class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-widest uppercase">ORDERS</span>
+          <span class="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded tracking-widest uppercase">ORDERS & PATHAO</span>
         </a>
       </div>
 
       <!-- Desktop Nav Tabs -->
       <nav class="hidden md:flex items-center gap-1 bg-neutral-100 p-1 rounded-xl border border-neutral-200">
-        <a href="./admin.html" class="text-neutral-600 hover:text-black font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-          Overview
-        </a>
-        <a href="./inventory.html" class="text-neutral-600 hover:text-black font-semibold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-          Inventory
-        </a>
         <a href="./order.html" class="bg-white text-black shadow-xs font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-all flex items-center gap-2">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
           Orders & Pathao
         </a>
       </nav>
 
-      <!-- Storefront Link -->
+      <!-- Storefront Link & Logout -->
       <div class="hidden md:flex items-center gap-3">
         <a href="./index.html" target="_blank" class="text-neutral-500 hover:text-black text-xs font-semibold uppercase tracking-wider flex items-center gap-1 transition-colors px-3 py-1.5 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50">
           <span>View Store</span>
@@ -68,8 +60,6 @@
 
     <!-- Mobile Drawer -->
     <div x-show="mobileMenuOpen" x-transition class="md:hidden flex flex-col bg-white border-b border-neutral-200 p-4 gap-2 shadow-lg">
-      <a href="./admin.html" class="font-semibold text-xs uppercase tracking-wider p-3 rounded-lg text-neutral-700 hover:bg-neutral-50">Overview</a>
-      <a href="./inventory.html" class="font-semibold text-xs uppercase tracking-wider p-3 rounded-lg text-neutral-700 hover:bg-neutral-50">Inventory Management</a>
       <a href="./order.html" class="bg-neutral-100 font-bold text-xs uppercase tracking-wider p-3 rounded-lg text-black">Orders & Pathao Dispatch</a>
       <a href="./index.html" target="_blank" class="font-semibold text-xs uppercase tracking-wider p-3 rounded-lg text-neutral-500 hover:bg-neutral-50 border-t border-neutral-100 mt-1">View Store ↗</a>
       <button @click="logout()" class="text-left font-bold text-xs uppercase tracking-wider p-3 rounded-lg text-red-600 hover:bg-red-50">Logout</button>
@@ -84,7 +74,7 @@
       <div>
         <h1 class="text-3xl font-black text-black tracking-tight">Order Management & Pathao Courier</h1>
         <p class="text-xs text-neutral-500 font-medium mt-1">
-          Review customer orders, verify bKash/Nagad transactions, and dispatch directly to Pathao Courier with 1-click.
+          Review customer orders, update order statuses, and dispatch eligible orders to Pathao Courier.
         </p>
       </div>
 
@@ -125,33 +115,6 @@
       </div>
     </div>
 
-    <!-- Metrics Cards (Clean, actionable) -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <div class="bg-white p-5 rounded-2xl border border-neutral-200 shadow-xs flex flex-col justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Total Store Orders</span>
-        <div class="text-2xl sm:text-3xl font-black text-black mt-2" x-text="metrics.totalOrders">0</div>
-        <div class="text-[10px] text-neutral-500 font-medium mt-1" x-text="'BDT ' + metrics.totalRevenue.toLocaleString()">BDT 0.00</div>
-      </div>
-
-      <div class="bg-white p-5 rounded-2xl border border-neutral-200 shadow-xs flex flex-col justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-amber-600">Ready for Pathao</span>
-        <div class="text-2xl sm:text-3xl font-black text-amber-600 mt-2" x-text="metrics.pendingDispatch">0</div>
-        <div class="text-[10px] text-neutral-500 font-medium mt-1">Orders awaiting courier dispatch</div>
-      </div>
-
-      <div class="bg-white p-5 rounded-2xl border border-neutral-200 shadow-xs flex flex-col justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Pathao Dispatched</span>
-        <div class="text-2xl sm:text-3xl font-black text-emerald-600 mt-2" x-text="metrics.dispatchedCount">0</div>
-        <div class="text-[10px] text-neutral-500 font-medium mt-1">Consignments created</div>
-      </div>
-
-      <div class="bg-white p-5 rounded-2xl border border-neutral-200 shadow-xs flex flex-col justify-between">
-        <span class="text-[11px] font-bold uppercase tracking-wider text-purple-600">Pending Payment</span>
-        <div class="text-2xl sm:text-3xl font-black text-purple-600 mt-2" x-text="metrics.pendingPayment">0</div>
-        <div class="text-[10px] text-neutral-500 font-medium mt-1">MFS / Online unverified</div>
-      </div>
-    </div>
-
     <!-- Filters & Search Toolbar -->
     <div class="bg-white p-4 rounded-2xl border border-neutral-200 shadow-xs flex flex-col md:flex-row justify-between items-center gap-4">
       
@@ -184,7 +147,7 @@
       
       <!-- Loading State -->
       <div x-show="loading" class="py-16 text-center text-neutral-400 font-bold uppercase tracking-wider text-xs">
-        Loading orders from MongoDB Atlas...
+        Loading orders...
       </div>
 
       <!-- Error State -->
@@ -249,7 +212,7 @@
                 <td class="py-4 px-5">
                   <div class="font-bold text-black" x-text="o.customer?.name || 'Customer'"></div>
                   
-                  <!-- Phone with Quick WhatsApp & Call links -->
+                  <!-- Phone with Quick WhatsApp link -->
                   <div class="flex items-center gap-1.5 mt-0.5">
                     <span class="text-neutral-600 font-mono text-[11px]" x-text="o.customer?.phone || ''"></span>
                     <template x-if="o.customer?.phone">
@@ -441,7 +404,7 @@
           Showing <span class="font-bold text-black" x-text="filteredOrders.length"></span> of <span class="font-bold text-black" x-text="allOrders.length"></span> customer orders
         </div>
         <div>
-          Persisted in MongoDB Atlas (<code class="font-mono text-[11px] text-black">orders</code>)
+          Order Management & Pathao Courier
         </div>
       </div>
     </div>
@@ -831,7 +794,6 @@
             return;
           }
 
-          // Check query parameters for pre-selected filter or search
           const urlParams = new URLSearchParams(window.location.search);
           const filterParam = urlParams.get('filter');
           const searchParam = urlParams.get('search');
@@ -924,14 +886,12 @@
           const query = this.searchQuery.trim().toLowerCase();
 
           return this.allOrders.filter(o => {
-            // Status filter
             if (this.activeFilter === 'ready' && (o.courier_status === 'dispatched' || o.status === 'cancelled')) return false;
             if (this.activeFilter === 'dispatched' && o.courier_status !== 'dispatched') return false;
             if (this.activeFilter === 'cod' && (o.payment_method || '').toLowerCase() !== 'cod') return false;
             if (this.activeFilter === 'mfs' && !['bkash', 'nagad'].includes((o.payment_method || '').toLowerCase())) return false;
             if (this.activeFilter === 'paid' && !(o.status === 'success' || o.verified)) return false;
 
-            // Search filter
             if (query) {
               const inv = (o.invoice_number || '').toLowerCase();
               const name = (o.customer?.name || '').toLowerCase();
@@ -944,22 +904,6 @@
 
             return true;
           });
-        },
-
-        get metrics() {
-          const totalOrders = this.allOrders.length;
-          const totalRevenue = this.allOrders.reduce((sum, o) => sum + (Number(o.payment_amount) || 0), 0);
-          const pendingDispatch = this.allOrders.filter(o => o.courier_status !== 'dispatched' && o.status !== 'cancelled').length;
-          const dispatchedCount = this.allOrders.filter(o => o.courier_status === 'dispatched').length;
-          const pendingPayment = this.allOrders.filter(o => (o.payment_method || '').toLowerCase() !== 'cod' && !(o.status === 'success' || o.verified)).length;
-
-          return {
-            totalOrders,
-            totalRevenue: Math.round(totalRevenue * 100) / 100,
-            pendingDispatch,
-            dispatchedCount,
-            pendingPayment
-          };
         },
 
         get isAllSelected() {
@@ -1006,7 +950,6 @@
                 this.activeOrder.trx_status = 'verified';
                 if (this.activeOrder.status === 'pending') this.activeOrder.status = 'confirmed';
               }
-              // Trigger reactivity update across Alpine template list
               this.allOrders = [...this.allOrders];
               this.showToast(`TrxID verified for ${invoiceNumber}!`);
             } else {
@@ -1062,7 +1005,6 @@
           await this.fetchOrders();
         },
 
-        // 1-Click Dispatch
         async quickDispatch(invoiceNumber) {
           if (!invoiceNumber) return;
           if (!confirm(`Send order ${invoiceNumber} to Pathao Courier?`)) return;
@@ -1098,7 +1040,6 @@
           }
         },
 
-        // Custom Dispatch Modal
         openCustomDispatchModal(order) {
           const isCod = (order.payment_method || '').toLowerCase() === 'cod';
           const isPaid = !isCod && (order.status === 'success' || order.verified);

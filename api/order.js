@@ -1,8 +1,7 @@
 // api/order.js
 // Protected Admin Order Operations
-// Uses fast MongoDB aggregate pipeline and reliable variant stock restoration
 
-const { getOrdersCollection, getInventoryCollection } = require("./_db");
+const { getOrdersCollection } = require("./_db");
 const {
   setCors,
   parseBody,
@@ -22,10 +21,9 @@ module.exports = async function handler(req, res) {
 
   try {
     const ordersCol = await getOrdersCollection();
-    const inventoryCol = await getInventoryCollection();
 
     // ==========================================
-    // GET: Fetch orders with aggregate metrics
+    // GET: Fetch orders with search and filters
     // ==========================================
     if (req.method === "GET") {
       const { search, status, payment_method, courier_status, limit = 200 } = req.query || {};
@@ -62,77 +60,16 @@ module.exports = async function handler(req, res) {
       }
 
       const numLimit = Math.min(500, Math.max(1, parseInt(limit, 10) || 200));
-
-      const [orders, metricsResult] = await Promise.all([
-        ordersCol.find(query).sort({ created_at: -1 }).limit(numLimit).toArray(),
-        ordersCol.aggregate([
-          {
-            $facet: {
-              total: [{ $count: "count" }],
-              revenue: [
-                {
-                  $match: {
-                    $or: [
-                      { status: "success" },
-                      { status: "delivered" },
-                      { payment_method: "cod" },
-                      { verified: true }
-                    ]
-                  }
-                },
-                { $group: { _id: null, total: { $sum: "$payment_amount" } } }
-              ],
-              dispatched: [
-                { $match: { courier_status: { $in: ["dispatched", "in_transit"] } } },
-                { $count: "count" }
-              ],
-              delivered: [
-                { $match: { $or: [{ courier_status: "delivered" }, { status: "delivered" }] } },
-                { $count: "count" }
-              ],
-              pendingDispatch: [
-                {
-                  $match: {
-                    courier_status: { $nin: ["dispatched", "in_transit", "delivered"] },
-                    status: { $nin: ["cancelled", "failed", "delivered"] }
-                  }
-                },
-                { $count: "count" }
-              ],
-              pendingPayment: [
-                {
-                  $match: {
-                    payment_method: { $ne: "cod" },
-                    verified: { $ne: true },
-                    status: { $nin: ["success", "delivered", "cancelled", "failed"] }
-                  }
-                },
-                { $count: "count" }
-              ]
-            }
-          }
-        ]).toArray()
-      ]);
-
-      const facet = metricsResult[0] || {};
-      const metrics = {
-        totalOrders: facet.total?.[0]?.count || 0,
-        totalRevenue: Math.round((facet.revenue?.[0]?.total || 0) * 100) / 100,
-        pendingDispatch: facet.pendingDispatch?.[0]?.count || 0,
-        pendingPayment: facet.pendingPayment?.[0]?.count || 0,
-        dispatchedCount: facet.dispatched?.[0]?.count || 0,
-        deliveredCount: facet.delivered?.[0]?.count || 0
-      };
+      const orders = await ordersCol.find(query).sort({ created_at: -1 }).limit(numLimit).toArray();
 
       return ok(res, {
         count: orders.length,
-        orders,
-        metrics
+        orders
       });
     }
 
     // ==========================================
-    // PATCH / PUT: Update Order & Restore Stock
+    // PATCH / PUT: Update Order Status & Details
     // ==========================================
     if (req.method === "PATCH" || req.method === "PUT") {
       const body = await parseBody(req);
@@ -158,41 +95,6 @@ module.exports = async function handler(req, res) {
         if (customer.email) updateFields["customer.email"] = customer.email;
       }
 
-      const normNewStatus = String(status || "").toLowerCase().trim();
-      const isCancellingOrReturning = normNewStatus === "cancelled" || normNewStatus === "returned";
-      let stockRestored = false;
-      let restoredTotalQuantity = 0;
-
-      if (isCancellingOrReturning && !existingOrder.stockRestored && existingOrder.status !== "cancelled" && existingOrder.status !== "returned") {
-        const rawItems = Array.isArray(existingOrder.items) ? existingOrder.items : [];
-
-        for (const item of rawItems) {
-          const qty = parseInt(item.qty || item.quantity || 1, 10);
-          if (qty > 0 && item.productId) {
-            const filter = {
-              productId: String(item.productId).trim(),
-              typeId: item.typeId ? String(item.typeId).trim() : null,
-              subProductId: item.subProductId ? String(item.subProductId).trim() : null,
-            };
-
-            await inventoryCol.updateOne(
-              filter,
-              {
-                $inc: { stock: qty },
-                $set: { updatedAt: new Date() },
-                $unset: { isAvailable: "", stockMode: "" }
-              }
-            );
-            restoredTotalQuantity += qty;
-          }
-        }
-
-        updateFields.stockRestored = true;
-        updateFields.stockRestoredAt = new Date();
-        updateFields.stockRestoredQuantity = restoredTotalQuantity;
-        stockRestored = true;
-      }
-
       const updated = await ordersCol.findOneAndUpdate(
         { invoice_number },
         { $set: updateFields },
@@ -200,11 +102,8 @@ module.exports = async function handler(req, res) {
       );
 
       return ok(res, {
-        message: stockRestored
-          ? `Order updated and ${restoredTotalQuantity} item(s) restored to inventory.`
-          : "Order updated successfully",
-        order: updated,
-        stockRestored
+        message: "Order updated successfully",
+        order: updated
       });
     }
 

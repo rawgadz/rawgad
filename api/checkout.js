@@ -1,12 +1,12 @@
 // api/checkout.js
-// POST /api/checkout — Production checkout handler with Markdown-compiled availability & physical stock verification
+// POST /api/checkout — Production checkout handler with Markdown-compiled availability & pricing verification
 // Sole origin for COD Order Creation and Meta Conversions API (CAPI) Purchase tracking
 
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { ObjectId } = require("mongodb");
-const { getDb, getInventoryCollection, getOrdersCollection } = require("./_db");
+const { getOrdersCollection } = require("./_db");
 const { normalizeId, makeCanonicalKey, getPurchasableCatalogMap } = require("./_catalog");
 const { parseBody } = require("./_helpers");
 const { buildPurchaseCustomData, trackServerPurchase } = require("./_meta");
@@ -206,11 +206,11 @@ module.exports = async function handler(req, res) {
         });
       }
 
-      // Enforce Markdown-defined product and variant availability server-side before order creation
+      // Enforce Markdown-defined product and variant availability from data/products.json server-side
       if (catalogItem.available !== true) {
         return res.status(400).json({
           success: false,
-          error: `Item "${priceEntry.name}" is currently unavailable.`
+          error: `Item "${priceEntry.name}" is currently out of stock and unavailable for purchase.`
         });
       }
 
@@ -259,8 +259,6 @@ module.exports = async function handler(req, res) {
       validatedLineItems,
     });
 
-    const client = await getDb();
-    const inventoryCol = await getInventoryCollection();
     const ordersCol = await getOrdersCollection();
 
     // Idempotency Check: Prevent duplicate order creation and duplicate Purchase events
@@ -365,132 +363,9 @@ module.exports = async function handler(req, res) {
       updated_at: new Date(),
     };
 
-    let session = null;
-    let useTransaction = false;
+    await ordersCol.insertOne(orderDoc);
 
-    try {
-      session = client.startSession();
-      useTransaction = true;
-    } catch (_) {
-      session = null;
-      useTransaction = false;
-    }
-
-    if (useTransaction && session) {
-      try {
-        await session.withTransaction(async () => {
-          for (const item of validatedLineItems) {
-            const filter = {
-              productId: item.productId,
-              typeId: item.typeId ?? null,
-              subProductId: item.subProductId ?? null,
-            };
-
-            const doc = await inventoryCol.findOne(filter, { session });
-            if (!doc) {
-              const err = new Error(`Item "${item.name}" is currently out of stock.`);
-              err.code = "OUT_OF_STOCK";
-              throw err;
-            }
-
-            const updateRes = await inventoryCol.findOneAndUpdate(
-              {
-                productId: item.productId,
-                typeId: item.typeId ?? null,
-                subProductId: item.subProductId ?? null,
-                stock: { $gte: item.qty }
-              },
-              {
-                $inc: { stock: -item.qty },
-                $set: { updatedAt: new Date() },
-                $unset: { isAvailable: "", stockMode: "" }
-              },
-              { session, returnDocument: "after" }
-            );
-
-            if (!updateRes) {
-              const availableStock = typeof doc.stock === "number" ? doc.stock : 0;
-              const err = new Error(`Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${availableStock} available.`);
-              err.code = "INSUFFICIENT_STOCK";
-              throw err;
-            }
-          }
-
-          await ordersCol.insertOne(orderDoc, { session });
-        });
-      } catch (txErr) {
-        return res.status(400).json({
-          success: false,
-          error: txErr.message || "Failed to process order stock validation."
-        });
-      } finally {
-        await session.endSession();
-      }
-    } else {
-      // Non-transaction fallback with compensation rollback
-      const decrementedItems = [];
-      try {
-        for (const item of validatedLineItems) {
-          const filter = {
-            productId: item.productId,
-            typeId: item.typeId ?? null,
-            subProductId: item.subProductId ?? null,
-          };
-
-          const doc = await inventoryCol.findOne(filter);
-          if (!doc) {
-            throw new Error(`Item "${item.name}" is currently out of stock.`);
-          }
-
-          const updateRes = await inventoryCol.findOneAndUpdate(
-            {
-              productId: item.productId,
-              typeId: item.typeId ?? null,
-              subProductId: item.subProductId ?? null,
-              stock: { $gte: item.qty }
-            },
-            {
-              $inc: { stock: -item.qty },
-              $set: { updatedAt: new Date() },
-              $unset: { isAvailable: "", stockMode: "" }
-            },
-            { returnDocument: "after" }
-          );
-
-          if (!updateRes) {
-            const availableStock = typeof doc.stock === "number" ? doc.stock : 0;
-            throw new Error(`Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${availableStock} available.`);
-          }
-
-          decrementedItems.push(item);
-        }
-
-        await ordersCol.insertOne(orderDoc);
-      } catch (err) {
-        for (const dec of decrementedItems) {
-          try {
-            await inventoryCol.updateOne(
-              {
-                productId: dec.productId,
-                typeId: dec.typeId ?? null,
-                subProductId: dec.subProductId ?? null,
-              },
-              {
-                $inc: { stock: dec.qty },
-                $set: { updatedAt: new Date() }
-              }
-            );
-          } catch (_) {}
-        }
-
-        return res.status(400).json({
-          success: false,
-          error: err.message || "Order rejected due to stock validation failure."
-        });
-      }
-    }
-
-    // Step 8: Only after successful order insertion in MongoDB, trigger Purchase via Meta CAPI
+    // Only after successful order insertion in MongoDB, trigger Purchase via Meta CAPI
     if (method === "cod") {
       try {
         const capiResult = await trackServerPurchase({

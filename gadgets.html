@@ -194,7 +194,7 @@
     >
       <a
         href="./index.html"
-        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
+        class="hover:text-black transition-colors font-bold text-xs tracking-wider uppercase text-black border-b-2 border-black pb-0.5"
       >
         Home
       </a>
@@ -215,7 +215,7 @@
 
       <a
         href="./gadgets.html"
-        class="hover:text-black transition-colors font-bold text-xs tracking-wider uppercase text-black border-b-2 border-black pb-0.5"
+        class="hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600"
       >
         Gadgets
       </a>
@@ -676,6 +676,11 @@
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               >
+              <template x-if="p.available === false">
+                <span class="absolute top-2.5 right-2.5 z-10 bg-rose-600 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+                  Out of Stock
+                </span>
+              </template>
             </a>
 
             <div class="p-3 sm:p-5 flex flex-col flex-grow">
@@ -718,7 +723,9 @@
 
                 <a
                   :href="'./product/' + p.slug + '.html'"
-                  class="bg-black hover:bg-neutral-800 text-white font-bold text-[10px] sm:text-xs uppercase tracking-wider px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all text-center shadow-xs"
+                  :class="p.available === false ? 'bg-neutral-200 text-neutral-600 hover:bg-neutral-300' : 'bg-black hover:bg-neutral-800 text-white'"
+                  class="font-bold text-[10px] sm:text-xs uppercase tracking-wider px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all text-center shadow-xs"
+                  x-text="p.available === false ? 'Out of Stock' : 'Select'"
                 >
                   Select
                 </a>
@@ -837,7 +844,6 @@
   </footer>
 
   <script>
-    if (window.RawgadzPixel) { window.RawgadzPixel.trackViewCategory({"category_name":"Gadgets","content_category":"Gadgets","category_slug":"gadgets"}); }
     document.addEventListener('alpine:init', () => {
 
       /* =========================================================
@@ -1003,8 +1009,6 @@
            3D CAROUSEL
         ===================================================== */
 
-        carouselSource: '/data/gadgets.json',
-
         carouselImages: [],
 
         cImageWidth: 260,
@@ -1134,30 +1138,53 @@
 
 
         /* =====================================================
-           LOAD CAROUSEL DATA (index.json / gadgets.json)
+           LOAD CAROUSEL DATA (index.json & gadgets.json)
         ===================================================== */
 
         async loadCarousel() {
           try {
-            const res = await fetch(this.carouselSource || '/data/index.json');
-            if (!res.ok) {
-              throw new Error('HTTP ' + res.status);
-            }
-            const data = await res.json();
-            const items = Array.isArray(data) ? data : (data.carousel || data.items || []);
-            if (Array.isArray(items) && items.length > 0) {
-              this.carouselImages = items.map(item => ({
-                image: item.image || item.src || '',
-                src: item.image || item.src || '',
-                tag: item.tag || '',
-                label: item.label || item.title || item.tag || ''
+            const sources = ['/data/index.json', '/data/gadgets.json'];
+            let allItems = [];
+
+            const fetchPromises = sources.map(async (source) => {
+              try {
+                const res = await fetch(source);
+                if (res.ok) {
+                  const data = await res.json();
+                  return Array.isArray(data) ? data : (data.carousel || data.items || data.products || []);
+                }
+              } catch (e) {
+                console.warn(`[Carousel] Failed to load ${source}:`, e);
+              }
+              return [];
+            });
+
+            const results = await Promise.all(fetchPromises);
+            allItems = results.flat();
+
+            // Deduplicate by id, slug, or title to prevent identical items from appearing twice
+            const seen = new Set();
+            const uniqueItems = allItems.filter(item => {
+              const key = item.id || item.slug || item.title || JSON.stringify(item);
+              if (seen.has(key)) return false;
+              seen.add(key);
+              return true;
+            });
+
+            if (uniqueItems.length > 0) {
+              this.carouselImages = uniqueItems.map(item => ({
+                image: item.image || item.imageSrc || item.src || '',
+                src: item.image || item.imageSrc || item.src || '',
+                tag: (item.tag || item.tags || (item.tab === 'gadget' ? 'gadgets' : (item.tab === 'normal' ? 'car accessories' : '')) || '').toString().toLowerCase(),
+                label: item.label || item.title || item.name || item.tag || item.tags || 'Explore'
               }));
+              
               this.$nextTick(() => {
                 this.cInit();
               });
             }
           } catch (err) {
-            console.warn('[Carousel] Could not load carousel data from ' + this.carouselSource + ':', err);
+            console.warn('[Carousel] Could not load carousel data:', err);
           }
         },
 
@@ -1199,18 +1226,6 @@
           const f =
             Math.min(deltaTime, 0.1);
 
-
-          /*
-           * IMPORTANT:
-           *
-           * The old version stopped rendering while
-           * the arrow animation was running.
-           *
-           * That meant cRotY changed but the DOM did
-           * not receive the new transform.
-           *
-           * This version ALWAYS renders.
-           */
 
           if (!this.cIsDragging) {
 
@@ -1254,20 +1269,12 @@
               Math.abs(this.cVel) > 0.01
             ) {
 
-              /*
-               * Drag momentum
-               */
-
               this.cRotY +=
                 this.cVel * f;
 
               this.cVel *= 0.94;
 
             } else {
-
-              /*
-               * Normal automatic rotation
-               */
 
               this.cRotY +=
                 this.cDegPerSec * f;
@@ -1276,13 +1283,7 @@
 
           }
 
-
-          /*
-           * Always update the actual DOM transform.
-           */
-
           this.cRender();
-
 
           this.animationFrameId =
             requestAnimationFrame(
@@ -1304,11 +1305,6 @@
             null;
 
           this.cVel = 0;
-
-          /*
-           * Cancel any previous arrow animation
-           * and start from the current position.
-           */
 
           this.cArrowTarget =
             this.cRotY -
@@ -1347,11 +1343,6 @@
 
           if (!this.cDrag) return;
 
-          /*
-           * Stop an arrow animation when the user
-           * starts dragging.
-           */
-
           this.cArrowTarget =
             null;
 
@@ -1369,11 +1360,6 @@
 
           this.cVel = 0;
 
-
-          /*
-           * Capture the pointer safely.
-           */
-
           if (
             e.currentTarget &&
             e.currentTarget.setPointerCapture
@@ -1389,12 +1375,6 @@
 
           }
 
-
-          /*
-           * Find the card currently closest
-           * to the front.
-           */
-
           const normalizedRot =
             (
               (this.cRotY % 360) +
@@ -1405,7 +1385,6 @@
 
           let closestItem =
             this.carouselImages[0];
-
 
           this.carouselImages.forEach(
             (item, i) => {
@@ -1436,7 +1415,6 @@
             }
           );
 
-
           this.cPotentialClickItem =
             closestItem;
 
@@ -1458,12 +1436,6 @@
           this.cLastX =
             e.clientX;
 
-
-          /*
-           * If the pointer moved enough,
-           * this is a drag rather than a click.
-           */
-
           if (
             Math.abs(
               this.cLastX -
@@ -1476,15 +1448,12 @@
 
           }
 
-
           const k =
             0.3 *
             this.cSensitivity;
 
-
           this.cRotY +=
             dx * k;
-
 
           this.cVel =
             dx *
@@ -1503,11 +1472,6 @@
           if (!this.cIsDragging) {
             return;
           }
-
-
-          /*
-           * Release pointer capture safely.
-           */
 
           if (
             e.currentTarget &&
@@ -1536,15 +1500,8 @@
 
           }
 
-
           this.cIsDragging =
             false;
-
-
-          /*
-           * A click on a carousel card
-           * applies its category filter.
-           */
 
           if (this.cPotentialClickItem) {
 
@@ -1555,7 +1512,6 @@
             );
 
           }
-
 
           this.cPotentialClickItem =
             null;
@@ -1573,9 +1529,8 @@
             window.RawgadStock.init();
           }
 
-          // Load carousel data from JSON source
+          // Load carousel data from JSON sources
           this.loadCarousel();
-
 
           try {
 
@@ -1590,17 +1545,14 @@
               );
             }
 
-
             const all =
               await res.json();
 
-            const available = window.RawgadStock ? window.RawgadStock.filterAvailableProducts(all) : all.filter(p => p.available !== false);
-            this.allProducts =
-              available.filter(p => p.tab === 'gadget');
+            const resolved = window.RawgadStock && typeof window.RawgadStock.resolveProductAvailability === 'function' ? all.map(p => window.RawgadStock.resolveProductAvailability(p)) : all;
+            this.allProducts = resolved.filter(p => p.tab === 'gadget');
 
             this.filteredProducts =
               [...this.allProducts];
-
 
           } catch (err) {
 
@@ -1654,9 +1606,7 @@
 
           }
 
-
           this.filterProducts();
-
 
           if (scrollTarget) {
 
@@ -1704,7 +1654,6 @@
             this.activeFilterTarget ||
             'all';
 
-
           if (filterVal) {
 
             list =
@@ -1724,7 +1673,6 @@
 
                 }
 
-
                 if (
                   filterTarget === 'title'
                 ) {
@@ -1739,7 +1687,6 @@
 
                 }
 
-
                 if (
                   filterTarget === 'id'
                 ) {
@@ -1753,7 +1700,6 @@
                     );
 
                 }
-
 
                 return (
                   (
@@ -1776,7 +1722,6 @@
               });
 
           }
-
 
           this.filteredProducts =
             list;

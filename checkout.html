@@ -325,9 +325,6 @@
                     <template x-if="getItemAvailability(item) === false">
                       <span class="text-[10px] text-rose-600 font-bold block mt-0.5">Item is currently unavailable</span>
                     </template>
-                    <template x-if="getItemAvailability(item) !== false && getItemStock(item) !== null && getItemStock(item) > 0 && getItemStock(item) < item.quantity">
-                      <span class="text-[10px] text-amber-600 font-bold block mt-0.5" x-text="'Only ' + getItemStock(item) + ' left in stock'"></span>
-                    </template>
                   </div>
                   <div class="flex items-center border border-neutral-300 rounded-xl overflow-hidden bg-white flex-shrink-0">
                     <button type="button" @click="updateItemQty(item.cartKey || item.subProductId || item.id, item.quantity - 1)" class="px-2 py-0.5 bg-neutral-100 hover:bg-black hover:text-white font-bold text-xs transition-colors">-</button>
@@ -526,7 +523,6 @@
         submitting: false,
         errorMessage: '',
 
-        stockStatusMap: {},
         availabilityStatusMap: {},
         checkingStock: false,
 
@@ -540,16 +536,10 @@
         },
 
         initStockFromCache() {
-          if (window.RawgadStock) {
-            const map = window.RawgadStock.getStockMap();
-            if (map && Object.keys(map).length > 0) {
-              this.stockStatusMap = { ...map };
-            }
-            if (typeof window.RawgadStock.getAvailabilityMap === 'function') {
-              const avail = window.RawgadStock.getAvailabilityMap();
-              if (avail && Object.keys(avail).length > 0) {
-                this.availabilityStatusMap = { ...avail };
-              }
+          if (window.RawgadStock && typeof window.RawgadStock.getAvailabilityMap === 'function') {
+            const avail = window.RawgadStock.getAvailabilityMap();
+            if (avail && Object.keys(avail).length > 0) {
+              this.availabilityStatusMap = { ...avail };
             }
           }
         },
@@ -558,38 +548,9 @@
           if (this.cartItems.length === 0) return;
           this.checkingStock = true;
           try {
-            const res = await fetch('/api/inventory', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                items: this.cartItems.map(i => ({
-                  productId: i.id || i.productId,
-                  typeId: i.typeId,
-                  subProductId: i.subProductId
-                }))
-              })
-            });
-            if (res.ok) {
-              const data = await res.json();
-              if (data && Array.isArray(data.inventory)) {
-                const map = {};
-                const availMap = {};
-                for (const item of data.inventory) {
-                  const key = String(item.productId) + ':::' + String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
-                  map[key] = item.stock;
-                  availMap[key] = (typeof item.available === 'boolean') ? item.available : (item.stock > 0);
-                  if (item.subProductId) {
-                    map[String(item.subProductId)] = item.stock;
-                    availMap[String(item.subProductId)] = (typeof item.available === 'boolean') ? item.available : (item.stock > 0);
-                  }
-                  if (item.typeId && !item.subProductId) {
-                    map[String(item.typeId)] = item.stock;
-                    availMap[String(item.typeId)] = (typeof item.available === 'boolean') ? item.available : (item.stock > 0);
-                  }
-                }
-                this.stockStatusMap = map;
-                this.availabilityStatusMap = availMap;
-              }
+            if (window.RawgadStock && typeof window.RawgadStock.fetchAndStoreAllStock === 'function') {
+              await window.RawgadStock.fetchAndStoreAllStock(true);
+              this.initStockFromCache();
             }
           } catch (_) {
           } finally {
@@ -597,36 +558,20 @@
           }
         },
 
-        getItemStock(item) {
-          const key1 = String(item.id || item.productId) + ':::' + String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
-          if (this.stockStatusMap && Object.prototype.hasOwnProperty.call(this.stockStatusMap, key1)) {
-            return this.stockStatusMap[key1];
-          }
-          if (item.subProductId && Object.prototype.hasOwnProperty.call(this.stockStatusMap, String(item.subProductId))) {
-            return this.stockStatusMap[String(item.subProductId)];
-          }
-          if (item.typeId && Object.prototype.hasOwnProperty.call(this.stockStatusMap, String(item.typeId))) {
-            return this.stockStatusMap[String(item.typeId)];
-          }
-          return null;
-        },
-
         getItemAvailability(item) {
-          const key1 = String(item.id || item.productId) + ':::' + String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
-          if (this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, key1)) {
-            return this.availabilityStatusMap[key1];
-          }
-          if (item.subProductId && this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, String(item.subProductId))) {
-            return this.availabilityStatusMap[String(item.subProductId)];
-          }
-          if (item.typeId && this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, String(item.typeId))) {
-            return this.availabilityStatusMap[String(item.typeId)];
+          const pId = item.id || item.productId;
+          const tId = item.typeId || '_';
+          const sId = item.subProductId || '_';
+          if (window.RawgadStock && typeof window.RawgadStock.makeCompositeKey === 'function') {
+            const key = window.RawgadStock.makeCompositeKey(pId, tId, sId);
+            if (this.availabilityStatusMap && Object.prototype.hasOwnProperty.call(this.availabilityStatusMap, key)) {
+              return Boolean(this.availabilityStatusMap[key]);
+            }
           }
           if (window.RawgadStock && typeof window.RawgadStock.isItemAvailable === 'function') {
-            const direct = window.RawgadStock.isItemAvailable(item.id || item.productId, item.typeId, item.subProductId);
-            if (direct !== null) return direct;
+            return window.RawgadStock.isItemAvailable(pId, tId, sId);
           }
-          return null;
+          return true;
         },
 
         validateBDPhone(phone) {
