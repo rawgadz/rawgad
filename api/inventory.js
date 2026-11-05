@@ -1,6 +1,6 @@
 // api/inventory.js
-// Consolidated Serverless Function for Inventory Operations in Rawgadz:
-// 2-Mode Variant Stock Management: "quantity" vs "unlimited"
+// Consolidated Serverless Function for Quantity-Based Inventory Operations in Rawgadz.
+// Product and variant availability is determined exclusively from Markdown via data/products.json.
 
 const { setCors, parseBody, ok, badRequest, notFound, serverError, requireAdminAuth } = require("./_helpers");
 const { getInventoryCollection, getOrdersCollection, getDb } = require("./_db");
@@ -45,12 +45,16 @@ module.exports = async function handler(req, res) {
       }
 
       const { productId, typeId, subProductId, admin, tab: queryTab } = req.query || {};
+      const { map: catalogMap, items: catalogItems, products: rawCatalogProducts } = getPurchasableCatalogMap();
 
       // B. Storefront single item lookup: ?productId=...&typeId=...
       if (productId && typeId !== undefined && !admin) {
         const pId = String(productId).trim();
         const tId = normalizeId(typeId);
         const sId = normalizeId(subProductId);
+        const key = makeCanonicalKey(pId, tId, sId);
+        const catalogInfo = catalogMap.get(key);
+        const catalogAvailable = catalogInfo ? Boolean(catalogInfo.available) : false;
 
         const doc = await inventoryCol.findOne({
           productId: pId,
@@ -58,19 +62,16 @@ module.exports = async function handler(req, res) {
           subProductId: sId === "_" ? null : sId,
         });
 
-        const stockMode = doc?.stockMode || "quantity";
         const stock = typeof doc?.stock === "number" ? Math.max(0, doc.stock) : 0;
-        const isAvailable = doc ? Boolean(doc.isAvailable) : false;
-        const available = isVariantAvailable(stockMode, isAvailable, stock);
-        const status = getStockStatus(stockMode, isAvailable, stock);
+        const available = isVariantAvailable(stock, catalogAvailable);
+        const status = getStockStatus(stock, catalogAvailable);
 
         return ok(res, {
           productId: pId,
           typeId: tId === "_" ? null : tId,
           subProductId: sId === "_" ? null : sId,
-          stockMode,
           stock,
-          isAvailable,
+          catalogAvailable,
           available,
           inStock: available,
           status,
@@ -84,24 +85,26 @@ module.exports = async function handler(req, res) {
           .find({ productId: String(productId).trim() })
           .toArray();
 
-        const formatted = docs.map((doc) => {
-          const stockMode = doc.stockMode || "quantity";
-          const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
-          const isAvailable = Boolean(doc.isAvailable);
-          const available = isVariantAvailable(stockMode, isAvailable, stock);
-          return {
-            productId: doc.productId,
-            typeId: doc.typeId || null,
-            subProductId: doc.subProductId || null,
-            stockMode,
-            stock,
-            isAvailable,
-            available,
-            inStock: available,
-            status: getStockStatus(stockMode, isAvailable, stock),
-            updatedAt: doc.updatedAt || null,
-          };
-        });
+        const formatted = docs
+          .map((doc) => {
+            const key = makeCanonicalKey(doc.productId, doc.typeId, doc.subProductId);
+            const catalogInfo = catalogMap.get(key);
+            const catalogAvailable = catalogInfo ? Boolean(catalogInfo.available) : false;
+            const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
+            const available = isVariantAvailable(stock, catalogAvailable);
+            return {
+              productId: doc.productId,
+              typeId: doc.typeId || null,
+              subProductId: doc.subProductId || null,
+              stock,
+              catalogAvailable,
+              available,
+              inStock: available,
+              status: getStockStatus(stock, catalogAvailable),
+              updatedAt: doc.updatedAt || null,
+            };
+          })
+          .filter((item) => item.catalogAvailable);
 
         return ok(res, {
           productId: String(productId).trim(),
@@ -126,39 +129,31 @@ module.exports = async function handler(req, res) {
         .sort({ productId: 1, typeId: 1, subProductId: 1 })
         .toArray();
 
-      const { map: catalogMap, items: catalogItems, products: rawCatalogProducts } = getPurchasableCatalogMap();
-
       const stockMap = new Map();
       for (const doc of inventoryDocs) {
         const key = makeCanonicalKey(doc.productId, doc.typeId, doc.subProductId);
         stockMap.set(key, doc);
       }
 
-      // If inventory collection is empty (e.g. unseeded database), populate with catalog items as default unavailable items
       if (inventoryDocs.length === 0) {
         for (const catItem of catalogItems) {
           stockMap.set(catItem.key, {
             productId: catItem.productId,
             typeId: catItem.typeId,
             subProductId: catItem.subProductId,
-            stockMode: "quantity",
             stock: 0,
-            isAvailable: false,
             isVirtual: true,
           });
         }
       } else if (isAdmin) {
-        // Auto-include any missing catalog variants in admin response so they appear immediately
         for (const catItem of catalogItems) {
           if (!stockMap.has(catItem.key)) {
             stockMap.set(catItem.key, {
               productId: catItem.productId,
               typeId: catItem.typeId,
               subProductId: catItem.subProductId,
-              stockMode: "quantity",
               stock: 0,
-              isAvailable: false,
-              isVirtual: true
+              isVirtual: true,
             });
           }
         }
@@ -167,8 +162,6 @@ module.exports = async function handler(req, res) {
       let inStockCount = 0;
       let lowStockCount = 0;
       let outOfStockCount = 0;
-      let availableCount = 0;
-      let unavailableCount = 0;
       let orphanedCount = 0;
 
       const itemsList = (isAdmin || inventoryDocs.length === 0) ? Array.from(stockMap.values()) : inventoryDocs;
@@ -180,34 +173,29 @@ module.exports = async function handler(req, res) {
         const key = makeCanonicalKey(pId, tId, sId);
         const catalogInfo = catalogMap.get(key);
 
-        const stockMode = doc.stockMode || "quantity";
         const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
-        const isAvailable = Boolean(doc.isAvailable);
-        const available = isVariantAvailable(stockMode, isAvailable, stock);
-        const status = getStockStatus(stockMode, isAvailable, stock);
+        const catalogAvailable = catalogInfo ? Boolean(catalogInfo.available) : false;
+        const available = isVariantAvailable(stock, catalogAvailable);
+        const status = getStockStatus(stock, catalogAvailable);
 
         if (status === "in_stock") inStockCount++;
         else if (status === "low_stock") lowStockCount++;
         else outOfStockCount++;
-
-        if (available) availableCount++;
-        else unavailableCount++;
 
         const isOrphaned = !catalogInfo;
         if (isOrphaned) orphanedCount++;
 
         const slug = catalogInfo ? catalogInfo.slug : "";
         const tab = catalogInfo ? catalogInfo.tab : "";
-        const productUrl = slug ? `/product/${slug}` : "";
+        const productUrl = slug && catalogAvailable ? `/product/${slug}` : "";
 
         const itemObj = {
           key,
           productId: pId,
           typeId: tId,
           subProductId: sId,
-          stockMode,
           stock,
-          isAvailable,
+          catalogAvailable,
           available,
           status,
           productTitle: catalogInfo ? catalogInfo.productTitle : `Item (${pId})`,
@@ -235,7 +223,7 @@ module.exports = async function handler(req, res) {
       const nestedProducts = buildNestedCatalog(rawCatalogProducts, stockMap);
       const orphanedItems = isAdmin ? mergedItems.filter((i) => i.orphaned) : [];
 
-      let outputItems = mergedItems;
+      let outputItems = isAdmin ? mergedItems : mergedItems.filter((i) => i.catalogAvailable);
       if (queryTab && queryTab.trim()) {
         const normTab = queryTab.trim().toLowerCase();
         outputItems = outputItems.filter((i) => (i.tab || "").toLowerCase() === normTab);
@@ -250,8 +238,6 @@ module.exports = async function handler(req, res) {
           inStock: inStockCount,
           lowStock: lowStockCount,
           outOfStock: outOfStockCount,
-          available: availableCount,
-          unavailable: unavailableCount,
           orphaned: orphanedCount,
         },
         items: outputItems,
@@ -265,13 +251,14 @@ module.exports = async function handler(req, res) {
   }
 
   // ==========================================
-  // 2. POST / PATCH: Bulk Query, Sync, or Mutation
+  // 2. POST / PATCH / PUT: Bulk Query, Sync, or Stock Quantity Mutation
   // ==========================================
-  if (req.method === "POST" || req.method === "PATCH") {
+  if (req.method === "POST" || req.method === "PATCH" || req.method === "PUT") {
     try {
       res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
       const body = await parseBody(req);
       const inventoryCol = await getInventoryCollection();
+      const { map: catalogMap, items: catalogItems } = getPurchasableCatalogMap();
 
       const { items: queryItems, productIds, action } = body;
 
@@ -280,19 +267,19 @@ module.exports = async function handler(req, res) {
         const cleanIds = productIds.map(String).filter(Boolean);
         const docs = await inventoryCol.find({ productId: { $in: cleanIds } }).toArray();
         const formatted = docs.map((doc) => {
-          const stockMode = doc.stockMode || "quantity";
+          const key = makeCanonicalKey(doc.productId, doc.typeId, doc.subProductId);
+          const catalogInfo = catalogMap.get(key);
+          const catalogAvailable = catalogInfo ? Boolean(catalogInfo.available) : false;
           const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
-          const isAvailable = Boolean(doc.isAvailable);
-          const available = isVariantAvailable(stockMode, isAvailable, stock);
+          const available = isVariantAvailable(stock, catalogAvailable);
           return {
             productId: doc.productId,
             typeId: doc.typeId || null,
             subProductId: doc.subProductId || null,
-            stockMode,
             stock,
-            isAvailable,
+            catalogAvailable,
             available,
-            status: getStockStatus(stockMode, isAvailable, stock),
+            status: getStockStatus(stock, catalogAvailable),
             updatedAt: doc.updatedAt || null,
           };
         });
@@ -316,19 +303,19 @@ module.exports = async function handler(req, res) {
 
         const docs = await inventoryCol.find({ $or: orConditions }).toArray();
         const formatted = docs.map((doc) => {
-          const stockMode = doc.stockMode || "quantity";
+          const key = makeCanonicalKey(doc.productId, doc.typeId, doc.subProductId);
+          const catalogInfo = catalogMap.get(key);
+          const catalogAvailable = catalogInfo ? Boolean(catalogInfo.available) : false;
           const stock = typeof doc.stock === "number" ? Math.max(0, doc.stock) : 0;
-          const isAvailable = Boolean(doc.isAvailable);
-          const available = isVariantAvailable(stockMode, isAvailable, stock);
+          const available = isVariantAvailable(stock, catalogAvailable);
           return {
             productId: doc.productId,
             typeId: doc.typeId || null,
             subProductId: doc.subProductId || null,
-            stockMode,
             stock,
-            isAvailable,
+            catalogAvailable,
             available,
-            status: getStockStatus(stockMode, isAvailable, stock),
+            status: getStockStatus(stock, catalogAvailable),
             updatedAt: doc.updatedAt || null,
           };
         });
@@ -345,10 +332,15 @@ module.exports = async function handler(req, res) {
       // B. Synchronization with Catalog
       // ----------------------------------------------------
       if (isSync) {
-        const { items: catalogItems } = getPurchasableCatalogMap();
         if (!catalogItems || catalogItems.length === 0) {
           return serverError(res, new Error("Unable to retrieve products catalog."));
         }
+
+        // Clean up any obsolete availability fields on existing records
+        await inventoryCol.updateMany(
+          { $or: [{ isAvailable: { $exists: true } }, { stockMode: { $exists: true } }] },
+          { $unset: { isAvailable: "", stockMode: "" } }
+        );
 
         const existingDocs = await inventoryCol
           .find({}, { projection: { _id: 0, productId: 1, typeId: 1, subProductId: 1 } })
@@ -371,9 +363,7 @@ module.exports = async function handler(req, res) {
             productId: item.productId,
             typeId: item.typeId,
             subProductId: item.subProductId,
-            stockMode: "quantity",
             stock: 0,
-            isAvailable: false,
             createdAt: now,
             updatedAt: now,
           }));
@@ -398,12 +388,19 @@ module.exports = async function handler(req, res) {
       }
 
       // ----------------------------------------------------
-      // C. Stock Mutation Actions
+      // C. Stock Quantity Mutation Actions Only
       // ----------------------------------------------------
-      const { productId, typeId, subProductId, stockMode } = body;
+      const { productId, typeId, subProductId } = body;
 
       if (!productId || typeof productId !== "string" || !productId.trim()) {
         return badRequest(res, "Missing or invalid 'productId' in request body.");
+      }
+
+      if (action === "set_mode" || action === "set_availability") {
+        return badRequest(
+          res,
+          `Action '${action}' is no longer supported. Product and variant availability is managed exclusively via Markdown frontmatter.`
+        );
       }
 
       const cleanProductId = String(productId).trim();
@@ -418,35 +415,7 @@ module.exports = async function handler(req, res) {
 
       const now = new Date();
 
-      if (action === "set_mode") {
-        if (!["quantity", "unlimited"].includes(stockMode)) {
-          return badRequest(res, "stockMode must be 'quantity' or 'unlimited'");
-        }
-        const updated = await inventoryCol.findOneAndUpdate(
-          filter,
-          {
-            $set: { stockMode, updatedAt: now },
-            $setOnInsert: { stock: 0, isAvailable: false, createdAt: now }
-          },
-          { upsert: true, returnDocument: "after" }
-        );
-        return ok(res, { action, inventory: updated });
-      }
-
-      if (action === "set_availability") {
-        const isAvail = Boolean(body.isAvailable);
-        const updated = await inventoryCol.findOneAndUpdate(
-          filter,
-          {
-            $set: { stockMode: "unlimited", isAvailable: isAvail, updatedAt: now },
-            $setOnInsert: { stock: 0, createdAt: now }
-          },
-          { upsert: true, returnDocument: "after" }
-        );
-        return ok(res, { action, isAvailable: isAvail, inventory: updated });
-      }
-
-      if (action === "set_stock") {
+      if (action === "set_stock" || action === "set" || (action === "update_stock" && body.adjust === undefined && body.delta === undefined)) {
         const val = parseInt(body.stock ?? body.value, 10);
         if (isNaN(val) || val < 0) {
           return badRequest(res, "stock must be a non-negative integer");
@@ -454,49 +423,59 @@ module.exports = async function handler(req, res) {
         const updated = await inventoryCol.findOneAndUpdate(
           filter,
           {
-            $set: { stockMode: "quantity", stock: val, isAvailable: val > 0, updatedAt: now },
+            $set: { stock: val, updatedAt: now },
+            $unset: { isAvailable: "", stockMode: "" },
             $setOnInsert: { createdAt: now }
           },
           { upsert: true, returnDocument: "after" }
         );
-        return ok(res, { action, stock: val, inventory: updated });
+        return ok(res, { action, stock: val, updatedAt: now, inventory: updated, item: updated });
       }
 
-      if (action === "adjust") {
-        const delta = parseInt(body.delta ?? body.adjust, 10);
+      if (action === "adjust" || action === "increase" || action === "decrease" || action === "update_stock") {
+        let delta;
+        if (action === "increase") {
+          delta = Math.abs(parseInt(body.delta ?? body.adjust ?? body.value ?? body.stock, 10));
+        } else if (action === "decrease") {
+          delta = -Math.abs(parseInt(body.delta ?? body.adjust ?? body.value ?? body.stock, 10));
+        } else {
+          delta = parseInt(body.delta ?? body.adjust ?? body.value, 10);
+        }
+
         if (isNaN(delta) || delta === 0) {
           return badRequest(res, "delta/adjust must be a non-zero integer");
         }
 
-        // If decreasing, guard against negative stock atomically
         if (delta < 0) {
           const updateRes = await inventoryCol.findOneAndUpdate(
             { ...filter, stock: { $gte: Math.abs(delta) } },
             {
               $inc: { stock: delta },
-              $set: { updatedAt: now }
+              $set: { updatedAt: now },
+              $unset: { isAvailable: "", stockMode: "" }
             },
             { returnDocument: "after" }
           );
           if (!updateRes) {
             return badRequest(res, "INSUFFICIENT_STOCK: Stock cannot become negative.");
           }
-          return ok(res, { action, inventory: updateRes });
+          return ok(res, { action, stock: updateRes.stock, updatedAt: now, inventory: updateRes, item: updateRes });
         } else {
           const updated = await inventoryCol.findOneAndUpdate(
             filter,
             {
               $inc: { stock: delta },
               $set: { updatedAt: now },
-              $setOnInsert: { stockMode: "quantity", isAvailable: true, createdAt: now }
+              $unset: { isAvailable: "", stockMode: "" },
+              $setOnInsert: { createdAt: now }
             },
             { upsert: true, returnDocument: "after" }
           );
-          return ok(res, { action, inventory: updated });
+          return ok(res, { action, stock: updated ? updated.stock : delta, updatedAt: now, inventory: updated, item: updated });
         }
       }
 
-      return badRequest(res, `Unsupported action '${action}'. Supported: set_mode, set_availability, set_stock, adjust, sync`);
+      return badRequest(res, `Unsupported action '${action}'. Supported: set_stock, adjust, increase, decrease, sync`);
     } catch (err) {
       return serverError(res, err);
     }

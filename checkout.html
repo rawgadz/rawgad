@@ -577,14 +577,14 @@
                 for (const item of data.inventory) {
                   const key = String(item.productId) + ':::' + String(item.typeId) + ':::' + (item.subProductId !== null && item.subProductId !== undefined ? String(item.subProductId) : 'null');
                   map[key] = item.stock;
-                  availMap[key] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
+                  availMap[key] = (typeof item.available === 'boolean') ? item.available : (item.stock > 0);
                   if (item.subProductId) {
                     map[String(item.subProductId)] = item.stock;
-                    availMap[String(item.subProductId)] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
+                    availMap[String(item.subProductId)] = (typeof item.available === 'boolean') ? item.available : (item.stock > 0);
                   }
                   if (item.typeId && !item.subProductId) {
                     map[String(item.typeId)] = item.stock;
-                    availMap[String(item.typeId)] = (typeof item.isAvailable === 'boolean') ? item.isAvailable : (item.stock > 0);
+                    availMap[String(item.typeId)] = (typeof item.available === 'boolean') ? item.available : (item.stock > 0);
                   }
                 }
                 this.stockStatusMap = map;

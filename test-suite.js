@@ -1,5 +1,5 @@
 // test-suite.js
-// Comprehensive Verification Suite for Rawgadz Platform & Meta Pixel + CAPI Integration
+// Comprehensive Verification Suite for Rawgadz Platform, Markdown Availability & Meta Pixel + CAPI Integration
 // Execution: node test-suite.js
 
 const assert = require("assert");
@@ -34,6 +34,10 @@ function installInMemoryDbIfNeeded() {
         if ("$gte" in v && !(docVal >= v.$gte)) return false;
         if ("$ne" in v && !(docVal !== v.$ne)) return false;
         if ("$in" in v && !v.$in.includes(docVal)) return false;
+        if ("$exists" in v) {
+          const exists = docVal !== undefined;
+          if (exists !== Boolean(v.$exists)) return false;
+        }
       } else if (v instanceof RegExp) {
         if (!v.test(String(docVal || ""))) return false;
       } else {
@@ -59,6 +63,11 @@ function installInMemoryDbIfNeeded() {
         } else {
           doc[k] = v;
         }
+      }
+    }
+    if (update.$unset) {
+      for (const k of Object.keys(update.$unset)) {
+        delete doc[k];
       }
     }
     if (update.$inc) {
@@ -96,8 +105,15 @@ function installInMemoryDbIfNeeded() {
       async findOne(filter = {}) {
         return stores[name].find((d) => matchesFilter(d, filter)) || null;
       },
-      async findOneAndUpdate(filter, update) {
-        const doc = stores[name].find((d) => matchesFilter(d, filter));
+      async findOneAndUpdate(filter, update, opts = {}) {
+        let doc = stores[name].find((d) => matchesFilter(d, filter));
+        if (!doc && opts.upsert) {
+          doc = { _id: "id_" + Date.now() + "_" + Math.random(), ...filter };
+          if (update.$setOnInsert) {
+            Object.assign(doc, update.$setOnInsert);
+          }
+          stores[name].push(doc);
+        }
         if (!doc) return null;
         applyUpdate(doc, update);
         return doc;
@@ -106,6 +122,9 @@ function installInMemoryDbIfNeeded() {
         let doc = stores[name].find((d) => matchesFilter(d, filter));
         if (!doc && opts.upsert) {
           doc = { _id: "id_" + Date.now() + "_" + Math.random(), ...filter };
+          if (update.$setOnInsert) {
+            Object.assign(doc, update.$setOnInsert);
+          }
           stores[name].push(doc);
         }
         if (doc) {
@@ -113,6 +132,13 @@ function installInMemoryDbIfNeeded() {
           return { matchedCount: 1, modifiedCount: 1 };
         }
         return { matchedCount: 0, modifiedCount: 0 };
+      },
+      async updateMany(filter, update) {
+        const docs = stores[name].filter((d) => matchesFilter(d, filter));
+        for (const doc of docs) {
+          applyUpdate(doc, update);
+        }
+        return { matchedCount: docs.length, modifiedCount: docs.length };
       },
       async insertOne(doc) {
         if (this._FailureMode) {
@@ -122,13 +148,25 @@ function installInMemoryDbIfNeeded() {
         stores[name].push(saved);
         return { insertedId: saved._id };
       },
+      async insertMany(docs) {
+        for (const doc of docs) {
+          stores[name].push({ _id: "id_" + Date.now() + "_" + Math.random(), ...doc });
+        }
+        return { insertedCount: docs.length };
+      },
+      async deleteOne(filter = {}) {
+        const idx = stores[name].findIndex((d) => matchesFilter(d, filter));
+        if (idx === -1) return { deletedCount: 0 };
+        stores[name].splice(idx, 1);
+        return { deletedCount: 1 };
+      },
     };
   }
 
   const invCol = makeCollection("inventory");
   const ordCol = makeCollection("orders");
 
-  // Seed initial inventory from products.json
+  // Seed initial inventory from products.json (quantity-only, no admin availability fields)
   const { getPurchasableCatalogMap } = require("./api/_catalog");
   const { items } = getPurchasableCatalogMap();
   for (const item of items) {
@@ -137,9 +175,7 @@ function installInMemoryDbIfNeeded() {
       productId: item.productId,
       typeId: item.typeId ?? null,
       subProductId: item.subProductId ?? null,
-      stockMode: "quantity",
       stock: 20,
-      isAvailable: true,
       updatedAt: new Date(),
     });
   }
@@ -313,7 +349,7 @@ function testBuildScriptAndHtmlCoverage() {
     assert.ok(!html.includes("meta-pixel.js"), `Admin page ${page} must not include meta-pixel.js`);
   }
 
-  // Verify generated product, blog, and car HTML pages include /js/meta-pixel.js after build
+  // Verify generated product HTML pages include /js/meta-pixel.js and Product JSON-LD after build
   const sampleProductHtml = fs.readdirSync(path.join(__dirname, "product")).filter((f) => f.endsWith(".html"));
   assert.ok(sampleProductHtml.length > 0, "No generated product HTML files found");
   for (const f of sampleProductHtml) {
@@ -321,6 +357,7 @@ function testBuildScriptAndHtmlCoverage() {
     assert.ok(html.includes("/js/meta-pixel.js"), `Generated product/${f} missing /js/meta-pixel.js`);
     assert.ok(html.includes("trackViewContent"), `Generated product/${f} missing trackViewContent`);
     assert.ok(html.includes("trackAddToCart"), `Generated product/${f} missing trackAddToCart`);
+    assert.ok(html.includes('application/ld+json'), `Generated product/${f} missing Product JSON-LD`);
   }
 
   console.log("[PASS] 3. Build scripts & HTML Pixel coverage test");
@@ -352,8 +389,8 @@ async function testStockJs() {
     json: async () => ({
       success: true,
       inventory: [
-        { productId: "prod-1", typeId: null, subProductId: null, stockMode: "quantity", stock: 15, isAvailable: true },
-        { productId: "prod-2", typeId: null, subProductId: null, stockMode: "quantity", stock: 0, isAvailable: false }
+        { productId: "prod-1", typeId: null, subProductId: null, stock: 15, available: true },
+        { productId: "prod-2", typeId: null, subProductId: null, stock: 0, available: false }
       ]
     })
   });
@@ -373,13 +410,34 @@ async function testStockJs() {
     assert.strictEqual(mockWindow.RawgadStock.getItemStock("prod-2", null, null), 0);
     assert.strictEqual(mockWindow.RawgadStock.isItemAvailable("prod-2", null, null), false);
     assert.ok(eventFired, "rawgad-stock-updated event did not fire");
-    console.log("[PASS] 4. Stock JS cache test");
+
+    // Verify central storefront availability filtering in RawgadStock
+    const filteredStorefront = mockWindow.RawgadStock.filterAvailableProducts([
+      { id: "a", title: "Available", price: 100, available: true },
+      { id: "b", title: "Unavailable", price: 200, available: false },
+      {
+        id: "c",
+        title: "Mixed Variants",
+        price: 300,
+        available: true,
+        types: [
+          { subProductId: "t1", subTitle: "Shown", price: 300, available: true },
+          { subProductId: "t2", subTitle: "Hidden", price: 450, available: false }
+        ]
+      }
+    ]);
+    assert.strictEqual(filteredStorefront.length, 2);
+    assert.strictEqual(filteredStorefront[1].types.length, 1);
+    assert.strictEqual(filteredStorefront[1].types[0].subProductId, "t1");
+    assert.deepStrictEqual(filteredStorefront[1].priceRange, { min: 300, max: 300 });
+
+    console.log("[PASS] 4. Stock JS cache & storefront availability filtering test");
   } finally {
     global.fetch = origFetch;
   }
 }
 
-// 5. Phase 8 Frontend Pixel Tests (PageView, ViewContent, ViewCategory, AddToCart, InitiateCheckout)
+// 5. Frontend Pixel Tests (PageView, ViewContent, ViewCategory, AddToCart, InitiateCheckout)
 function testFrontendPixelEvents() {
   const products = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "products.json"), "utf8"));
   const sampleProduct = products.find((p) => Array.isArray(p.types) && p.types.length > 0) || products[0];
@@ -391,7 +449,6 @@ function testFrontendPixelEvents() {
   assert.strictEqual(initCalls.length, 1, "Pixel should initialize once on homepage");
   assert.strictEqual(initCalls[0][1], "1536032983933873", "Pixel ID must be 1536032983933873");
   assert.strictEqual(pvCalls.length, 1, "Homepage must fire exactly one PageView");
-  // Calling trackPageView() again on same page load must not duplicate
   homeEnv.window.RawgadzPixel.trackPageView();
   assert.strictEqual(homeEnv.fbqCalls.filter((c) => c[0] === "track" && c[1] === "PageView").length, 1, "Duplicate PageView must be blocked");
 
@@ -453,7 +510,7 @@ function testFrontendPixelEvents() {
   console.log("[PASS] 5. Frontend Pixel events test (PageView, ViewContent, ViewCategory, AddToCart, InitiateCheckout)");
 }
 
-// 6. Phase 8 Checkout & CAPI Purchase Integration Tests
+// 6. Checkout & CAPI Purchase Integration Tests
 async function testCheckoutAndMetaPurchaseScenarios() {
   const checkoutHandler = require("./api/checkout");
   const { getOrdersCollection, getInventoryCollection } = require("./api/_db");
@@ -473,9 +530,7 @@ async function testCheckoutAndMetaPurchaseScenarios() {
       },
       {
         $set: {
-          stockMode: "quantity",
           stock: stockCount,
-          isAvailable: stockCount > 0,
           updatedAt: new Date(),
         },
       },
@@ -527,7 +582,6 @@ async function testCheckoutAndMetaPurchaseScenarios() {
 
     // ------------------------------------------------------------------
     // Scenario 6A: Submit Valid COD Order -> One Server CAPI Purchase + One Browser Purchase with matching event_id
-    // Also verify anti-tamper: client submits fake price=1, server uses priceData[sampleKey].price with 10% coupon
     // ------------------------------------------------------------------
     capiRequests = [];
     const validIdemKey = "chk_test_valid_" + Date.now();
@@ -598,7 +652,6 @@ async function testCheckoutAndMetaPurchaseScenarios() {
     // Verify Browser Purchase Event & Deduplication
     const chkEnv = createBrowserEnv({ pathname: "/checkout.html" });
     chkEnv.window.RawgadzPixel.trackPurchase(validRes.body.purchase_data, validRes.body.event_id);
-    // Calling trackPurchase a second time with same event_id must be blocked
     chkEnv.window.RawgadzPixel.trackPurchase(validRes.body.purchase_data, validRes.body.event_id);
     const browserPurchases = chkEnv.fbqCalls.filter((c) => c[0] === "track" && c[1] === "Purchase");
     assert.strictEqual(browserPurchases.length, 1, "Browser must fire exactly ONE Purchase event");
@@ -641,7 +694,7 @@ async function testCheckoutAndMetaPurchaseScenarios() {
         method: "POST",
         body: {
           cust_name: "Test User",
-          cust_phone: "12345", // Invalid phone
+          cust_phone: "12345",
           cust_address: "123 Test Street, Dhaka",
           payment_method: "cod",
           cartItems: [{ productId: item.productId, typeId: item.typeId, subProductId: item.subProductId, price: item.price, qty: 1 }],
@@ -746,6 +799,358 @@ async function testCheckoutAndMetaPurchaseScenarios() {
   }
 }
 
+// 7. Markdown Availability & Storefront/Backend Enforcement Tests
+async function testMarkdownAvailabilityAndEnforcement() {
+  const {
+    validateBooleanField,
+    resolveProductAvailability,
+    filterProductForStorefront,
+    filterAvailableProducts,
+    extractPurchasableItems,
+  } = require("./api/_catalog");
+  const { generateProductJson } = require("./build/build-products");
+  const buildSitemap = require("./build/build-sitemap");
+  const checkoutHandler = require("./api/checkout");
+  const inventoryHandler = require("./api/inventory");
+  const orderHandler = require("./api/order");
+  const { getInventoryCollection } = require("./api/_db");
+
+  // 7.1 Verify generated data/products.json has boolean `available` at product and variant levels
+  const products = JSON.parse(fs.readFileSync(path.join(__dirname, "data", "products.json"), "utf8"));
+  assert.ok(products.length > 0, "products.json must not be empty");
+  for (const p of products) {
+    assert.strictEqual(typeof p.available, "boolean", `Product ${p.id} must have boolean available`);
+    if (Array.isArray(p.types)) {
+      for (const t of p.types) {
+        assert.strictEqual(typeof t.available, "boolean", `Variant ${t.subProductId} on ${p.id} must have boolean available`);
+        if (Array.isArray(t.subProducts)) {
+          for (const s of t.subProducts) {
+            assert.strictEqual(typeof s.available, "boolean", `SubProduct ${s.subProductId} on ${p.id} must have boolean available`);
+          }
+        }
+      }
+    }
+  }
+
+  // 7.2 Strict boolean validation (reject strings like "false" or "true")
+  assert.strictEqual(validateBooleanField(true), true);
+  assert.strictEqual(validateBooleanField(false), false);
+  assert.strictEqual(validateBooleanField(undefined), undefined);
+  assert.throws(() => validateBooleanField("false"), /Invalid availability value/);
+  assert.throws(() => validateBooleanField("true"), /Invalid availability value/);
+  assert.throws(() => validateBooleanField(1), /Invalid availability value/);
+  assert.throws(() => validateBooleanField(null), /Invalid availability value/);
+
+  // 7.3 Missing availability defaults to true & inheritance rules work
+  const defaultProd = resolveProductAvailability({
+    id: "def-1",
+    title: "Default Product",
+    price: 100,
+    types: [
+      {
+        subProductId: "t-inherit",
+        subTitle: "Inherited Type",
+        subProducts: [{ subProductId: "s-inherit", subTitle: "Inherited Sub" }],
+      },
+    ],
+  });
+  assert.strictEqual(defaultProd.available, true);
+  assert.strictEqual(defaultProd.types[0].available, true);
+  assert.strictEqual(defaultProd.types[0].subProducts[0].available, true);
+
+  // Parent unavailable overrides child available: true
+  const parentFalseProd = resolveProductAvailability({
+    id: "par-false",
+    title: "Parent Unavailable",
+    price: 100,
+    available: false,
+    types: [{ subProductId: "t-true", subTitle: "Child True", available: true }],
+  });
+  assert.strictEqual(parentFalseProd.available, false);
+  assert.strictEqual(parentFalseProd.types[0].available, false);
+  assert.strictEqual(filterProductForStorefront(parentFalseProd), null);
+
+  // All variants unavailable hides entire product
+  const allVarsFalseProd = resolveProductAvailability({
+    id: "all-vars-false",
+    title: "All Variants Unavailable",
+    price: 100,
+    available: true,
+    types: [
+      { subProductId: "t1", subTitle: "V1", available: false },
+      { subProductId: "t2", subTitle: "V2", available: false },
+    ],
+  });
+  assert.strictEqual(allVarsFalseProd.available, false);
+  assert.strictEqual(filterProductForStorefront(allVarsFalseProd), null);
+
+  // Mixed-availability product shows only available variants & recalculates priceRange
+  const mixedProd = filterProductForStorefront({
+    id: "mixed-prod",
+    title: "Mixed Variants Product",
+    price: 200,
+    available: true,
+    types: [
+      { subProductId: "t-avail", subTitle: "Available Variant", price: 250, available: true },
+      { subProductId: "t-unavail", subTitle: "Unavailable Variant", price: 999, available: false },
+    ],
+  });
+  assert.ok(mixedProd, "Mixed product with at least one available variant must be visible");
+  assert.strictEqual(mixedProd.types.length, 1, "Only available variant must remain");
+  assert.strictEqual(mixedProd.types[0].subProductId, "t-avail");
+  assert.deepStrictEqual(mixedProd.priceRange, { min: 250, max: 250 });
+
+  // 7.4 End-to-end build & checkout test with temporary Markdown files
+  const tmpUnavailMd = path.join(__dirname, "content", "product", "_tmp_test_unavail.md");
+  const tmpMixedMd = path.join(__dirname, "content", "product", "_tmp_test_mixed.md");
+  const tmpInvalidBoolMd = path.join(__dirname, "content", "product", "_tmp_test_invalid_bool.md");
+  const staleHtmlPath = path.join(__dirname, "product", "tmp-test-unavail-slug.html");
+
+  try {
+    // Test invalid string boolean in Markdown frontmatter fails build
+    fs.writeFileSync(
+      tmpInvalidBoolMd,
+      [
+        "---",
+        "id: 999001",
+        "slug: tmp-invalid-bool",
+        "title: Invalid Bool Product",
+        "price: 500",
+        'available: "false"',
+        "---",
+      ].join("\n"),
+      "utf8"
+    );
+    assert.throws(() => generateProductJson(), /Invalid availability value/);
+    fs.unlinkSync(tmpInvalidBoolMd);
+
+    // Create a stale HTML page for a product that is now unavailable
+    fs.writeFileSync(staleHtmlPath, "<html><body>Stale page</body></html>", "utf8");
+    assert.ok(fs.existsSync(staleHtmlPath), "Stale HTML page should exist before build");
+
+    // Write unavailable product and mixed-variant product Markdown files
+    fs.writeFileSync(
+      tmpUnavailMd,
+      [
+        "---",
+        "id: 999002",
+        "slug: tmp-test-unavail-slug",
+        "title: Temp Unavailable Product",
+        "description: Should never be generated or purchasable",
+        "price: 500",
+        "available: false",
+        "---",
+      ].join("\n"),
+      "utf8"
+    );
+
+    fs.writeFileSync(
+      tmpMixedMd,
+      [
+        "---",
+        "id: 999003",
+        "slug: tmp-test-mixed-slug",
+        "title: Temp Mixed Variant Product",
+        "description: Has one available variant and one unavailable variant",
+        "price: 600",
+        "available: true",
+        "types:",
+        "  - subProductId: var-open",
+        "    subTitle: Open Variant",
+        "    price: 600",
+        "    available: true",
+        "  - subProductId: var-closed",
+        "    subTitle: Closed Variant",
+        "    price: 750",
+        "    available: false",
+        "---",
+      ].join("\n"),
+      "utf8"
+    );
+
+    generateProductJson();
+    buildSitemap();
+
+    // Verify stale HTML page for unavailable product was removed and not regenerated
+    assert.strictEqual(
+      fs.existsSync(staleHtmlPath),
+      false,
+      "Unavailable product HTML page must not be generated and stale page must be removed"
+    );
+
+    // Verify sitemap.xml excludes unavailable product
+    const sitemapXml = fs.readFileSync(path.join(__dirname, "sitemap.xml"), "utf8");
+    assert.ok(!sitemapXml.includes("tmp-test-unavail-slug"), "sitemap.xml must exclude unavailable products");
+    assert.ok(sitemapXml.includes("tmp-test-mixed-slug"), "sitemap.xml must include available products");
+
+    // Verify mixed product HTML page contains only the available variant and excludes unavailable variant
+    const mixedHtmlPath = path.join(__dirname, "product", "tmp-test-mixed-slug.html");
+    assert.ok(fs.existsSync(mixedHtmlPath), "Mixed-availability product HTML page must be generated");
+    const mixedHtml = fs.readFileSync(mixedHtmlPath, "utf8");
+    assert.ok(mixedHtml.includes("var-open"), "Mixed product HTML must include available variant");
+    assert.ok(!mixedHtml.includes("var-closed"), "Mixed product HTML must NOT include unavailable variant");
+
+    // Seed physical stock for both 999002 and 999003 variants in DB to prove availability is enforced independently of stock
+    const invCol = await getInventoryCollection();
+    await invCol.updateOne(
+      { productId: "999002", typeId: null, subProductId: null },
+      { $set: { stock: 50, updatedAt: new Date() } },
+      { upsert: true }
+    );
+    await invCol.updateOne(
+      { productId: "999003", typeId: "var-open", subProductId: null },
+      { $set: { stock: 50, updatedAt: new Date() } },
+      { upsert: true }
+    );
+    await invCol.updateOne(
+      { productId: "999003", typeId: "var-closed", subProductId: null },
+      { $set: { stock: 50, updatedAt: new Date() } },
+      { upsert: true }
+    );
+
+    function mockRes() {
+      return {
+        statusCode: null,
+        body: null,
+        status(c) { this.statusCode = c; return this; },
+        json(b) { this.body = b; return this; },
+        setHeader() {},
+        end() {},
+      };
+    }
+
+    // Checkout must reject unavailable product (even with stock=50 in MongoDB)
+    const unavailProdRes = mockRes();
+    await checkoutHandler(
+      {
+        method: "POST",
+        body: {
+          cust_name: "Test Buyer",
+          cust_phone: "01711223344",
+          cust_address: "House 5, Road 3, Dhanmondi, Dhaka",
+          payment_method: "cod",
+          cartItems: [{ productId: "999002", typeId: null, subProductId: null, qty: 1 }],
+        },
+      },
+      unavailProdRes
+    );
+    assert.strictEqual(unavailProdRes.statusCode, 400, "Checkout must reject unavailable product with 400");
+    assert.ok(
+      String(unavailProdRes.body.error || "").toLowerCase().includes("unavailable"),
+      "Error message must state item is unavailable"
+    );
+
+    // Checkout must reject unavailable variant (even when parent product is available and variant has stock=50)
+    const unavailVarRes = mockRes();
+    await checkoutHandler(
+      {
+        method: "POST",
+        body: {
+          cust_name: "Test Buyer",
+          cust_phone: "01711223344",
+          cust_address: "House 5, Road 3, Dhanmondi, Dhaka",
+          payment_method: "cod",
+          cartItems: [{ productId: "999003", typeId: "var-closed", subProductId: null, qty: 1 }],
+        },
+      },
+      unavailVarRes
+    );
+    assert.strictEqual(unavailVarRes.statusCode, 400, "Checkout must reject unavailable variant with 400");
+    assert.ok(
+      String(unavailVarRes.body.error || "").toLowerCase().includes("unavailable"),
+      "Error message must state variant is unavailable"
+    );
+
+    // Checkout must succeed for available variant on mixed product and decrement physical stock
+    const availVarRes = mockRes();
+    await checkoutHandler(
+      {
+        method: "POST",
+        body: {
+          cust_name: "Test Buyer",
+          cust_phone: "01711223344",
+          cust_address: "House 5, Road 3, Dhanmondi, Dhaka",
+          payment_method: "cod",
+          idempotency_key: "chk_mixed_avail_" + Date.now(),
+          cartItems: [{ productId: "999003", typeId: "var-open", subProductId: null, qty: 3 }],
+        },
+      },
+      availVarRes
+    );
+    assert.strictEqual(availVarRes.statusCode, 200, "Checkout must succeed for available variant");
+    const stockAfterOrder = await invCol.findOne({ productId: "999003", typeId: "var-open", subProductId: null });
+    assert.strictEqual(stockAfterOrder.stock, 47, "Physical stock must decrement by ordered qty (50 -> 47)");
+
+    // Verify order cancellation restores physical stock in api/order.js (without requiring stockMode)
+    const { signToken } = require("./api/_helpers");
+    if (!process.env.AUTH_SECRET) process.env.AUTH_SECRET = "test_admin_secret_key_for_suite";
+    const adminToken = signToken({ username: "admin", role: "admin", exp: Date.now() + 60000 }, process.env.AUTH_SECRET);
+    const cancelRes = mockRes();
+    await orderHandler(
+      {
+        method: "PATCH",
+        headers: { authorization: `Bearer ${adminToken}` },
+        body: {
+          invoice_number: availVarRes.body.invoice_number,
+          status: "cancelled",
+        },
+      },
+      cancelRes
+    );
+    assert.strictEqual(cancelRes.statusCode, 200, "Order cancellation must succeed");
+    assert.strictEqual(cancelRes.body.stockRestored, true, "Order cancellation must restore stock");
+    const stockAfterCancel = await invCol.findOne({ productId: "999003", typeId: "var-open", subProductId: null });
+    assert.strictEqual(stockAfterCancel.stock, 50, "Physical stock must be restored to 50 after cancellation");
+
+    // Verify api/inventory.js rejects obsolete set_availability and set_mode actions
+    const setAvailRes = mockRes();
+    await inventoryHandler(
+      {
+        method: "POST",
+        headers: { authorization: `Bearer ${adminToken}` },
+        body: {
+          action: "set_availability",
+          productId: "999003",
+          typeId: "var-open",
+          isAvailable: false,
+        },
+      },
+      setAvailRes
+    );
+    assert.strictEqual(setAvailRes.statusCode, 400, "api/inventory must reject set_availability with 400");
+
+    const setModeRes = mockRes();
+    await inventoryHandler(
+      {
+        method: "POST",
+        headers: { authorization: `Bearer ${adminToken}` },
+        body: {
+          action: "set_mode",
+          productId: "999003",
+          typeId: "var-open",
+          stockMode: "unlimited",
+        },
+      },
+      setModeRes
+    );
+    assert.strictEqual(setModeRes.statusCode, 400, "api/inventory must reject set_mode with 400");
+
+    // Clean up test DB records
+    await invCol.deleteOne({ productId: "999002", typeId: null, subProductId: null });
+    await invCol.deleteOne({ productId: "999003", typeId: "var-open", subProductId: null });
+    await invCol.deleteOne({ productId: "999003", typeId: "var-closed", subProductId: null });
+  } finally {
+    if (fs.existsSync(tmpInvalidBoolMd)) fs.unlinkSync(tmpInvalidBoolMd);
+    if (fs.existsSync(tmpUnavailMd)) fs.unlinkSync(tmpUnavailMd);
+    if (fs.existsSync(tmpMixedMd)) fs.unlinkSync(tmpMixedMd);
+    if (fs.existsSync(staleHtmlPath)) fs.unlinkSync(staleHtmlPath);
+    generateProductJson();
+    buildSitemap();
+  }
+
+  console.log("[PASS] 7. Markdown availability, inheritance, HTML/SEO exclusion, checkout enforcement & stock restoration test");
+}
+
 (async () => {
   try {
     await testDbPing();
@@ -754,6 +1159,7 @@ async function testCheckoutAndMetaPurchaseScenarios() {
     await testStockJs();
     testFrontendPixelEvents();
     await testCheckoutAndMetaPurchaseScenarios();
+    await testMarkdownAvailabilityAndEnforcement();
     console.log(`ALL TESTS PASSED SUCCESSFULLY (${usingMockDb ? "In-Memory DB" : "Live MongoDB"}).`);
   } finally {
     try {

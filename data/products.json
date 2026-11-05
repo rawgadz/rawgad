@@ -3,6 +3,7 @@
     "id": "MRA-02",
     "slug": "1st-and-no1-choice-for-all-interior-steering-cover-with-sports-look-leather-with-super-grip",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp"
@@ -23,6 +24,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/White_dots_-_1_900.00.webp"
         ],
         "subTitle": "White Dots",
+        "available": true,
         "price": 1900
       },
       {
@@ -32,6 +34,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp"
         ],
         "subTitle": "Red Dots",
+        "available": true,
         "price": 1900
       }
     ],
@@ -41,6 +44,7 @@
     "id": "MRA-03",
     "slug": "anti-skid-dashboard-mat-with-360-rotating-phone-holder-and-number-plate",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01xhvoYo1WC0cypPbv3_976492751-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01xhvoYo1WC0cypPbv3_976492751-0-cib.webp",
@@ -66,6 +70,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/chocolate-color-1.webp"
         ],
         "subTitle": "Chocolate Color Oval",
+        "available": true,
         "price": 720
       },
       {
@@ -75,6 +80,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/gray-color.webp"
         ],
         "subTitle": "Gray Color Oval",
+        "available": true,
         "price": 720
       },
       {
@@ -84,6 +90,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790423744/O1CN013Su7se1WC0dG5kNDx_976492751-0-cib.webp"
         ],
         "subTitle": "Chocolate Rectangle",
+        "available": true,
         "price": 790
       },
       {
@@ -93,6 +100,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01isX37p1WC0dHC04tu_976492751-0-cib.webp"
         ],
         "subTitle": "Gray Rectangle",
+        "available": true,
         "price": 790
       },
       {
@@ -102,6 +110,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01xhvoYo1WC0cypPbv3_976492751-0-cib.webp"
         ],
         "subTitle": "White and Blue",
+        "available": true,
         "price": 1100
       }
     ],
@@ -111,6 +120,7 @@
     "id": "MRA-04",
     "slug": "glossy-non-slip-peach-wood-grain-steering-cover-all-season-universal-fit-breathable",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp",
@@ -133,6 +143,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp"
         ],
         "subTitle": "RedWine Glossy",
+        "available": true,
         "price": 1847
       },
       {
@@ -142,6 +153,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp"
         ],
         "subTitle": "Brown Glossy",
+        "available": true,
         "price": 1847
       },
       {
@@ -151,6 +163,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp"
         ],
         "subTitle": "Gray Glossy",
+        "available": true,
         "price": 1847
       }
     ],
@@ -160,6 +173,7 @@
     "id": "MRA-05",
     "slug": "rawgadz-factory-direct-leather-semi-perforated-steering-wheel-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790440793/Untitled-design-48.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790440793/Untitled-design-48.webp",
@@ -183,6 +197,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib.webp"
         ],
         "subTitle": "Black and Red",
+        "available": true,
         "price": 1860
       },
       {
@@ -192,6 +207,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01zKWp3z25tz6gQhW6C_2756927585-0-cib.webp"
         ],
         "subTitle": "Black and Grey",
+        "available": true,
         "price": 1860
       },
       {
@@ -201,6 +217,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790440810/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 1860
       }
     ],
@@ -210,6 +227,7 @@
     "id": "MRA-06",
     "slug": "rawgadz-new-breathable-non-slip-peach-wood-grain-steering-cover-all-season-universal-fit",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790441318/O1CN01CFl46O25tz6FnivDC_2756927585-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790441318/O1CN01CFl46O25tz6FnivDC_2756927585-0-cib.webp",
@@ -232,6 +250,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp"
         ],
         "subTitle": "RedWine Glossy",
+        "available": true,
         "price": 1850
       },
       {
@@ -241,6 +260,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp"
         ],
         "subTitle": "Brown Glossy",
+        "available": true,
         "price": 1850
       },
       {
@@ -250,6 +270,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp"
         ],
         "subTitle": "Gray Glossy",
+        "available": true,
         "price": 1850
       }
     ],
@@ -259,6 +280,7 @@
     "id": "MRA-07",
     "slug": "microfiber-leather-steering-wheel-cover-38cm",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp",
@@ -281,6 +303,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp"
         ],
         "subTitle": "Red Black",
+        "available": true,
         "price": 1699
       },
       {
@@ -290,6 +313,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01AFZCvv26HLEWDMCcU_2215748707636-0-cib.webp"
         ],
         "subTitle": "Coffee Black",
+        "available": true,
         "price": 1699
       }
     ],
@@ -299,6 +323,7 @@
     "id": "MRA-08",
     "slug": "rawgadz-wool-patchwork-multi-color-leopard-print-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-51.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-51.webp",
@@ -322,6 +347,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-51.webp"
         ],
         "subTitle": "Beige",
+        "available": true,
         "price": 920
       },
       {
@@ -331,6 +357,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-49.webp"
         ],
         "subTitle": "Ash",
+        "available": true,
         "price": 920
       },
       {
@@ -340,6 +367,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-50.webp"
         ],
         "subTitle": "Red Wine",
+        "available": true,
         "price": 920
       }
     ],
@@ -349,6 +377,7 @@
     "id": "MRA-09",
     "slug": "napa-leather-steering-wheel-cover-universal-hand-shape-ergonomics",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01UvOUiH2GvK02ncaTh_3025299077-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01UvOUiH2GvK02ncaTh_3025299077-0-cib.webp",
@@ -372,6 +401,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp"
         ],
         "subTitle": "Red Wine",
+        "available": true,
         "price": 1450
       },
       {
@@ -381,6 +411,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 1450
       },
       {
@@ -390,6 +421,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp"
         ],
         "subTitle": "Gray",
+        "available": true,
         "price": 1450
       }
     ],
@@ -399,6 +431,7 @@
     "id": "MRA-10",
     "slug": "microfiber-leather-steering-wheel-cover-38cm-universal-fit-for-all-cars-integrated-crafted-design",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-3.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-3.webp",
@@ -421,6 +454,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-3.webp"
         ],
         "subTitle": "Red Wine",
+        "available": true,
         "price": 1899
       },
       {
@@ -430,6 +464,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-4.webp"
         ],
         "subTitle": "Deep Brown",
+        "available": true,
         "price": 1899
       }
     ],
@@ -439,6 +474,7 @@
     "id": "MRA-11",
     "slug": "premium-crystal-mahogany-grain-car-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp",
@@ -462,6 +498,7 @@
           "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082590/Upload-to-rawgadz-increase-price-1.webp"
         ],
         "subTitle": "Black and Red",
+        "available": true,
         "price": 2400
       },
       {
@@ -471,6 +508,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790509577/Untitled-design-34.webp"
         ],
         "subTitle": "Black and Brown",
+        "available": true,
         "price": 2400
       },
       {
@@ -480,6 +518,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/Untitled-design-32-1.webp"
         ],
         "subTitle": "Black and Gray",
+        "available": true,
         "price": 2400
       }
     ],
@@ -489,6 +528,7 @@
     "id": "MRA-12",
     "slug": "car-bumper-protector-eco-friendly-pvc-scratch-guard",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790598116/white-2-piece.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790598116/white-2-piece.webp",
@@ -510,6 +550,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790598117/white-2-piece-1.webp"
         ],
         "subTitle": "Black 2 Piece",
+        "available": true,
         "price": 600
       },
       {
@@ -519,6 +560,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790598116/white-2-piece.webp"
         ],
         "subTitle": "White 2 Piece",
+        "available": true,
         "price": 600
       },
       {
@@ -528,6 +570,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790598117/white-2-piece-2.webp"
         ],
         "subTitle": "Ash 2 piece",
+        "available": true,
         "price": 600
       },
       {
@@ -537,6 +580,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790598117/white-2-piece-1.webp"
         ],
         "subTitle": "Black 4 Piece",
+        "available": true,
         "price": 950
       },
       {
@@ -546,6 +590,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790598116/white-2-piece.webp"
         ],
         "subTitle": "White 4 Piece",
+        "available": true,
         "price": 950
       },
       {
@@ -555,6 +600,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790598117/white-2-piece-2.webp"
         ],
         "subTitle": "Ash 4 Piece",
+        "available": true,
         "price": 950
       }
     ],
@@ -564,6 +610,7 @@
     "id": "MRA-13",
     "slug": "car-steering-cover-anti-slip-artificial-leather",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01yUvX2Q238gkA87fYA_2211268807211-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01yUvX2Q238gkA87fYA_2211268807211-0-cib.webp",
@@ -588,6 +635,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01yUvX2Q238gkA87fYA_2211268807211-0-cib.webp"
         ],
         "subTitle": "Red Wine",
+        "available": true,
         "price": 1100
       },
       {
@@ -597,6 +645,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01vcCRrD238gkGuWHaF_2211268807211-0-cib.webp"
         ],
         "subTitle": "Red and Black",
+        "available": true,
         "price": 1100
       },
       {
@@ -606,6 +655,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01iW1zfY238gkGuUTMX_2211268807211-0-cib.webp"
         ],
         "subTitle": "Sky Blue",
+        "available": true,
         "price": 1100
       }
     ],
@@ -615,6 +665,7 @@
     "id": "MRA-14",
     "slug": "high-quality-cow-leather-car-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN01gbEFI31JKAcRJEvHQ_2206426561009-0-cib_1.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN01gbEFI31JKAcRJEvHQ_2206426561009-0-cib_1.webp",
@@ -639,6 +690,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618233/Upload-to-rawgadz-increase-price-7.webp"
         ],
         "subTitle": "With Toyota Logo Red",
+        "available": true,
         "price": 1650
       },
       {
@@ -648,6 +700,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN01gbEFI31JKAcRJEvHQ_2206426561009-0-cib.webp"
         ],
         "subTitle": "With Toyota Logo Chocolate",
+        "available": true,
         "price": 1650
       },
       {
@@ -657,6 +710,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN011UAdnb1JKAcSMgCCw_2206426561009-0-cib-1.webp"
         ],
         "subTitle": "Without Logo Light Black",
+        "available": true,
         "price": 1650
       },
       {
@@ -666,6 +720,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/Upload-to-rawgadz-increase-price-10.webp"
         ],
         "subTitle": "No Logo Plain Red",
+        "available": true,
         "price": 1650
       },
       {
@@ -675,6 +730,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN01gbEFI31JKAcRJEvHQ_2206426561009-0-cib.webp"
         ],
         "subTitle": "With Toyota Logo Chocolate",
+        "available": true,
         "price": 1650
       }
     ],
@@ -684,6 +740,7 @@
     "id": "MRA-15",
     "slug": "car-steering-cover-of-suede-fur-ultra-thin-premium",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp",
@@ -705,6 +762,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Upload-to-rawgadz-increase-price-6.webp"
         ],
         "subTitle": "Red Texture",
+        "available": true,
         "price": 1690
       },
       {
@@ -714,6 +772,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656669/Upload-to-rawgadz-increase-price-5.webp"
         ],
         "subTitle": "Orange Texture",
+        "available": true,
         "price": 1690
       },
       {
@@ -723,6 +782,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp"
         ],
         "subTitle": "Green Texture",
+        "available": true,
         "price": 1690
       }
     ],
@@ -732,6 +792,7 @@
     "id": "MRA-16",
     "slug": "sporty-vibe-high-quality-cow-leather-car-steering-cover-with-super-grip",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp"
@@ -752,6 +813,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp"
         ],
         "subTitle": "Red Dots",
+        "available": true,
         "price": 1750
       }
     ],
@@ -761,6 +823,7 @@
     "id": "MRA-17",
     "slug": "classic-brown-universal-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp",
@@ -782,6 +845,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp"
         ],
         "subTitle": "Light Brown",
+        "available": true,
         "price": 1050
       }
     ],
@@ -791,6 +855,7 @@
     "id": "MRA-18",
     "slug": "classic-universal-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790686772/gallery-image-2.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790686772/gallery-image-2.webp",
@@ -822,6 +887,7 @@
     "id": "MRA-19",
     "slug": "bmw-style-premium-leather-steering-cover-ultrathin-and-super-grip",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp",
@@ -843,6 +909,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp"
         ],
         "subTitle": "With Toyota Logo",
+        "available": true,
         "price": 1990
       },
       {
@@ -852,6 +919,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp"
         ],
         "subTitle": "Without Logo",
+        "available": true,
         "price": 1990
       }
     ],
@@ -861,6 +929,7 @@
     "id": "MRA-20",
     "slug": "glossy-handshape-dragon-skin-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01BOmfnH25typd8KVPw_2756927585-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01BOmfnH25typd8KVPw_2756927585-0-cib.webp",
@@ -882,6 +951,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01JoBQ3625tyqilBjYS_2756927585-0-cib.webp"
         ],
         "subTitle": "Red Dragon",
+        "available": true,
         "price": 1550
       },
       {
@@ -891,6 +961,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN013BchY625tyqovMRLi_2756927585-0-cib.webp"
         ],
         "subTitle": "Blue Dragon",
+        "available": true,
         "price": 1550
       }
     ],
@@ -900,6 +971,7 @@
     "id": "MRA-21",
     "slug": "glossy-non-slip-peach-wood-grain-steering-cover-all-season-universal-fit-breathable-2",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp",
@@ -923,6 +995,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp"
         ],
         "subTitle": "RedWine Glossy",
+        "available": true,
         "price": 1850
       },
       {
@@ -932,6 +1005,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp"
         ],
         "subTitle": "Brown Glossy",
+        "available": true,
         "price": 1850
       },
       {
@@ -941,6 +1015,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp"
         ],
         "subTitle": "Gray Glossy",
+        "available": true,
         "price": 1850
       }
     ],
@@ -950,6 +1025,7 @@
     "id": "MRA-22",
     "slug": "green-car-steering-cover-of-suede-fur-ultra-thin-premium-universal-fit-red-and-orange",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp",
@@ -973,6 +1049,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp"
         ],
         "subTitle": "Green Texture",
+        "available": true,
         "price": 1690
       },
       {
@@ -982,6 +1059,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Upload-to-rawgadz-increase-price-6.webp"
         ],
         "subTitle": "Red Texture",
+        "available": true,
         "price": 1690
       },
       {
@@ -991,6 +1069,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656669/Upload-to-rawgadz-increase-price-5.webp"
         ],
         "subTitle": "Orange Texture",
+        "available": true,
         "price": 1690
       }
     ],
@@ -1000,6 +1079,7 @@
     "id": "MRA-23",
     "slug": "high-quality-leather-and-fabric-super-soft-steering-cover-with-green-black-and-coffee-color-universal",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086813/green-1-1.webp",
     "images": [
       "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086813/green-1-1.webp",
@@ -1025,6 +1105,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp"
         ],
         "subTitle": "Green",
+        "available": true,
         "price": 1650
       },
       {
@@ -1034,6 +1115,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790832495/Upload-to-rawgadz-increase-price-1.webp"
         ],
         "subTitle": "Coffee",
+        "available": true,
         "price": 1650
       },
       {
@@ -1043,6 +1125,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790832495/green-1-1.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 1650
       }
     ],
@@ -1052,6 +1135,7 @@
     "id": "MRA-24",
     "slug": "leather-semi-perforated-steering-wheel-cover-rawgadz",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib.webp",
@@ -1073,6 +1157,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib.webp"
         ],
         "subTitle": "Black and Red",
+        "available": true,
         "price": 1860
       },
       {
@@ -1082,6 +1167,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01zKWp3z25tz6gQhW6C_2756927585-0-cib.webp"
         ],
         "subTitle": "Black and Grey",
+        "available": true,
         "price": 1860
       },
       {
@@ -1091,6 +1177,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790440810/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 1860
       }
     ],
@@ -1100,6 +1187,7 @@
     "id": "MRA-25",
     "slug": "leather-steering-wheel-cover-universal-hand-shape",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp",
@@ -1123,6 +1211,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp"
         ],
         "subTitle": "Red Wine",
+        "available": true,
         "price": 1450
       },
       {
@@ -1132,6 +1221,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 1450
       },
       {
@@ -1141,6 +1231,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp"
         ],
         "subTitle": "Gray",
+        "available": true,
         "price": 1450
       }
     ],
@@ -1150,6 +1241,7 @@
     "id": "MRA-26",
     "slug": "long-lasting-38-cm-steering-cover-best-budget",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790833553/gallery-image-1.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790833553/gallery-image-1.webp",
@@ -1184,6 +1276,7 @@
     "id": "MRA-27",
     "slug": "leather-premium-steering-cover-ultrathin-and-super-grip",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790834130/Upload-to-rawgadz-increase-price-9.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790834130/Upload-to-rawgadz-increase-price-9.webp",
@@ -1207,6 +1300,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790834130/Upload-to-rawgadz-increase-price-9.webp"
         ],
         "subTitle": "Premium Brown",
+        "available": true,
         "price": 1650
       },
       {
@@ -1216,6 +1310,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/Upload-to-rawgadz-increase-price-10.webp"
         ],
         "subTitle": "Premium Red",
+        "available": true,
         "price": 1650
       },
       {
@@ -1225,6 +1320,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN011UAdnb1JKAcSMgCCw_2206426561009-0-cib-1.webp"
         ],
         "subTitle": "Premium Black",
+        "available": true,
         "price": 1650
       }
     ],
@@ -1234,6 +1330,7 @@
     "id": "MRA-28",
     "slug": "rawgadz-3d-dot-grip-carbon-fiber-splicing-steering-wheel-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1790835190/O1CN01OEQcUX1x10iXaUofw_2219093776382-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1790835190/O1CN01OEQcUX1x10iXaUofw_2219093776382-0-cib.webp",
@@ -1257,6 +1354,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790835190/O1CN01OEQcUX1x10iXaUofw_2219093776382-0-cib.webp"
         ],
         "subTitle": "White",
+        "available": true,
         "price": 2790
       },
       {
@@ -1266,6 +1364,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790835190/O1CN01THWdrm1x10iWeA4bB_2219093776382-0-cib.webp"
         ],
         "subTitle": "Gray",
+        "available": true,
         "price": 2790
       },
       {
@@ -1275,6 +1374,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790835190/O1CN01pZVhcc1x10iYambI4_2219093776382-0-cib.webp"
         ],
         "subTitle": "Blue",
+        "available": true,
         "price": 2790
       },
       {
@@ -1284,6 +1384,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1790835190/O1CN01boW4Jv1x10iTivpTX_2219093776382-0-cib.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 2790
       }
     ],
@@ -1293,6 +1394,7 @@
     "id": "MRA-29",
     "slug": "synthetic-fiber-car-steering-cover",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791089292/Untitled-design-35.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791089292/Untitled-design-35.webp",
@@ -1317,6 +1419,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089292/Untitled-design-35.webp"
         ],
         "subTitle": "Green",
+        "available": true,
         "price": 899
       }
     ],
@@ -1326,6 +1429,7 @@
     "id": "MRA-30",
     "slug": "universal-car-ac-decoration-strips",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791089575/71ar05bdvxL._AC_SL1500_-1024x1017.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791089575/71ar05bdvxL._AC_SL1500_-1024x1017.webp",
@@ -1354,6 +1458,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089576/red.webp"
         ],
         "subTitle": "Red",
+        "available": true,
         "price": 399
       },
       {
@@ -1363,6 +1468,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089577/silver.webp"
         ],
         "subTitle": "Silver",
+        "available": true,
         "price": 399
       },
       {
@@ -1372,6 +1478,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089576/gold.webp"
         ],
         "subTitle": "Golden",
+        "available": true,
         "price": 399
       },
       {
@@ -1381,6 +1488,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089576/purple.webp"
         ],
         "subTitle": "Purple",
+        "available": true,
         "price": 399
       },
       {
@@ -1390,6 +1498,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089576/O1CN01nn0cev1ykBInkPlwJ_3298946616-0-cib.webp"
         ],
         "subTitle": "Sky Blue",
+        "available": true,
         "price": 399
       },
       {
@@ -1399,6 +1508,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791089576/green.webp"
         ],
         "subTitle": "Green",
+        "available": true,
         "price": 399
       }
     ],
@@ -1408,6 +1518,7 @@
     "id": "MRA-31",
     "slug": "universal-steering-cover-best-budget",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791089965/gallery-image.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791089965/gallery-image.webp",
@@ -1442,6 +1553,7 @@
     "id": "MRA-32",
     "slug": "rawgadz-half-cover-steering-wheel-cover-rghg",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE_1.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE_1.webp",
@@ -1466,6 +1578,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791096799/RED-WINE-3.webp"
         ],
         "subTitle": "Red Wine",
+        "available": true,
         "price": 1500
       },
       {
@@ -1475,6 +1588,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 1500
       },
       {
@@ -1484,6 +1598,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE_1.webp"
         ],
         "subTitle": "Camel Brown",
+        "available": true,
         "price": 1500
       },
       {
@@ -1493,6 +1608,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE-2.webp"
         ],
         "subTitle": "Off White",
+        "available": true,
         "price": 1500
       },
       {
@@ -1502,6 +1618,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791096798/RED-WINE-1-1.webp"
         ],
         "subTitle": "Coffee",
+        "available": true,
         "price": 1500
       },
       {
@@ -1511,6 +1628,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791096799/RED-WINE-4-1.webp"
         ],
         "subTitle": "Orange",
+        "available": true,
         "price": 1500
       }
     ],
@@ -1520,6 +1638,7 @@
     "id": "MRA-33",
     "slug": "hanging-gemstones-crystals-for-car-interior",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/61H-myi9YL._AC_SL1000_-1.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/61H-myi9YL._AC_SL1000_-1.webp",
@@ -1544,6 +1663,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/Untitled-design-19.webp"
         ],
         "subTitle": "Type-1",
+        "available": true,
         "price": 850
       },
       {
@@ -1553,6 +1673,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/Untitled-design-18.webp"
         ],
         "subTitle": "Type-2",
+        "available": true,
         "price": 1050
       },
       {
@@ -1562,6 +1683,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/Untitled-design-20.webp"
         ],
         "subTitle": "Type-3",
+        "available": true,
         "price": 1050
       }
     ],
@@ -1571,6 +1693,7 @@
     "id": "MRA-34",
     "slug": "imported-steering-cover-in-white-design-for-all-cars",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-29.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-29.webp",
@@ -1592,6 +1715,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-28.webp"
         ],
         "subTitle": "White and Black Leather",
+        "available": true,
         "price": 1800
       },
       {
@@ -1601,6 +1725,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-29.webp"
         ],
         "subTitle": "White and Orange Leather",
+        "available": true,
         "price": 1800
       },
       {
@@ -1610,6 +1735,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-27.webp"
         ],
         "subTitle": "White and Carbon Fiber",
+        "available": true,
         "price": 1550
       }
     ],
@@ -1619,6 +1745,7 @@
     "id": "MRA-35",
     "slug": "modern-wrench-for-car-jack-and-waterproof-stickers-during-rain",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791101143/jack-plus-wrench-1-1024x1024.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791101143/jack-plus-wrench-1-1024x1024.webp",
@@ -1642,6 +1769,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791101143/%E0%A6%B8%E0%A6%95%E0%A6%B2-%E0%A6%A7%E0%A6%B0%E0%A6%A8%E0%A7%87%E0%A6%B0-%E0%A6%9C%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%95%E0%A7%87-%E0%A6%AB%E0%A6%BF%E0%A6%9F%E0%A7%87%E0%A6%B0-%E0%A6%9C%E0%A6%A8%E0%A7%8D%E0%A6%AF-%E0%A6%8F%E0%A6%A1%E0%A6%BE%E0%A6%AA%E0%A7%8D%E0%A6%9F%E0%A6%BE%E0%A6%B0-%E0%A6%B8%E0%A6%B9-%E0%A6%95%E0%A6%BF%E0%A6%A8%E0%A7%81%E0%A6%A8.webp"
         ],
         "subTitle": "Wrench and Adapter",
+        "available": true,
         "price": 660
       },
       {
@@ -1651,6 +1779,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791101143/only-adapter-1.webp"
         ],
         "subTitle": " Adapter",
+        "available": true,
         "price": 260
       },
       {
@@ -1660,6 +1789,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791101143/jack-plus-wrench-1-1024x1024.webp"
         ],
         "subTitle": "1.5 Ton and Wrench ",
+        "available": true,
         "price": 2050
       }
     ],
@@ -1669,6 +1799,7 @@
     "id": "MRA-36",
     "slug": "jack-and-wrench-combo-for-car-15t-2t-and-3t",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp"
@@ -1689,6 +1820,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp"
         ],
         "subTitle": "1.5Ton",
+        "available": true,
         "price": 1999
       },
       {
@@ -1698,6 +1830,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp"
         ],
         "subTitle": "2 Ton",
+        "available": true,
         "price": 2499
       },
       {
@@ -1707,6 +1840,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp"
         ],
         "subTitle": "3Ton",
+        "available": true,
         "price": 2899
       }
     ],
@@ -1716,6 +1850,7 @@
     "id": "MRA-37",
     "slug": "car-wheel-top-guard-scratch-protection-of-car-body",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.webp",
@@ -1741,6 +1876,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102278/RAwGADZ.webp"
         ],
         "subTitle": "Silver 2 Piece",
+        "available": true,
         "price": 1300
       },
       {
@@ -1750,6 +1886,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102277/O1CN01uCp4KB21XIyuKj6qv_2216861676994-0-cib.webp"
         ],
         "subTitle": "Black 2 Piece",
+        "available": true,
         "price": 1200
       },
       {
@@ -1759,6 +1896,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102277/O1CN01urodG221XIyvPvCkx_2216861676994-0-cib_1.webp"
         ],
         "subTitle": "Carbon Fiber 2 Piece",
+        "available": true,
         "price": 1200
       },
       {
@@ -1768,6 +1906,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102277/O1CN01mhQxCY21XIyzHRDTg_2216861676994-0-cib_1.webp"
         ],
         "subTitle": "Silver 4 Piece",
+        "available": true,
         "price": 2200
       },
       {
@@ -1777,6 +1916,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102277/O1CN01uCp4KB21XIyuKj6qv_2216861676994-0-cib.webp"
         ],
         "subTitle": "Black 4 Piece",
+        "available": true,
         "price": 2100
       },
       {
@@ -1786,6 +1926,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102277/O1CN01urodG221XIyvPvCkx_2216861676994-0-cib_1.webp"
         ],
         "subTitle": "Carbon Fiber 4 Piece",
+        "available": true,
         "price": 2100
       }
     ],
@@ -1795,6 +1936,7 @@
     "id": "MRA-38",
     "slug": "high-quality-iphone-speaker-dust-protector",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/IMG_5603.webp",
     "images": [
       "https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/IMG_5603.webp",
@@ -1818,6 +1960,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/IMG_5603.webp"
         ],
         "subTitle": "Black",
+        "available": true,
         "price": 80
       },
       {
@@ -1827,6 +1970,7 @@
           "https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/Untitled-design-3.webp"
         ],
         "subTitle": "Silver/White",
+        "available": true,
         "price": 80
       }
     ],
@@ -1836,6 +1980,7 @@
     "id": "pro_test",
     "slug": "cable-organizers-for-charging-cable-and-other-cables-slider-magnet",
     "tab": "gadget",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089323/O1CN01i3cew61lBIFIP8Rfx_2210908094780-0-cib.webp",
     "images": [
       "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089323/O1CN01i3cew61lBIFIP8Rfx_2210908094780-0-cib.webp",
@@ -1857,6 +2002,7 @@
         "subImage": "",
         "images": [],
         "subTitle": "",
+        "available": true,
         "price": 100
       }
     ],
@@ -1866,6 +2012,7 @@
     "id": "prod_002",
     "slug": "studio-anc-headphones",
     "tab": "gadget",
+    "available": true,
     "imageSrc": "https://placehold.co/600x600/171717/ffffff?text=Studio+ANC+Headphones",
     "images": [
       "https://placehold.co/600x600/171717/ffffff?text=Studio+ANC+Headphones",
@@ -1889,6 +2036,7 @@
           "https://placehold.co/600x600/171717/ffffff?text=Matte%20Black%2BAlt"
         ],
         "subTitle": "Matte Black",
+        "available": true,
         "price": 249.5,
         "subProducts": [
           {
@@ -1899,6 +2047,7 @@
               "https://placehold.co/600x600/171717/ffffff?text=Standard%20Cushions%2BAlt"
             ],
             "subTitle": "Standard Cushions",
+            "available": true,
             "price": 249.5
           },
           {
@@ -1909,6 +2058,7 @@
               "https://placehold.co/600x600/171717/ffffff?text=Cooling%20Gel%20Cushions%2BAlt"
             ],
             "subTitle": "Cooling Gel Cushions",
+            "available": true,
             "price": 279.5
           }
         ]
@@ -1921,6 +2071,7 @@
           "https://placehold.co/600x600/f8fafc/0f172a?text=Polar%20White%2BAlt"
         ],
         "subTitle": "Polar White",
+        "available": true,
         "price": 249.5,
         "subProducts": [
           {
@@ -1931,6 +2082,7 @@
               "https://placehold.co/600x600/f8fafc/0f172a?text=Standard%20Cushions%2BAlt"
             ],
             "subTitle": "Standard Cushions",
+            "available": true,
             "price": 249.5
           },
           {
@@ -1941,6 +2093,7 @@
               "https://placehold.co/600x600/f8fafc/0f172a?text=Cooling%20Gel%20Cushions%2BAlt"
             ],
             "subTitle": "Cooling Gel Cushions",
+            "available": true,
             "price": 279.5
           }
         ]
@@ -1953,6 +2106,7 @@
           "https://placehold.co/600x600/1e3a8a/ffffff?text=Midnight%20Blue%2BAlt"
         ],
         "subTitle": "Midnight Blue",
+        "available": true,
         "price": 259.5,
         "subProducts": [
           {
@@ -1963,6 +2117,7 @@
               "https://placehold.co/600x600/1e3a8a/ffffff?text=Standard%20Cushions%2BAlt"
             ],
             "subTitle": "Standard Cushions",
+            "available": true,
             "price": 259.5
           },
           {
@@ -1973,6 +2128,7 @@
               "https://placehold.co/600x600/1e3a8a/ffffff?text=Cooling%20Gel%20Cushions%2BAlt"
             ],
             "subTitle": "Cooling Gel Cushions",
+            "available": true,
             "price": 289.5
           }
         ]
@@ -1984,6 +2140,7 @@
     "id": "prod_003",
     "slug": "retro-instant-camera",
     "tab": "gadget",
+    "available": true,
     "imageSrc": "https://placehold.co/600x600/262626/ffffff?text=Retro+Instant+Camera",
     "images": [
       "https://placehold.co/600x600/262626/ffffff?text=Retro+Instant+Camera",
@@ -2007,6 +2164,7 @@
           "https://placehold.co/600x600/f8fafc/171717?text=Classic%20White%2BAlt"
         ],
         "subTitle": "Classic White",
+        "available": true,
         "price": 89.99,
         "subProducts": [
           {
@@ -2017,6 +2175,7 @@
               "https://placehold.co/600x600/f8fafc/171717?text=Camera%20Only%2BAlt"
             ],
             "subTitle": "Camera Only",
+            "available": true,
             "price": 89.99
           },
           {
@@ -2027,6 +2186,7 @@
               "https://placehold.co/600x600/f8fafc/171717?text=Camera%20%2B%2020%20Film%20Pack%2BAlt"
             ],
             "subTitle": "Camera + 20 Film Pack",
+            "available": true,
             "price": 109.99
           }
         ]
@@ -2039,6 +2199,7 @@
           "https://placehold.co/600x600/a7f3d0/064e3b?text=Mint%20Green%2BAlt"
         ],
         "subTitle": "Mint Green",
+        "available": true,
         "price": 89.99,
         "subProducts": [
           {
@@ -2049,6 +2210,7 @@
               "https://placehold.co/600x600/a7f3d0/064e3b?text=Camera%20Only%2BAlt"
             ],
             "subTitle": "Camera Only",
+            "available": true,
             "price": 89.99
           },
           {
@@ -2059,6 +2221,7 @@
               "https://placehold.co/600x600/a7f3d0/064e3b?text=Camera%20%2B%2020%20Film%20Pack%2BAlt"
             ],
             "subTitle": "Camera + 20 Film Pack",
+            "available": true,
             "price": 109.99
           }
         ]
@@ -2071,6 +2234,7 @@
           "https://placehold.co/600x600/fed7aa/7c2d12?text=Sunset%20Orange%2BAlt"
         ],
         "subTitle": "Sunset Orange",
+        "available": true,
         "price": 94.99,
         "subProducts": [
           {
@@ -2081,6 +2245,7 @@
               "https://placehold.co/600x600/fed7aa/7c2d12?text=Camera%20Only%2BAlt"
             ],
             "subTitle": "Camera Only",
+            "available": true,
             "price": 94.99
           },
           {
@@ -2091,6 +2256,7 @@
               "https://placehold.co/600x600/fed7aa/7c2d12?text=Camera%20%2B%2020%20Film%20Pack%2BAlt"
             ],
             "subTitle": "Camera + 20 Film Pack",
+            "available": true,
             "price": 114.99
           }
         ]
@@ -2102,6 +2268,7 @@
     "id": "SH-02",
     "slug": "car-seat-water-bottle-holder-bag",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp",
     "images": [
       "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp",
@@ -2128,6 +2295,7 @@
           "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"
         ],
         "subTitle": "1 Liter",
+        "available": true,
         "price": 950,
         "subProducts": [
           {
@@ -2137,6 +2305,7 @@
               "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"
             ],
             "subTitle": "Black",
+            "available": true,
             "price": 950
           },
           {
@@ -2146,6 +2315,7 @@
               "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp"
             ],
             "subTitle": "Coffee",
+            "available": true,
             "price": 950
           },
           {
@@ -2155,6 +2325,7 @@
               "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp"
             ],
             "subTitle": "Gray",
+            "available": true,
             "price": 950
           }
         ]
@@ -2166,6 +2337,7 @@
           "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"
         ],
         "subTitle": "2 Litre",
+        "available": true,
         "price": 1049,
         "subProducts": [
           {
@@ -2175,6 +2347,7 @@
               "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"
             ],
             "subTitle": "Black",
+            "available": true,
             "price": 1049
           },
           {
@@ -2184,6 +2357,7 @@
               "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp"
             ],
             "subTitle": "Coffee",
+            "available": true,
             "price": 1049
           },
           {
@@ -2193,6 +2367,7 @@
               "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp"
             ],
             "subTitle": "Gray",
+            "available": true,
             "price": 1049
           }
         ]
@@ -2204,6 +2379,7 @@
     "id": "SH-03",
     "slug": "car-seat-storage-hanging-bag-multi-pocket-seat-side-organizer",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793160542/71JPzjzuvFL._AC_SL1500_.webp",
     "images": [
       "https://res.cloudinary.com/s4f1uyfw/image/upload/v1793160542/71JPzjzuvFL._AC_SL1500_.webp",
@@ -2227,6 +2403,7 @@
     "id": "SH01",
     "slug": "car-ac-vent-cleaning-brush-remove-interior-dust-easily",
     "tab": "normal",
+    "available": true,
     "imageSrc": "https://res.cloudinary.com/s4f1uyfw/image/upload/v1790524205/car-ac-cleaner.webp",
     "images": [
       "https://res.cloudinary.com/s4f1uyfw/image/upload/v1790524205/car-ac-cleaner.webp",

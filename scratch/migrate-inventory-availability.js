@@ -1,52 +1,54 @@
 // scratch/migrate-inventory-availability.js
-// Non-destructive migration to add isAvailable to all inventory documents in MongoDB Atlas
+// MongoDB Migration: Remove obsolete admin availability fields (`isAvailable`, `stockMode`)
+// while preserving physical stock quantities, compound identifiers, and timestamps.
 
-const { getInventoryCollection, getDb } = require('../lib/db');
+const { getInventoryCollection, getDb } = require("../api/_db");
 
 async function migrate() {
-  console.log("=== INVENTORY isAvailable MIGRATION ===");
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
+  if (!uri) {
+    console.log("[migrate-inventory] MONGO_URI not configured in environment. Skipping live DB migration.");
+    return;
+  }
+
+  console.log("=== Starting MongoDB Inventory Cleanup Migration ===");
+  let client;
   try {
-    const inventoryCol = await getInventoryCollection();
-    const totalCount = await inventoryCol.countDocuments();
-    console.log(`Total inventory documents in collection: ${totalCount}`);
+    const col = await getInventoryCollection();
+    client = await getDb();
 
-    const missingCount = await inventoryCol.countDocuments({ isAvailable: { $exists: false } });
-    console.log(`Documents missing 'isAvailable': ${missingCount}`);
+    const totalBefore = await col.countDocuments({});
+    console.log(`Total inventory documents found: ${totalBefore}`);
 
-    if (missingCount > 0) {
-      console.log("Migrating documents missing 'isAvailable'...");
+    const res = await col.updateMany(
+      {},
+      {
+        $unset: {
+          isAvailable: "",
+          stockMode: "",
+        },
+        $set: {
+          updatedAt: new Date(),
+        },
+      }
+    );
 
-      // Update documents where stock > 0 -> isAvailable: true
-      const resTrue = await inventoryCol.updateMany(
-        { isAvailable: { $exists: false }, stock: { $gt: 0 } },
-        { $set: { isAvailable: true, updatedAt: new Date() } }
-      );
-      console.log(`Updated with isAvailable: true (stock > 0): ${resTrue.modifiedCount}`);
-
-      // Update documents where stock <= 0 -> isAvailable: false
-      const resFalse = await inventoryCol.updateMany(
-        { isAvailable: { $exists: false } },
-        { $set: { isAvailable: false, updatedAt: new Date() } }
-      );
-      console.log(`Updated with isAvailable: false (stock <= 0): ${resFalse.modifiedCount}`);
-    } else {
-      console.log("All documents already have 'isAvailable' defined.");
+    console.log(`Matched ${res.matchedCount} documents, modified ${res.modifiedCount} documents.`);
+    console.log("=== Migration Complete ===");
+  } finally {
+    if (client) {
+      await client.close().catch(() => {});
     }
-
-    const availableCount = await inventoryCol.countDocuments({ isAvailable: true });
-    const unavailableCount = await inventoryCol.countDocuments({ isAvailable: false });
-    console.log(`Summary: isAvailable: true = ${availableCount}, isAvailable: false = ${unavailableCount}`);
-
-    // Sample document check
-    const sample = await inventoryCol.findOne({});
-    console.log("Sample migrated document:", sample);
-
-    console.log("Migration complete successfully!");
-    process.exit(0);
-  } catch (err) {
-    console.error("Migration failed:", err);
-    process.exit(1);
   }
 }
 
-migrate();
+if (require.main === module) {
+  migrate()
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error("Migration failed:", err);
+      process.exit(1);
+    });
+}
+
+module.exports = migrate;

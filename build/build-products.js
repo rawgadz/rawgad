@@ -3,6 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 const { marked } = require('marked');
+const {
+  validateBooleanField,
+  filterProductForStorefront,
+} = require('../api/_catalog');
 
 const ROOT_DIR = process.cwd();
 const CONTENT_DIR = path.join(ROOT_DIR, 'content', 'product');
@@ -36,8 +40,12 @@ function normalizeId(val) {
   return (s === '' || s === 'null' || s === '_') ? '_' : s;
 }
 
-function normalizeSubProduct(sub, parentPrice = null) {
+function normalizeSubProduct(sub, parentPrice = null, parentAvailable = true, contextPrefix = '') {
   if (!sub || typeof sub !== 'object') return null;
+
+  const rawTypeAvailable = validateBooleanField(sub.available, `${contextPrefix}.available`);
+  const inheritedTypeAvailable = rawTypeAvailable !== undefined ? rawTypeAvailable : parentAvailable;
+  const parentAndTypeAvailable = Boolean(parentAvailable && inheritedTypeAvailable);
 
   const typePrice = (sub.price !== undefined && sub.price !== null && sub.price !== '')
     ? (Number(sub.price) || 0)
@@ -49,8 +57,15 @@ function normalizeSubProduct(sub, parentPrice = null) {
       ? sub.subproducts
       : (Array.isArray(sub.types) ? sub.types : []));
 
-  const subProducts = rawNested.map(item => {
+  const subProducts = rawNested.map((item, sIdx) => {
     if (!item || typeof item !== 'object') return null;
+    const rawSubAvailable = validateBooleanField(
+      item.available,
+      `${contextPrefix}.subProducts[${sIdx}].available`
+    );
+    const inheritedSubAvailable = rawSubAvailable !== undefined ? rawSubAvailable : parentAndTypeAvailable;
+    const effectiveSubAvailable = Boolean(parentAndTypeAvailable && inheritedSubAvailable);
+
     const itemPrice = (item.price !== undefined && item.price !== null && item.price !== '')
       ? (Number(item.price) || 0)
       : typePrice;
@@ -63,7 +78,8 @@ function normalizeSubProduct(sub, parentPrice = null) {
       subProductId: String(item.subProductId || item.id || '').trim(),
       subImage: nestedImages[0] || item.subImage || item.imageSrc || item.image || '',
       images: nestedImages,
-      subTitle: item.subTitle || item.title || ''
+      subTitle: item.subTitle || item.title || '',
+      available: effectiveSubAvailable
     };
     if (typeof itemPrice === 'number' && !isNaN(itemPrice)) {
       nestedItem.price = itemPrice;
@@ -75,11 +91,16 @@ function normalizeSubProduct(sub, parentPrice = null) {
     ? sub.images.map(img => String(img).trim()).filter(Boolean)
     : (sub.subImage || sub.imageSrc || sub.image ? [String(sub.subImage || sub.imageSrc || sub.image).trim()] : []);
 
+  const effectiveTypeAvailable = subProducts.length > 0
+    ? Boolean(parentAndTypeAvailable && subProducts.some(s => s.available === true))
+    : parentAndTypeAvailable;
+
   const normalized = {
     subProductId: String(sub.subProductId || sub.id || '').trim(),
     subImage: typeImages[0] || sub.subImage || sub.imageSrc || sub.image || '',
     images: typeImages,
-    subTitle: sub.subTitle || sub.title || ''
+    subTitle: sub.subTitle || sub.title || '',
+    available: effectiveTypeAvailable
   };
 
   if (typeof typePrice === 'number' && !isNaN(typePrice)) {
@@ -91,6 +112,37 @@ function normalizeSubProduct(sub, parentPrice = null) {
   }
 
   return normalized;
+}
+
+function buildProductJsonLd(product) {
+  const canonicalUrl = `https://www.rawgadz.com/product/${product.slug}.html`;
+  const priceRange = product.priceRange || { min: product.price, max: product.price };
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description || product.title,
+    image: Array.isArray(product.images) && product.images.length > 0 ? product.images : (product.imageSrc ? [product.imageSrc] : []),
+    sku: String(product.id),
+    url: canonicalUrl,
+    offers: priceRange.min !== priceRange.max
+      ? {
+          '@type': 'AggregateOffer',
+          priceCurrency: 'BDT',
+          lowPrice: priceRange.min,
+          highPrice: priceRange.max,
+          availability: 'https://schema.org/InStock',
+          url: canonicalUrl
+        }
+      : {
+          '@type': 'Offer',
+          priceCurrency: 'BDT',
+          price: product.price,
+          availability: 'https://schema.org/InStock',
+          url: canonicalUrl
+        }
+  };
+  return JSON.stringify(schema).replace(/</g, '\\u003c');
 }
 
 function generateStandaloneProductHTML(product) {
@@ -110,6 +162,7 @@ function generateStandaloneProductHTML(product) {
   const catalogName = isGadget ? 'Gadgets' : 'Shop';
 
   const sanitizedProductJson = JSON.stringify(product).replace(/</g, '\\u003c');
+  const jsonLd = buildProductJsonLd(product);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -118,6 +171,13 @@ function generateStandaloneProductHTML(product) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>${escapeHtml(product.title)} | Rawgadz</title>
   <meta name="description" content="${escapeHtml(product.description || product.title)}">
+  <link rel="canonical" href="https://www.rawgadz.com/product/${escapeHtml(product.slug)}.html">
+  <meta property="og:title" content="${escapeHtml(product.title)} | Rawgadz">
+  <meta property="og:description" content="${escapeHtml(product.description || product.title)}">
+  <meta property="og:image" content="${escapeHtml(initialImage || '')}">
+  <meta property="og:url" content="https://www.rawgadz.com/product/${escapeHtml(product.slug)}.html">
+  <meta property="og:type" content="product">
+  <script type="application/ld+json">${jsonLd}</script>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -383,7 +443,7 @@ function generateStandaloneProductHTML(product) {
             return 0;
           },
 
-          get isAvailable() {
+          get itemInStock() {
             const type = this.selectedType;
             const sub = this.selectedSubProduct;
             const typeId = type ? String(type.subProductId || type.id) : '_';
@@ -396,13 +456,13 @@ function generateStandaloneProductHTML(product) {
 
           get stockStatus() {
             if (this.loadingInventory) return 'in_stock';
-            if (!this.isAvailable) return 'out_of_stock';
+            if (!this.itemInStock) return 'out_of_stock';
             const s = this.currentStock;
             if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
             return 'in_stock';
           },
 
-          get isOutOfStock() { return !this.loadingInventory && !this.isAvailable; },
+          get isOutOfStock() { return !this.loadingInventory && !this.itemInStock; },
 
           selectType(index) {
             this.selectedTypeIndex = Number(index) || 0;
@@ -538,17 +598,25 @@ function generateProductJson() {
     }
     if (!slug) slug = slugify(String(data.id));
 
-    // FIX: Accept both 'gadget' and 'gadgets', normalize to 'gadget'
     let tab = 'normal';
     if (data.tab) {
       const rawTab = String(data.tab).trim().toLowerCase();
       tab = (rawTab === 'gadget' || rawTab === 'gadgets') ? 'gadget' : 'normal';
     }
 
+    const rawProductAvailable = validateBooleanField(data.available, `${file}:available`);
+    const baseProductAvailable = rawProductAvailable !== undefined ? rawProductAvailable : true;
+
     const htmlContent = marked.parse(content || '');
     const rawTypes = Array.isArray(data.types) ? data.types : (Array.isArray(data.subProducts) ? data.subProducts : []);
     const productPrice = Number(data.price) || 0;
-    const types = rawTypes.map(item => normalizeSubProduct(item, productPrice)).filter(Boolean);
+    const types = rawTypes
+      .map((item, idx) => normalizeSubProduct(item, productPrice, baseProductAvailable, `${file}:types[${idx}]`))
+      .filter(Boolean);
+
+    const effectiveProductAvailable = types.length > 0
+      ? Boolean(baseProductAvailable && types.some(t => t.available === true))
+      : Boolean(baseProductAvailable);
 
     const rawImages = Array.isArray(data.images) ? data.images.map(img => String(img).trim()).filter(Boolean) : [];
     const mainImg = data.imageSrc ? String(data.imageSrc).trim() : '';
@@ -563,14 +631,24 @@ function generateProductJson() {
     if (data.priceRange && typeof data.priceRange === 'object' && data.priceRange.min !== undefined && data.priceRange.max !== undefined) {
       priceRange = { min: Number(data.priceRange.min) || 0, max: Number(data.priceRange.max) || 0 };
     } else {
-      const allPrices = [productPrice];
-      for (const t of types) {
-        if (typeof t.price === 'number') allPrices.push(t.price);
-        if (Array.isArray(t.subProducts)) {
-          for (const s of t.subProducts) { if (typeof s.price === 'number') allPrices.push(s.price); }
+      const availablePrices = [];
+      if (types.length === 0) {
+        availablePrices.push(productPrice);
+      } else {
+        for (const t of types) {
+          if (t.available === false) continue;
+          const subs = Array.isArray(t.subProducts) ? t.subProducts.filter(s => s.available !== false) : [];
+          if (Array.isArray(t.subProducts) && t.subProducts.length > 0) {
+            for (const s of subs) {
+              if (typeof s.price === 'number') availablePrices.push(s.price);
+            }
+          } else if (typeof t.price === 'number') {
+            availablePrices.push(t.price);
+          }
         }
       }
-      priceRange = { min: Math.min(...allPrices), max: Math.max(...allPrices) };
+      if (availablePrices.length === 0) availablePrices.push(productPrice);
+      priceRange = { min: Math.min(...availablePrices), max: Math.max(...availablePrices) };
     }
 
     const tags = Array.isArray(data.tags) ? data.tags.filter(Boolean).join(', ') : (typeof data.tags === 'string' ? data.tags : '');
@@ -579,6 +657,7 @@ function generateProductJson() {
       id: String(data.id),
       slug,
       tab,
+      available: effectiveProductAvailable,
       imageSrc,
       images: productImages,
       title: data.title,
@@ -662,8 +741,6 @@ function generateProductJson() {
   console.log(`[build-products] Compiled ${Object.keys(priceCatalog).length} purchasable items into ${PRICE_OUTPUT_FILE}`);
 
   buildStandaloneProductPages(products);
-  // FIX: Commented out to prevent overwriting your manual gadgets.html
-  // buildGadgetsPage();
 
   return products;
 }
@@ -674,15 +751,17 @@ function buildStandaloneProductPages(products) {
   for (const file of existingFiles) fs.unlinkSync(path.join(HTML_OUTPUT_DIR, file));
 
   let count = 0;
-  products.forEach(product => {
-    const filePath = path.join(HTML_OUTPUT_DIR, `${product.slug}.html`);
-    fs.writeFileSync(filePath, generateStandaloneProductHTML(product));
+  for (const product of products) {
+    const storefrontProduct = filterProductForStorefront(product);
+    if (!storefrontProduct) continue;
+
+    const filePath = path.join(HTML_OUTPUT_DIR, `${storefrontProduct.slug}.html`);
+    fs.writeFileSync(filePath, generateStandaloneProductHTML(storefrontProduct));
     count++;
-  });
+  }
   console.log(`[build-products] Generated ${count} standalone product pages in ${HTML_OUTPUT_DIR}`);
 }
 
-// FIX: Improved regex patterns for more robust replacement
 function buildGadgetsPage() {
   if (!fs.existsSync(INDEX_HTML_FILE)) {
     throw new Error(`[build-products] Cannot generate gadgets.html: ${INDEX_HTML_FILE} does not exist.`);
@@ -690,22 +769,16 @@ function buildGadgetsPage() {
 
   let html = fs.readFileSync(INDEX_HTML_FILE, 'utf-8');
 
-  // Update Title and Meta
   html = html.replace(/<title>.*?<\/title>/i, '<title>Rawgadz - Minimalist Gadgets</title>');
   html = html.replace(/<meta\s+name="description"\s+content=".*?"\s*\/?>/i, '<meta name="description" content="Explore our curated collection of minimalist gadgets and car accessories at Rawgadz.">');
 
-  // Update Navbar Active States
   html = html.replace(/(<nav class="hidden md:flex[^>]*>[\s\S]*?<a\s+href="\.\/index\.html"\s+class=")[^"]*(")/i, '$1hover:text-black transition-colors font-semibold text-xs tracking-wider uppercase text-neutral-600$2');
   html = html.replace(/(<nav class="hidden md:flex[^>]*>[\s\S]*?<a\s+href="\.\/gadgets\.html"\s+class=")[^"]*(")/i, '$1hover:text-black transition-colors font-bold text-xs tracking-wider uppercase text-black border-b-2 border-black pb-0.5$2');
 
-  // Update Hero Slider
   html = html.replace(/heroSlider\(['"]index['"]\)/g, `heroSlider('gadgets')`);
   html = html.replace(/aria-label="Hero Slider"/g, `aria-label="Gadgets Hero Slider"`);
 
-  // FIX: Broader regex to catch the filter regardless of spacing
   html = html.replace(/all\.filter\(\s*p\s*=>[^)]+\)/g, `all.filter(p => p.tab === 'gadget')`);
-  
-  // FIX: More flexible carousel source replacement
   html = html.replace(/carouselSource:\s*['"][^'"]+['"]/g, `carouselSource: '/data/gadgets.json'`);
 
   fs.writeFileSync(GADGETS_OUTPUT_FILE, html, 'utf-8');
@@ -719,5 +792,6 @@ if (require.main === module) {
 module.exports = {
   generateProductJson,
   buildStandaloneProductPages,
-  buildGadgetsPage
+  buildGadgetsPage,
+  normalizeSubProduct
 };

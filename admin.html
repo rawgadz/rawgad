@@ -116,7 +116,7 @@
       </div>
     </div>
 
-    <!-- KPI Metric Cards (Actionable, No Fluff) -->
+    <!-- KPI Metric Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
       <!-- Total Orders -->
       <a href="./order.html" class="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs hover:border-black transition-all group flex flex-col justify-between">
@@ -298,38 +298,14 @@
                     class="text-[9px] font-black uppercase px-2 py-0.5 rounded border"
                     x-text="item.stock === 0 ? 'Out of Stock' : (item.stock + ' Left')"
                   ></span>
-                  <span 
-                    :class="item.isAvailable ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-rose-100 text-rose-800 border-rose-200'"
-                    class="text-[9px] font-black uppercase px-1.5 py-0.5 rounded border"
-                    x-text="item.isAvailable ? 'Available' : 'Unavailable'"
-                  ></span>
                 </div>
               </div>
 
               <!-- 1-Click Fast Stock Resolution Action -->
               <div class="flex flex-col gap-1 items-end shrink-0">
-                <template x-if="!item.isAvailable">
-                  <button 
-                    @click="quickMakeAvailable(item)"
-                    title="Make this item immediately available/in-stock"
-                    class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors inline-flex items-center gap-1 cursor-pointer"
-                  >
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    Available
-                  </button>
-                </template>
-                <template x-if="item.isAvailable">
-                  <button 
-                    @click="quickMakeUnavailable(item)"
-                    title="Make this item unavailable"
-                    class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors inline-flex items-center gap-1 cursor-pointer"
-                  >
-                    Unavailable
-                  </button>
-                </template>
                 <button 
                   @click="quickAddStock(item, 10)"
-                  title="Add 10 fixed units"
+                  title="Add 10 stock units"
                   class="bg-neutral-200 hover:bg-neutral-300 text-neutral-800 font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
                 >
                   +10 Units
@@ -348,7 +324,7 @@
 
   </main>
 
-  <!-- ADD / UPDATE INVENTORY MODAL (Shared logic) -->
+  <!-- ADD / UPDATE INVENTORY MODAL -->
   <div 
     x-show="showAddModal" 
     x-transition.opacity 
@@ -361,7 +337,7 @@
       <div class="flex items-center justify-between border-b border-neutral-100 pb-4">
         <div>
           <h3 class="text-xl font-black text-black tracking-tight">Add or Update Inventory</h3>
-          <p class="text-xs text-neutral-500 mt-0.5">Select a product and choose fixed units or unlimited availability.</p>
+          <p class="text-xs text-neutral-500 mt-0.5">Set physical stock quantity for a product or variant.</p>
         </div>
         <button @click="showAddModal = false" class="text-neutral-400 hover:text-black p-1 text-lg font-bold">&times;</button>
       </div>
@@ -399,60 +375,19 @@
           </div>
         </div>
 
-        <!-- Stock Logic Toggle: Core Requirement -->
+        <!-- Stock Quantity Input -->
         <div class="border border-neutral-200 p-4 rounded-2xl bg-neutral-50/50 flex flex-col gap-3">
-          <span class="text-xs font-black uppercase tracking-wider text-black">Stock Management Mode</span>
-          
-          <div class="grid grid-cols-2 gap-2">
-            <!-- Mode 1: Stock is Available Button -->
-            <button 
-              type="button" 
-              @click="stockMode = 'available'" 
-              :class="stockMode === 'available' ? 'bg-black text-white border-black shadow-xs' : 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-100'"
-              class="p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer"
-            >
-              <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider">
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                Stock Available
-              </div>
-              <span class="text-[10px] text-neutral-400 leading-tight">Always in-stock / unlimited purchasable</span>
-            </button>
-
-            <!-- Mode 2: Fixed Stock Amount -->
-            <button 
-              type="button" 
-              @click="stockMode = 'fixed'" 
-              :class="stockMode === 'fixed' ? 'bg-black text-white border-black shadow-xs' : 'bg-white text-neutral-700 border-neutral-200 hover:bg-neutral-100'"
-              class="p-3 rounded-xl border text-left flex flex-col gap-1 transition-all cursor-pointer"
-            >
-              <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider">
-                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
-                Fixed Amount
-              </div>
-              <span class="text-[10px] text-neutral-400 leading-tight">Set exact numerical inventory count</span>
-            </button>
-          </div>
-
-          <!-- Fixed Amount Input (Shown when fixed mode is active) -->
-          <div x-show="stockMode === 'fixed'" class="mt-2">
-            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600 mb-1">Enter Fixed Quantity</label>
-            <div class="flex items-center gap-2">
-              <input 
-                type="number" 
-                x-model.number="formProduct.stockAmount" 
-                min="0"
-                class="w-full bg-white border border-neutral-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-black font-bold"
-              />
-              <button type="button" @click="formProduct.stockAmount = 10" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">10</button>
-              <button type="button" @click="formProduct.stockAmount = 25" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">25</button>
-              <button type="button" @click="formProduct.stockAmount = 50" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">50</button>
-            </div>
-          </div>
-
-          <!-- Description for Available Mode -->
-          <div x-show="stockMode === 'available'" class="p-3 bg-emerald-50 text-emerald-800 text-[11px] rounded-xl border border-emerald-200 flex items-center gap-2">
-            <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>This product will be marked <strong>"Stock is Available"</strong> with 1-click. Customers can always checkout without stockout limits.</span>
+          <label class="block text-xs font-bold uppercase tracking-wider text-neutral-600">Stock Quantity (Integer &ge; 0)</label>
+          <div class="flex items-center gap-2">
+            <input 
+              type="number" 
+              x-model.number="formProduct.stockAmount" 
+              min="0"
+              class="w-full bg-white border border-neutral-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-black font-bold"
+            />
+            <button type="button" @click="formProduct.stockAmount = 10" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">10</button>
+            <button type="button" @click="formProduct.stockAmount = 25" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">25</button>
+            <button type="button" @click="formProduct.stockAmount = 50" class="px-3 py-2 bg-neutral-200 text-neutral-800 rounded-lg text-xs font-bold hover:bg-neutral-300">50</button>
           </div>
         </div>
 
@@ -495,7 +430,6 @@
         loading: false,
         savingStock: false,
         showAddModal: false,
-        stockMode: 'available', // 'available' or 'fixed'
 
         formProduct: {
           productId: '',
@@ -616,7 +550,7 @@
         },
 
         get alertItems() {
-          return this.inventory.filter(i => (typeof i.stock === 'number' ? i.stock : 0) <= 5 || i.isAvailable === false);
+          return this.inventory.filter(i => (typeof i.stock === 'number' ? i.stock : 0) <= 5);
         },
 
         get stockAlertsCount() {
@@ -635,7 +569,6 @@
             subProductId: prefill.subProductId || '',
             stockAmount: typeof prefill.stock === 'number' ? prefill.stock : 10
           };
-          this.stockMode = prefill.isAvailable !== false ? 'available' : 'fixed';
           this.showAddModal = true;
         },
 
@@ -648,16 +581,15 @@
           this.savingStock = true;
           try {
             const payload = {
-              action: 'update_stock',
+              action: 'set_stock',
               productId: this.formProduct.productId.trim(),
               typeId: this.formProduct.typeId.trim() || null,
               subProductId: this.formProduct.subProductId.trim() || null,
-              isAvailable: this.stockMode === 'available',
               stock: Number(this.formProduct.stockAmount) || 0
             };
 
             const res = await fetch('/api/inventory', {
-              method: 'POST',
+              method: 'PUT',
               headers: this.getAuthHeaders(),
               body: JSON.stringify(payload)
             });
@@ -682,73 +614,17 @@
           }
         },
 
-        async quickMakeAvailable(item) {
-          try {
-            const res = await fetch('/api/inventory', {
-              method: 'POST',
-              headers: this.getAuthHeaders(),
-              body: JSON.stringify({
-                action: 'set_availability',
-                productId: item.productId,
-                typeId: item.typeId,
-                subProductId: item.subProductId,
-                isAvailable: true
-              })
-            });
-
-            if (res.status === 401) {
-              this.logout();
-              return;
-            }
-
-            if (res.ok) {
-              this.showToast(`${item.productId} marked as Available!`);
-              await this.loadInventory();
-            }
-          } catch (e) {
-            this.showToast('Failed to update stock', 'error');
-          }
-        },
-
-        async quickMakeUnavailable(item) {
-          try {
-            const res = await fetch('/api/inventory', {
-              method: 'POST',
-              headers: this.getAuthHeaders(),
-              body: JSON.stringify({
-                action: 'set_availability',
-                productId: item.productId,
-                typeId: item.typeId,
-                subProductId: item.subProductId,
-                isAvailable: false
-              })
-            });
-
-            if (res.status === 401) {
-              this.logout();
-              return;
-            }
-
-            if (res.ok) {
-              this.showToast(`${item.productId} marked as Unavailable!`);
-              await this.loadInventory();
-            }
-          } catch (e) {
-            this.showToast('Failed to update stock', 'error');
-          }
-        },
-
         async quickAddStock(item, amount) {
           try {
             const res = await fetch('/api/inventory', {
-              method: 'POST',
+              method: 'PUT',
               headers: this.getAuthHeaders(),
               body: JSON.stringify({
-                action: 'update_stock',
+                action: 'adjust',
                 productId: item.productId,
                 typeId: item.typeId,
                 subProductId: item.subProductId,
-                adjust: amount
+                delta: amount
               })
             });
 

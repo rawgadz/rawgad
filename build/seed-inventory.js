@@ -1,139 +1,81 @@
 // build/seed-inventory.js
-// Seeds initial inventory in MongoDB Atlas based on data/products.json
-// Supports 2-mode variant schema: stockMode ("quantity" | "unlimited") and ensures indexes.
+// Automatically seeds missing product/variant records into MongoDB during build.
+// Safe: never overwrites existing stock levels; removes obsolete availability fields; skips gracefully if MONGO_URI is not set.
 
-const fs = require('fs');
-const path = require('path');
-const { MongoClient } = require('mongodb');
+const { getPurchasableCatalogMap, normalizeId } = require("../api/_catalog");
 
-const ROOT_DIR = process.cwd();
-const MONGO_URI = process.env.MONGO_URI;
-const DB_NAME = process.env.MONGODB_DB || process.env.MONGO_DB;
+function buildVariantFilter(productId, typeId, subProductId) {
+  const pId = String(productId).trim();
+  const normT = normalizeId(typeId);
+  const normS = normalizeId(subProductId);
 
-async function seedInventory(defaultStock = 0) {
-  if (!MONGO_URI) {
-    throw new Error('[seed-inventory] ERROR: MONGO_URI environment variable is required.');
+  const query = { productId: pId };
+  query.typeId = normT === "_" ? { $in: [null, "", "_"] } : normT;
+  query.subProductId = normS === "_" ? { $in: [null, "", "_"] } : normS;
+  return query;
+}
+
+async function seedInventory() {
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
+  if (!uri) {
+    console.log("[seed-inventory] MONGO_URI not set in environment — skipping build-time DB seed (runtime auto-sync in /api/inventory will handle it).");
+    return;
   }
-  if (!DB_NAME) {
-    throw new Error('[seed-inventory] ERROR: MONGODB_DB environment variable is required.');
-  }
 
-  const productsPath = path.join(ROOT_DIR, 'data', 'products.json');
-  if (!fs.existsSync(productsPath)) {
-    throw new Error(`[seed-inventory] ERROR: data/products.json not found at ${productsPath}`);
-  }
-
-  const products = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
-  const client = new MongoClient(MONGO_URI, {
-    maxPoolSize: 2,
-    serverSelectionTimeoutMS: 5000,
-  });
-
+  let client;
   try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const inventoryCol = db.collection('inventory');
-    const ordersCol = db.collection('orders');
+    const { getInventoryCollection, getDb } = require("../api/_db");
+    const { items } = getPurchasableCatalogMap();
 
-    // 1. Create unique compound index on inventory
-    await inventoryCol.createIndex(
-      { productId: 1, typeId: 1, subProductId: 1 },
-      { unique: true }
-    );
-    console.log('[seed-inventory] Ensured unique compound index on inventory: { productId: 1, typeId: 1, subProductId: 1 }');
-
-    // 2. Create unique index on orders invoice_number & compound on status + created_at
-    await ordersCol.createIndex({ invoice_number: 1 }, { unique: true });
-    await ordersCol.createIndex({ status: 1, created_at: -1 });
-    console.log('[seed-inventory] Ensured indexes on orders: { invoice_number: 1 (unique) } & { status: 1, created_at: -1 }');
-
-    const now = new Date();
-    let totalItems = 0;
-    let upsertedCount = 0;
-
-    for (const product of products) {
-      const productId = String(product.id).trim();
-      const types = Array.isArray(product.types) ? product.types : [];
-
-      if (types.length === 0) {
-        totalItems++;
-        const filter = { productId, typeId: null, subProductId: null };
-        const update = {
-          $setOnInsert: {
-            productId,
-            typeId: null,
-            subProductId: null,
-            stockMode: 'quantity',
-            stock: defaultStock,
-            isAvailable: defaultStock > 0,
-            createdAt: now,
-          },
-          $set: { updatedAt: now },
-        };
-        const res = await inventoryCol.updateOne(filter, update, { upsert: true });
-        if (res.upsertedCount > 0) upsertedCount++;
-        continue;
-      }
-
-      for (const type of types) {
-        const typeId = String(type.subProductId || type.id).trim();
-        const subProducts = Array.isArray(type.subProducts) ? type.subProducts : [];
-
-        if (subProducts.length > 0) {
-          for (const sub of subProducts) {
-            totalItems++;
-            const subProductId = String(sub.subProductId || sub.id).trim();
-            const filter = { productId, typeId, subProductId };
-            const update = {
-              $setOnInsert: {
-                productId,
-                typeId,
-                subProductId,
-                stockMode: 'quantity',
-                stock: defaultStock,
-                isAvailable: defaultStock > 0,
-                createdAt: now,
-              },
-              $set: { updatedAt: now },
-            };
-            const res = await inventoryCol.updateOne(filter, update, { upsert: true });
-            if (res.upsertedCount > 0) upsertedCount++;
-          }
-        } else {
-          totalItems++;
-          const filter = { productId, typeId, subProductId: null };
-          const update = {
-            $setOnInsert: {
-              productId,
-              typeId,
-              subProductId: null,
-              stockMode: 'quantity',
-              stock: defaultStock,
-              isAvailable: defaultStock > 0,
-              createdAt: now,
-            },
-            $set: { updatedAt: now },
-          };
-          const res = await inventoryCol.updateOne(filter, update, { upsert: true });
-          if (res.upsertedCount > 0) upsertedCount++;
-        }
-      }
+    if (!items || items.length === 0) {
+      console.log("[seed-inventory] No purchasable items found in data/products.json.");
+      return;
     }
 
-    console.log(`[seed-inventory] Processed ${totalItems} inventory items. Newly upserted: ${upsertedCount}`);
-    const count = await inventoryCol.countDocuments();
-    console.log(`[seed-inventory] Total documents in inventory collection: ${count}`);
+    const col = await getInventoryCollection();
+    client = await getDb();
 
+    // Clean up obsolete availability fields on existing records without altering stock
+    await col.updateMany(
+      { $or: [{ isAvailable: { $exists: true } }, { stockMode: { $exists: true } }] },
+      { $unset: { isAvailable: "", stockMode: "" } }
+    );
+
+    const now = new Date();
+    const bulkOps = items.map((item) => ({
+      updateOne: {
+        filter: buildVariantFilter(item.productId, item.typeId, item.subProductId),
+        update: {
+          $setOnInsert: {
+            productId: item.productId,
+            typeId: item.typeId ?? null,
+            subProductId: item.subProductId ?? null,
+            stock: 0,
+            createdAt: now,
+            updatedAt: now,
+          },
+        },
+        upsert: true,
+      },
+    }));
+
+    const result = await col.bulkWrite(bulkOps, { ordered: false });
+    console.log(
+      `[seed-inventory] Synced ${items.length} catalog items with MongoDB (inserted: ${result.upsertedCount || 0}, existing preserved: ${result.matchedCount || 0}).`
+    );
+  } catch (err) {
+    console.warn(`[seed-inventory] Warning: Could not seed MongoDB at build time (${err.message}). Runtime auto-sync will handle it.`);
   } finally {
-    await client.close();
+    if (client) {
+      try {
+        await client.close();
+      } catch (e) {}
+    }
   }
 }
 
 if (require.main === module) {
-  seedInventory().catch(err => {
-    console.error('[seed-inventory] Fatal error:', err);
-    process.exit(1);
-  });
+  seedInventory().then(() => process.exit(0));
 }
 
-module.exports = { seedInventory };
+module.exports = seedInventory;

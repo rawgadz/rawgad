@@ -173,12 +173,15 @@ module.exports = async function handler(req, res) {
               productId: String(item.productId).trim(),
               typeId: item.typeId ? String(item.typeId).trim() : null,
               subProductId: item.subProductId ? String(item.subProductId).trim() : null,
-              stockMode: "quantity"
             };
 
             await inventoryCol.updateOne(
               filter,
-              { $inc: { stock: qty }, $set: { updatedAt: new Date() } }
+              {
+                $inc: { stock: qty },
+                $set: { updatedAt: new Date() },
+                $unset: { isAvailable: "", stockMode: "" }
+              }
             );
             restoredTotalQuantity += qty;
           }

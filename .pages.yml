@@ -34,6 +34,12 @@ content:
         type: string
         label: Product ID
         required: true
+      - name: available
+        type: boolean
+        label: Available
+        required: false
+        default: true
+        description: "Product availability on storefront (true = available, false = unavailable)"
       - name: slug
         type: string
         label: Slug / URL
@@ -93,6 +99,11 @@ content:
             type: string
             label: Variant ID
             required: true
+          - name: available
+            type: boolean
+            label: Available
+            required: false
+            default: true
           - name: subTitle
             type: string
             label: Variant Title
@@ -121,6 +132,11 @@ content:
                 type: string
                 label: Sub-Variant ID
                 required: true
+              - name: available
+                type: boolean
+                label: Available
+                required: false
+                default: true
               - name: subTitle
                 type: string
                 label: Sub-Variant Title

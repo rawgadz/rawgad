@@ -1,168 +1,314 @@
 // js/stock.js
-// Universal Client-Side Stock & Inventory Cache Manager for Rawgadz
-// Handles 20-second localStorage caching and 2-Mode Variant Stock
+// Storefront helper for product availability filtering and physical stock caching.
 
-(function(window) {
-  'use strict';
+(function () {
+  const STOCK_CACHE_KEY = "rawgadz_stock_cache_v3";
+  const CACHE_TTL_MS = 5 * 60 * 1000;
 
-  const STORAGE_KEY = 'rawgad_inventory_stock';
-  const CACHE_TTL_MS = 20 * 1000; // 20 Seconds in milliseconds for instant Pages CMS visibility
-
-  let memoryCache = null;
   let fetchPromise = null;
+  let memoryCache = null;
 
   function normalizeId(val) {
-    if (val === null || val === undefined || val === '' || val === 'null' || val === '_') return '_';
+    if (val === null || val === undefined || val === "" || val === "null" || val === "_") return "_";
     const s = String(val).trim();
-    return (s === '' || s === 'null' || s === '_') ? '_' : s;
+    return s === "" || s === "null" || s === "_" ? "_" : s;
   }
 
-  function isVariantAvailable(stockMode, isAvailable, stock) {
-    if (stockMode === 'unlimited') {
-      return Boolean(isAvailable);
+  function makeCompositeKey(productId, typeId, subProductId) {
+    return `${normalizeId(productId)}:::${normalizeId(typeId)}:::${normalizeId(subProductId)}`;
+  }
+
+  /**
+   * Resolves effective availability for a product and its nested variants/sub-products
+   * based on Markdown-compiled `available` booleans in products.json.
+   */
+  function resolveProductAvailability(product) {
+    if (!product || typeof product !== "object") return null;
+    const baseProductAvailable = typeof product.available === "boolean" ? product.available : true;
+    const rawTypes = Array.isArray(product.types) ? product.types : [];
+
+    if (rawTypes.length === 0) {
+      return {
+        ...product,
+        available: baseProductAvailable,
+        types: []
+      };
     }
-    return Number(stock) > 0;
-  }
 
-  function isValidCache(data) {
-    if (!data || typeof data !== 'object') return false;
-    if (!data.timestamp || typeof data.timestamp !== 'number') return false;
-    if (!Array.isArray(data.inventory)) return false;
-    if (!data.stockMap || !data.availabilityMap) return false;
-    const age = Date.now() - data.timestamp;
-    return age >= 0 && age < CACHE_TTL_MS;
-  }
+    const resolvedTypes = rawTypes.map((type) => {
+      const inheritedTypeAvailable = typeof type.available === "boolean" ? type.available : baseProductAvailable;
+      const parentAndTypeAvailable = Boolean(baseProductAvailable && inheritedTypeAvailable);
+      const rawSubs = Array.isArray(type.subProducts) ? type.subProducts : [];
 
-  function readLocalStorage() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      if (isValidCache(parsed)) {
-        return parsed;
+      if (rawSubs.length === 0) {
+        return {
+          ...type,
+          available: parentAndTypeAvailable
+        };
       }
-      return null;
-    } catch (e) {
-      console.warn('[RawgadStock] Could not read from localStorage:', e);
-      return null;
-    }
+
+      const resolvedSubs = rawSubs.map((sub) => {
+        const inheritedSubAvailable = typeof sub.available === "boolean" ? sub.available : parentAndTypeAvailable;
+        return {
+          ...sub,
+          available: Boolean(parentAndTypeAvailable && inheritedSubAvailable)
+        };
+      });
+
+      const anySubAvailable = resolvedSubs.some((s) => s.available === true);
+      return {
+        ...type,
+        available: Boolean(parentAndTypeAvailable && anySubAvailable),
+        subProducts: resolvedSubs
+      };
+    });
+
+    const anyTypeAvailable = resolvedTypes.some((t) => t.available === true);
+    return {
+      ...product,
+      available: Boolean(baseProductAvailable && anyTypeAvailable),
+      types: resolvedTypes
+    };
   }
 
-  function buildStockMaps(inventory) {
+  /**
+   * Computes priceRange { min, max } across available variants (or base price if no variants).
+   */
+  function computeAvailablePriceRange(product) {
+    const basePrice = typeof product.price === "number" && !isNaN(product.price) ? product.price : 0;
+    const types = Array.isArray(product.types) ? product.types : [];
+    if (types.length === 0) {
+      return { min: basePrice, max: basePrice };
+    }
+
+    const prices = [];
+    for (const type of types) {
+      if (type.available === false) continue;
+      const subs = Array.isArray(type.subProducts) ? type.subProducts : [];
+      const availableSubs = subs.filter((s) => s.available !== false);
+      if (subs.length > 0) {
+        for (const sub of availableSubs) {
+          const p = typeof sub.price === "number" ? sub.price : (typeof type.price === "number" ? type.price : basePrice);
+          if (typeof p === "number" && !isNaN(p)) prices.push(p);
+        }
+      } else {
+        const p = typeof type.price === "number" ? type.price : basePrice;
+        if (typeof p === "number" && !isNaN(p)) prices.push(p);
+      }
+    }
+
+    if (prices.length === 0) {
+      return { min: basePrice, max: basePrice };
+    }
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices)
+    };
+  }
+
+  /**
+   * Filters a single product for customer-facing storefront usage:
+   * - Excludes unavailable products (returns null).
+   * - Filters out unavailable types and unavailable subProducts.
+   * - Excludes products whose variants are all unavailable (returns null).
+   * - Recomputes priceRange from remaining available variants.
+   */
+  function filterProductForStorefront(product) {
+    const resolved = resolveProductAvailability(product);
+    if (!resolved || !resolved.available) return null;
+
+    const rawTypes = Array.isArray(resolved.types) ? resolved.types : [];
+    if (rawTypes.length === 0) {
+      return resolved;
+    }
+
+    const availableTypes = [];
+    for (const type of rawTypes) {
+      if (!type.available) continue;
+      const rawSubs = Array.isArray(type.subProducts) ? type.subProducts : [];
+      if (rawSubs.length > 0) {
+        const availableSubs = rawSubs.filter((s) => s.available === true);
+        if (availableSubs.length === 0) continue;
+        availableTypes.push({
+          ...type,
+          available: true,
+          subProducts: availableSubs
+        });
+      } else {
+        availableTypes.push({
+          ...type,
+          available: true
+        });
+      }
+    }
+
+    if (availableTypes.length === 0) return null;
+
+    const filtered = {
+      ...resolved,
+      available: true,
+      types: availableTypes
+    };
+    filtered.priceRange = computeAvailablePriceRange(filtered);
+    return filtered;
+  }
+
+  /**
+   * Centrally filters an array of products for storefront listings, search, and categories.
+   */
+  function filterAvailableProducts(products) {
+    if (!Array.isArray(products)) return [];
+    const result = [];
+    for (const p of products) {
+      const filtered = filterProductForStorefront(p);
+      if (filtered) result.push(filtered);
+    }
+    return result;
+  }
+
+  function extractInventoryRows(data) {
+    if (!data) return [];
+    if (Array.isArray(data.inventory)) return data.inventory;
+    if (Array.isArray(data.items)) return data.items;
+    if (Array.isArray(data.data)) return data.data;
+    if (Array.isArray(data)) return data;
+    return [];
+  }
+
+  function normalizeInventoryPayload(data) {
+    const rows = extractInventoryRows(data);
+    const items = [];
     const stockMap = {};
     const availabilityMap = {};
-    const modeMap = {};
-    if (!Array.isArray(inventory)) return { stockMap, availabilityMap, modeMap };
 
-    for (const item of inventory) {
-      const pId = normalizeId(item.productId);
-      const tId = normalizeId(item.typeId);
-      const sId = normalizeId(item.subProductId);
-      const stockMode = item.stockMode || 'quantity';
-      const stock = typeof item.stock === 'number' ? Math.max(0, item.stock) : 0;
-      const isAvailable = Boolean(item.isAvailable);
-      const available = isVariantAvailable(stockMode, isAvailable, stock);
+    for (const item of rows) {
+      if (!item || item.productId === undefined || item.productId === null) continue;
 
-      function setEntry(k) {
-        stockMap[k] = stock;
-        availabilityMap[k] = available;
-        modeMap[k] = stockMode;
-      }
+      const productId = String(item.productId);
+      const typeId = normalizeId(item.typeId) === "_" ? null : String(item.typeId);
+      const subProductId = normalizeId(item.subProductId) === "_" ? null : String(item.subProductId);
 
-      setEntry(`${pId}:::${tId}:::${sId}`);
-      setEntry(`${tId}:::${sId}`);
+      const rawStock = typeof item.stock === "number" ? item.stock : Number(item.stock) || 0;
+      const stock = Math.max(0, rawStock);
+      const catalogAvailable = typeof item.available === "boolean" ? item.available : true;
+      const available = Boolean(catalogAvailable && stock > 0);
+      const status = !available ? "out_of_stock" : (stock <= 5 ? "low_stock" : "in_stock");
 
-      if (sId !== '_') {
-        setEntry(sId);
-        setEntry(`${pId}:::${sId}`);
-      }
+      const key = makeCompositeKey(productId, typeId, subProductId);
 
-      if (tId !== '_' && sId === '_') {
-        setEntry(tId);
-        setEntry(`${pId}:::${tId}`);
-      }
+      const normalizedItem = {
+        key,
+        productId,
+        typeId,
+        subProductId,
+        stock,
+        available,
+        status,
+        updatedAt: item.updatedAt || null
+      };
 
-      if (pId && pId !== '_') {
-        if (!stockMap[pId] || stockMap[pId] < stock) {
-          stockMap[pId] = stock;
-        }
-        if (availabilityMap[pId] === undefined || available) {
-          availabilityMap[pId] = availabilityMap[pId] || available;
-        }
-      }
+      items.push(normalizedItem);
+      stockMap[key] = stock;
+      availabilityMap[key] = available;
     }
-    return { stockMap, availabilityMap, modeMap };
+
+    return {
+      timestamp: Date.now(),
+      items,
+      stockMap,
+      availabilityMap
+    };
   }
 
-  function saveToLocalStorage(inventory) {
-    const { stockMap, availabilityMap, modeMap } = buildStockMaps(inventory);
-    const cacheObj = {
-      timestamp: Date.now(),
-      inventory: inventory,
-      stockMap: stockMap,
-      availabilityMap: availabilityMap,
-      modeMap: modeMap
-    };
+  function saveCache(payload) {
+    memoryCache = payload;
+    try {
+      localStorage.setItem(STOCK_CACHE_KEY, JSON.stringify(payload));
+    } catch (e) {
+      console.warn("Could not write stock cache to localStorage:", e);
+    }
+  }
+
+  function getCachedStock() {
+    if (memoryCache && memoryCache.timestamp && Date.now() - memoryCache.timestamp <= CACHE_TTL_MS) {
+      return memoryCache;
+    }
 
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cacheObj));
-    } catch (e) {
-      console.warn('[RawgadStock] Could not write to localStorage:', e);
-    }
+      const raw = localStorage.getItem(STOCK_CACHE_KEY);
+      if (!raw) return null;
 
-    memoryCache = cacheObj;
-    return cacheObj;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.timestamp) return null;
+
+      if (Date.now() - parsed.timestamp > CACHE_TTL_MS) {
+        localStorage.removeItem(STOCK_CACHE_KEY);
+        return null;
+      }
+
+      if (!parsed.stockMap || typeof parsed.stockMap !== "object") {
+        parsed.stockMap = {};
+      }
+      if (!parsed.availabilityMap || typeof parsed.availabilityMap !== "object") {
+        parsed.availabilityMap = {};
+      }
+
+      memoryCache = parsed;
+      return parsed;
+    } catch (e) {
+      return null;
+    }
   }
 
-  async function fetchAllStock(force = false) {
-    if (!force) {
-      if (isValidCache(memoryCache)) {
-        return memoryCache;
-      }
-      const cached = readLocalStorage();
-      if (cached) {
-        memoryCache = cached;
-        return cached;
-      }
+  function clearStockCache() {
+    memoryCache = null;
+    try {
+      localStorage.removeItem(STOCK_CACHE_KEY);
+    } catch (e) {}
+  }
+
+  async function fetchAndStoreAllStock(forceRefresh = false) {
+    if (!forceRefresh) {
+      const cached = getCachedStock();
+      if (cached) return cached;
     }
 
-    if (fetchPromise) {
-      return fetchPromise;
-    }
+    if (fetchPromise) return fetchPromise;
 
     fetchPromise = (async () => {
       try {
-        const res = await fetch('/api/inventory', {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
+        const res = await fetch("/api/inventory", {
+          method: "GET",
+          headers: { Accept: "application/json" }
         });
 
         if (!res.ok) {
-          throw new Error('HTTP ' + res.status);
+          throw new Error(`HTTP ${res.status}`);
         }
 
         const data = await res.json();
-        const invArray = (data && Array.isArray(data.inventory)) ? data.inventory : (data && Array.isArray(data.items) ? data.items : null);
-        if (data && data.success && invArray) {
-          const cacheObj = saveToLocalStorage(invArray);
-          notifyListeners(cacheObj);
-          return cacheObj;
-        } else {
-          throw new Error(data && data.error ? data.error : 'Invalid inventory response payload');
+        if (data && data.success === false) {
+          throw new Error(data.error || "Failed to load inventory");
         }
-      } catch (err) {
-        console.warn('[RawgadStock] Error pulling full inventory from /api/inventory:', err);
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
-            const stale = JSON.parse(raw);
-            if (stale && Array.isArray(stale.inventory)) {
-              memoryCache = stale;
-              return stale;
+
+        const payload = normalizeInventoryPayload(data);
+        saveCache(payload);
+
+        window.dispatchEvent(
+          new CustomEvent("rawgad-stock-updated", {
+            detail: {
+              stockMap: payload.stockMap,
+              availabilityMap: payload.availabilityMap,
+              inventory: payload.items
             }
-          }
-        } catch (_) {}
-        return null;
+          })
+        );
+
+        return payload;
+      } catch (err) {
+        console.warn("Error fetching inventory:", err);
+        const fallback = getCachedStock();
+        return fallback || { timestamp: Date.now(), items: [], stockMap: {}, availabilityMap: {} };
       } finally {
         fetchPromise = null;
       }
@@ -171,205 +317,154 @@
     return fetchPromise;
   }
 
-  function notifyListeners(cacheObj) {
-    if (!cacheObj) return;
+  function getItemStock(productId, typeId = null, subProductId = null) {
+    const cached = getCachedStock();
+    if (!cached || !cached.stockMap) return 0;
 
-    try {
-      window.dispatchEvent(new CustomEvent('rawgad-stock-updated', {
-        detail: {
-          inventory: cacheObj.inventory,
-          stockMap: cacheObj.stockMap,
-          availabilityMap: cacheObj.availabilityMap,
-          timestamp: cacheObj.timestamp
-        }
-      }));
-    } catch (_) {}
-
-    syncAlpineStore(cacheObj);
-  }
-
-  function syncAlpineStore(cacheObj) {
-    if (window.Alpine && window.Alpine.store && window.Alpine.store('inventory')) {
-      try {
-        const store = window.Alpine.store('inventory');
-        store.items = cacheObj.inventory;
-        store.stockMap = cacheObj.stockMap;
-        store.availabilityMap = cacheObj.availabilityMap || {};
-        store.timestamp = cacheObj.timestamp;
-        store.loading = false;
-      } catch (_) {}
+    const exactKey = makeCompositeKey(productId, typeId, subProductId);
+    if (Object.prototype.hasOwnProperty.call(cached.stockMap, exactKey)) {
+      return cached.stockMap[exactKey];
     }
-  }
 
-  function initAlpineIntegration() {
-    if (window.Alpine && window.Alpine.store) {
-      if (!window.Alpine.store('inventory')) {
-        const currentCache = RawgadStock.getCache();
-        window.Alpine.store('inventory', {
-          items: currentCache ? currentCache.inventory : [],
-          stockMap: currentCache ? currentCache.stockMap : {},
-          availabilityMap: currentCache ? (currentCache.availabilityMap || {}) : {},
-          timestamp: currentCache ? currentCache.timestamp : null,
-          loading: !currentCache,
-          getItemStock(productId, typeId, subProductId) {
-            return RawgadStock.getItemStock(productId, typeId, subProductId);
-          },
-          isItemAvailable(productId, typeId, subProductId) {
-            return RawgadStock.isItemAvailable(productId, typeId, subProductId);
-          },
-          getProductStockMap(productId) {
-            return RawgadStock.getProductStockMap(productId);
-          },
-          getProductAvailabilityMap(productId) {
-            return RawgadStock.getProductAvailabilityMap(productId);
-          },
-          refresh(force = true) {
-            return RawgadStock.fetchAndStoreAllStock(force);
-          }
-        });
+    if (normalizeId(subProductId) !== "_") {
+      const typeKey = makeCompositeKey(productId, typeId, "_");
+      if (Object.prototype.hasOwnProperty.call(cached.stockMap, typeKey)) {
+        return cached.stockMap[typeKey];
       }
     }
-  }
 
-  const RawgadStock = {
-    STORAGE_KEY,
-    CACHE_TTL_MS,
-
-    isCacheValid() {
-      if (isValidCache(memoryCache)) return true;
-      return !!readLocalStorage();
-    },
-
-    getCache() {
-      if (isValidCache(memoryCache)) return memoryCache;
-      const local = readLocalStorage();
-      if (local) {
-        memoryCache = local;
-        return local;
-      }
-      return null;
-    },
-
-    getInventory() {
-      const cache = this.getCache();
-      return cache ? cache.inventory : [];
-    },
-
-    getStockMap() {
-      const cache = this.getCache();
-      return cache ? cache.stockMap : {};
-    },
-
-    getAvailabilityMap() {
-      const cache = this.getCache();
-      return cache ? (cache.availabilityMap || {}) : {};
-    },
-
-    getProductStockMap(productId) {
-      const pId = normalizeId(productId);
-      const cache = this.getCache();
-      const resMap = {};
-      if (!cache || !Array.isArray(cache.inventory)) return resMap;
-
-      for (const item of cache.inventory) {
-        if (normalizeId(item.productId) === pId) {
-          const tId = normalizeId(item.typeId);
-          const sId = normalizeId(item.subProductId);
-          const key = tId + ':::' + sId;
-          resMap[key] = typeof item.stock === 'number' ? item.stock : 0;
-        }
-      }
-      return resMap;
-    },
-
-    getProductAvailabilityMap(productId) {
-      const pId = normalizeId(productId);
-      const cache = this.getCache();
-      const resMap = {};
-      if (!cache || !Array.isArray(cache.inventory)) return resMap;
-
-      for (const item of cache.inventory) {
-        if (normalizeId(item.productId) === pId) {
-          const tId = normalizeId(item.typeId);
-          const sId = normalizeId(item.subProductId);
-          const key = tId + ':::' + sId;
-          const stockMode = item.stockMode || 'quantity';
-          const stock = typeof item.stock === 'number' ? Math.max(0, item.stock) : 0;
-          const isAvailable = Boolean(item.isAvailable);
-          resMap[key] = isVariantAvailable(stockMode, isAvailable, stock);
-        }
-      }
-      return resMap;
-    },
-
-    getItemStock(productId, typeId, subProductId) {
-      const cache = this.getCache();
-      if (!cache || !cache.stockMap) return null;
-      const map = cache.stockMap;
-
-      const pId = normalizeId(productId);
-      const tId = normalizeId(typeId);
-      const sId = normalizeId(subProductId);
-
-      const key1 = `${pId}:::${tId}:::${sId}`;
-      if (Object.prototype.hasOwnProperty.call(map, key1)) return map[key1];
-
-      const key2 = `${tId}:::${sId}`;
-      if (Object.prototype.hasOwnProperty.call(map, key2)) return map[key2];
-
-      if (sId !== '_' && Object.prototype.hasOwnProperty.call(map, sId)) return map[sId];
-      if (tId !== '_' && Object.prototype.hasOwnProperty.call(map, tId)) return map[tId];
-      if (pId !== '_' && Object.prototype.hasOwnProperty.call(map, pId)) return map[pId];
-
-      return null;
-    },
-
-    isItemAvailable(productId, typeId, subProductId) {
-      const cache = this.getCache();
-      if (!cache || !cache.availabilityMap) return null;
-      const map = cache.availabilityMap;
-
-      const pId = normalizeId(productId);
-      const tId = normalizeId(typeId);
-      const sId = normalizeId(subProductId);
-
-      const key1 = `${pId}:::${tId}:::${sId}`;
-      if (Object.prototype.hasOwnProperty.call(map, key1)) return map[key1];
-
-      const key2 = `${tId}:::${sId}`;
-      if (Object.prototype.hasOwnProperty.call(map, key2)) return map[key2];
-
-      if (sId !== '_' && Object.prototype.hasOwnProperty.call(map, sId)) return map[sId];
-      if (tId !== '_' && Object.prototype.hasOwnProperty.call(map, tId)) return map[tId];
-      if (pId !== '_' && Object.prototype.hasOwnProperty.call(map, pId)) return map[pId];
-
-      return null;
-    },
-
-    fetchAndStoreAllStock(force = false) {
-      return fetchAllStock(force);
-    },
-
-    init() {
-      const cached = readLocalStorage();
-      if (cached) {
-        memoryCache = cached;
-        notifyListeners(cached);
-      } else {
-        fetchAllStock(false);
+    if (normalizeId(typeId) !== "_" || normalizeId(subProductId) !== "_") {
+      const baseKey = makeCompositeKey(productId, "_", "_");
+      if (Object.prototype.hasOwnProperty.call(cached.stockMap, baseKey)) {
+        return cached.stockMap[baseKey];
       }
     }
+
+    return 0;
+  }
+
+  function isItemAvailable(productId, typeId = null, subProductId = null) {
+    const cached = getCachedStock();
+    if (!cached || !cached.availabilityMap) return true;
+
+    const exactKey = makeCompositeKey(productId, typeId, subProductId);
+    if (Object.prototype.hasOwnProperty.call(cached.availabilityMap, exactKey)) {
+      return Boolean(cached.availabilityMap[exactKey]);
+    }
+
+    const pPrefix = `${normalizeId(productId)}:::`;
+
+    if (normalizeId(typeId) === "_" && normalizeId(subProductId) === "_") {
+      const keys = Object.keys(cached.availabilityMap).filter((k) => k.startsWith(pPrefix));
+      if (keys.length > 0) {
+        return keys.some((k) => Boolean(cached.availabilityMap[k]));
+      }
+    }
+
+    if (normalizeId(typeId) !== "_" && normalizeId(subProductId) === "_") {
+      const tPrefix = `${normalizeId(productId)}:::${normalizeId(typeId)}:::`;
+      const keys = Object.keys(cached.availabilityMap).filter((k) => k.startsWith(tPrefix));
+      if (keys.length > 0) {
+        return keys.some((k) => Boolean(cached.availabilityMap[k]));
+      }
+    }
+
+    return false;
+  }
+
+  function getProductStockMap(productId) {
+    const cached = getCachedStock();
+    const map = {};
+    if (!cached || !cached.stockMap) return map;
+
+    const pId = normalizeId(productId);
+    const prefix = `${pId}:::`;
+
+    for (const [key, stockVal] of Object.entries(cached.stockMap)) {
+      if (key.startsWith(prefix)) {
+        const parts = key.split(":::");
+        const tId = parts[1] || "_";
+        const sId = parts[2] || "_";
+
+        map[key] = stockVal;
+        map[`${tId}:::${sId}`] = stockVal;
+
+        if (sId === "_") {
+          map[tId] = stockVal;
+        }
+        if (tId === "_" && sId === "_") {
+          map["_"] = stockVal;
+          map["base"] = stockVal;
+        }
+      }
+    }
+
+    return map;
+  }
+
+  function getProductAvailabilityMap(productId) {
+    const cached = getCachedStock();
+    const map = {};
+    if (!cached || !cached.availabilityMap) return map;
+
+    const pId = normalizeId(productId);
+    const prefix = `${pId}:::`;
+
+    for (const [key, availVal] of Object.entries(cached.availabilityMap)) {
+      if (key.startsWith(prefix)) {
+        const parts = key.split(":::");
+        const tId = parts[1] || "_";
+        const sId = parts[2] || "_";
+
+        map[key] = availVal;
+        map[`${tId}:::${sId}`] = availVal;
+
+        if (sId === "_") {
+          map[tId] = availVal;
+        }
+        if (tId === "_" && sId === "_") {
+          map["_"] = availVal;
+          map["base"] = availVal;
+        }
+      }
+    }
+
+    return map;
+  }
+
+  function getStockMap() {
+    const cached = getCachedStock();
+    return cached && cached.stockMap ? cached.stockMap : {};
+  }
+
+  function getAvailabilityMap() {
+    const cached = getCachedStock();
+    return cached && cached.availabilityMap ? cached.availabilityMap : {};
+  }
+
+  window.RawgadStock = {
+    normalizeId,
+    makeCompositeKey,
+    resolveProductAvailability,
+    computeAvailablePriceRange,
+    filterProductForStorefront,
+    filterAvailableProducts,
+    fetchAndStoreAllStock,
+    getCachedStock,
+    clearStockCache,
+    getStockMap,
+    getAvailabilityMap,
+    getItemStock,
+    isItemAvailable,
+    getProductStockMap,
+    getProductAvailabilityMap
   };
 
-  window.RawgadStock = RawgadStock;
-  window.RawgadzStock = RawgadStock;
-
-  RawgadStock.init();
-
-  if (typeof window !== 'undefined' && window.Alpine) {
-    initAlpineIntegration();
-  } else if (typeof document !== 'undefined') {
-    document.addEventListener('alpine:init', initAlpineIntegration);
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => fetchAndStoreAllStock(false));
+    } else {
+      fetchAndStoreAllStock(false);
+    }
   }
-
-})(typeof window !== 'undefined' ? window : this);
+})();

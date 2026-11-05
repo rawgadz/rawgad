@@ -1,5 +1,5 @@
 // api/_catalog.js
-// Single source of truth for products & variants directly from data/products.json
+// Single source of truth for products, variants, and availability directly from data/products.json
 
 const fs = require("fs");
 const path = require("path");
@@ -14,20 +14,189 @@ function makeCanonicalKey(productId, typeId, subProductId) {
   return `${normalizeId(productId)}:::${normalizeId(typeId)}:::${normalizeId(subProductId)}`;
 }
 
-function isVariantAvailable(stockMode, isAvailable, stock) {
-  if (stockMode === "unlimited") {
-    return Boolean(isAvailable);
-  }
-  return Number(stock) > 0;
+/**
+ * Strictly validates that an availability value is a boolean if provided.
+ * Strings like "false" or "true", numbers, or null are rejected.
+ */
+function validateBooleanField(val, fieldLabel = "available") {
+  if (val === undefined) return undefined;
+  if (typeof val === "boolean") return val;
+  throw new Error(
+    `Invalid availability value for ${fieldLabel}: expected boolean (true or false), got ${typeof val} (${JSON.stringify(val)})`
+  );
 }
 
-function getStockStatus(stockMode, isAvailable, stock) {
-  const available = isVariantAvailable(stockMode, isAvailable, stock);
-  if (!available) return "out_of_stock";
-  if (stockMode === "quantity") {
-    const s = Number(stock) || 0;
-    if (s > 0 && s <= 5) return "low_stock";
+/**
+ * Resolves effective availability for a product and all of its variants/sub-products.
+ * Rules:
+ * - Missing product.available defaults to true.
+ * - Variant without explicit available inherits parent's availability.
+ * - If parent product is unavailable (false), all variants/sub-products are unavailable.
+ * - If a variant has sub-products and all sub-products are unavailable, that variant is effectively unavailable.
+ * - If a product has variants and all variants are unavailable, the product is effectively unavailable.
+ */
+function resolveProductAvailability(product, contextPrefix = "") {
+  if (!product || typeof product !== "object") return product;
+  const prefix = contextPrefix ? `${contextPrefix}:` : (product.id ? `product(${product.id}):` : "");
+
+  const rawProductAvailable = validateBooleanField(product.available, `${prefix}available`);
+  const baseProductAvailable = rawProductAvailable !== undefined ? rawProductAvailable : true;
+
+  const rawTypes = Array.isArray(product.types) ? product.types : [];
+  if (rawTypes.length === 0) {
+    return {
+      ...product,
+      available: baseProductAvailable,
+      types: [],
+    };
   }
+
+  const resolvedTypes = rawTypes.map((type, tIdx) => {
+    const rawTypeAvailable = validateBooleanField(type.available, `${prefix}types[${tIdx}].available`);
+    const inheritedTypeAvailable = rawTypeAvailable !== undefined ? rawTypeAvailable : baseProductAvailable;
+    const parentAndTypeAvailable = Boolean(baseProductAvailable && inheritedTypeAvailable);
+
+    const rawSubs = Array.isArray(type.subProducts) ? type.subProducts : [];
+    if (rawSubs.length === 0) {
+      return {
+        ...type,
+        available: parentAndTypeAvailable,
+      };
+    }
+
+    const resolvedSubs = rawSubs.map((sub, sIdx) => {
+      const rawSubAvailable = validateBooleanField(
+        sub.available,
+        `${prefix}types[${tIdx}].subProducts[${sIdx}].available`
+      );
+      const inheritedSubAvailable = rawSubAvailable !== undefined ? rawSubAvailable : parentAndTypeAvailable;
+      return {
+        ...sub,
+        available: Boolean(parentAndTypeAvailable && inheritedSubAvailable),
+      };
+    });
+
+    const anySubAvailable = resolvedSubs.some((s) => s.available === true);
+    return {
+      ...type,
+      available: Boolean(parentAndTypeAvailable && anySubAvailable),
+      subProducts: resolvedSubs,
+    };
+  });
+
+  const anyTypeAvailable = resolvedTypes.some((t) => t.available === true);
+  return {
+    ...product,
+    available: Boolean(baseProductAvailable && anyTypeAvailable),
+    types: resolvedTypes,
+  };
+}
+
+/**
+ * Computes priceRange { min, max } across available variants (or base price if no variants).
+ */
+function computeAvailablePriceRange(product) {
+  const basePrice = typeof product.price === "number" && !Number.isNaN(product.price) ? product.price : 0;
+  const types = Array.isArray(product.types) ? product.types : [];
+  if (types.length === 0) {
+    return { min: basePrice, max: basePrice };
+  }
+
+  const prices = [];
+  for (const type of types) {
+    if (type.available === false) continue;
+    const subs = Array.isArray(type.subProducts) ? type.subProducts : [];
+    const availableSubs = subs.filter((s) => s.available !== false);
+    if (subs.length > 0) {
+      for (const sub of availableSubs) {
+        const p = typeof sub.price === "number" ? sub.price : (typeof type.price === "number" ? type.price : basePrice);
+        if (typeof p === "number" && !Number.isNaN(p)) prices.push(p);
+      }
+    } else {
+      const p = typeof type.price === "number" ? type.price : basePrice;
+      if (typeof p === "number" && !Number.isNaN(p)) prices.push(p);
+    }
+  }
+
+  if (prices.length === 0) {
+    return { min: basePrice, max: basePrice };
+  }
+  return {
+    min: Math.min(...prices),
+    max: Math.max(...prices),
+  };
+}
+
+/**
+ * Filters a single product for customer-facing storefront usage:
+ * - Returns null if the product is effectively unavailable.
+ * - Filters out unavailable types and unavailable subProducts.
+ * - Returns null if a variant product has no available variants left.
+ * - Recomputes priceRange from remaining available variants.
+ */
+function filterProductForStorefront(product) {
+  if (!product || typeof product !== "object") return null;
+  const resolved = resolveProductAvailability(product);
+  if (!resolved.available) return null;
+
+  const rawTypes = Array.isArray(resolved.types) ? resolved.types : [];
+  if (rawTypes.length === 0) {
+    return resolved;
+  }
+
+  const availableTypes = [];
+  for (const type of rawTypes) {
+    if (!type.available) continue;
+    const rawSubs = Array.isArray(type.subProducts) ? type.subProducts : [];
+    if (rawSubs.length > 0) {
+      const availableSubs = rawSubs.filter((s) => s.available === true);
+      if (availableSubs.length === 0) continue;
+      availableTypes.push({
+        ...type,
+        available: true,
+        subProducts: availableSubs,
+      });
+    } else {
+      availableTypes.push({
+        ...type,
+        available: true,
+      });
+    }
+  }
+
+  if (availableTypes.length === 0) return null;
+
+  const filteredProduct = {
+    ...resolved,
+    available: true,
+    types: availableTypes,
+  };
+  filteredProduct.priceRange = computeAvailablePriceRange(filteredProduct);
+  return filteredProduct;
+}
+
+/**
+ * Centrally filters an array of products for storefront listings, search, and pages.
+ */
+function filterAvailableProducts(products) {
+  if (!Array.isArray(products)) return [];
+  const result = [];
+  for (const p of products) {
+    const filtered = filterProductForStorefront(p);
+    if (filtered) result.push(filtered);
+  }
+  return result;
+}
+
+function isVariantAvailable(stock, catalogAvailable = true) {
+  return Boolean(catalogAvailable) && Number(stock) > 0;
+}
+
+function getStockStatus(stock, catalogAvailable = true) {
+  if (!catalogAvailable) return "out_of_stock";
+  const s = Number(stock) || 0;
+  if (s <= 0) return "out_of_stock";
+  if (s <= 5) return "low_stock";
   return "in_stock";
 }
 
@@ -43,13 +212,14 @@ function extractPurchasableItems(products) {
   const items = [];
   if (!Array.isArray(products)) return items;
 
-  for (const product of products) {
+  for (const rawProduct of products) {
+    const product = resolveProductAvailability(rawProduct);
     const productId = String(product.id ?? "").trim();
     if (!productId) continue;
 
     const slug = String(product.slug || "").trim();
     const tab = String(product.tab || "").trim();
-    const productUrl = slug ? `/product/${slug}` : "";
+    const productUrl = slug && product.available ? `/product/${slug}` : "";
     const types = Array.isArray(product.types) ? product.types : [];
 
     if (types.length === 0) {
@@ -68,6 +238,7 @@ function extractPurchasableItems(products) {
         slug,
         tab,
         productUrl,
+        available: Boolean(product.available),
       });
       continue;
     }
@@ -97,6 +268,7 @@ function extractPurchasableItems(products) {
             slug,
             tab,
             productUrl,
+            available: Boolean(product.available && type.available && sub.available),
           });
         }
       } else {
@@ -118,6 +290,7 @@ function extractPurchasableItems(products) {
           slug,
           tab,
           productUrl,
+          available: Boolean(product.available && type.available),
         });
       }
     }
@@ -129,21 +302,21 @@ function extractPurchasableItems(products) {
 function buildNestedCatalog(products, stockMap = new Map()) {
   if (!Array.isArray(products)) return [];
 
-  return products.map((product) => {
+  return products.map((rawProduct) => {
+    const product = resolveProductAvailability(rawProduct);
     const productId = String(product.id ?? "").trim();
     const slug = String(product.slug || "").trim();
     const tab = String(product.tab || "").trim();
-    const productUrl = slug ? `/product/${slug}` : "";
+    const productUrl = slug && product.available ? `/product/${slug}` : "";
     const types = Array.isArray(product.types) ? product.types : [];
 
     if (types.length === 0) {
       const key = makeCanonicalKey(productId, "_", "_");
       const stockDoc = stockMap.get(key);
-      const stockMode = stockDoc?.stockMode || "quantity";
       const stock = typeof stockDoc?.stock === "number" ? Math.max(0, stockDoc.stock) : 0;
-      const isAvailable = stockDoc ? Boolean(stockDoc.isAvailable) : false;
-      const available = isVariantAvailable(stockMode, isAvailable, stock);
-      const status = getStockStatus(stockMode, isAvailable, stock);
+      const catalogAvailable = Boolean(product.available);
+      const available = isVariantAvailable(stock, catalogAvailable);
+      const status = getStockStatus(stock, catalogAvailable);
 
       return {
         key,
@@ -162,10 +335,9 @@ function buildNestedCatalog(products, stockMap = new Map()) {
         hasTypes: false,
         hasSubProducts: false,
         totalVariants: 0,
-        stockMode,
         stock,
         totalStock: stock,
-        isAvailable,
+        catalogAvailable,
         available,
         status,
         updatedAt: stockDoc ? (stockDoc.updatedAt || stockDoc.createdAt) : null,
@@ -175,13 +347,13 @@ function buildNestedCatalog(products, stockMap = new Map()) {
 
     let productTotalStock = 0;
     let totalVariants = 0;
-    let productAnyAvailable = false;
+    let productAnyInStock = false;
 
     const mappedTypes = types.map((type) => {
       const typeId = String(type.subProductId || type.id || "").trim();
       const subProducts = Array.isArray(type.subProducts) ? type.subProducts : [];
       let typeTotalStock = 0;
-      let typeAnyAvailable = false;
+      let typeAnyInStock = false;
 
       if (subProducts.length > 0) {
         const mappedSubs = subProducts.map((sub) => {
@@ -189,14 +361,13 @@ function buildNestedCatalog(products, stockMap = new Map()) {
           const subProductId = String(sub.subProductId || sub.id || "").trim();
           const key = makeCanonicalKey(productId, typeId, subProductId);
           const stockDoc = stockMap.get(key);
-          const stockMode = stockDoc?.stockMode || "quantity";
           const stock = typeof stockDoc?.stock === "number" ? Math.max(0, stockDoc.stock) : 0;
-          const isAvailable = stockDoc ? Boolean(stockDoc.isAvailable) : false;
-          const available = isVariantAvailable(stockMode, isAvailable, stock);
+          const catalogAvailable = Boolean(product.available && type.available && sub.available);
+          const available = isVariantAvailable(stock, catalogAvailable);
 
           typeTotalStock += stock;
-          if (available) typeAnyAvailable = true;
-          const status = getStockStatus(stockMode, isAvailable, stock);
+          if (available) typeAnyInStock = true;
+          const status = getStockStatus(stock, catalogAvailable);
 
           const itemPrice = typeof sub.price === "number" ? sub.price : (typeof type.price === "number" ? type.price : Number(product.price) || 0);
           const itemImage = sub.subImage || type.subImage || product.imageSrc || "";
@@ -212,9 +383,8 @@ function buildNestedCatalog(products, stockMap = new Map()) {
             displayName: `${product.title} - ${type.subTitle || "Type"} (${sub.subTitle || "Option"})`,
             price: itemPrice,
             imageSrc: itemImage,
-            stockMode,
             stock,
-            isAvailable,
+            catalogAvailable,
             available,
             status,
             slug,
@@ -225,7 +395,7 @@ function buildNestedCatalog(products, stockMap = new Map()) {
         });
 
         productTotalStock += typeTotalStock;
-        if (typeAnyAvailable) productAnyAvailable = true;
+        if (typeAnyInStock) productAnyInStock = true;
 
         return {
           typeId,
@@ -234,21 +404,21 @@ function buildNestedCatalog(products, stockMap = new Map()) {
           hasSubProducts: true,
           subProductsCount: mappedSubs.length,
           totalStock: typeTotalStock,
-          isAvailable: typeAnyAvailable,
+          catalogAvailable: Boolean(product.available && type.available),
+          available: typeAnyInStock,
           subProducts: mappedSubs,
         };
       } else {
         totalVariants++;
         const key = makeCanonicalKey(productId, typeId, "_");
         const stockDoc = stockMap.get(key);
-        const stockMode = stockDoc?.stockMode || "quantity";
         const stock = typeof stockDoc?.stock === "number" ? Math.max(0, stockDoc.stock) : 0;
-        const isAvailable = stockDoc ? Boolean(stockDoc.isAvailable) : false;
-        const available = isVariantAvailable(stockMode, isAvailable, stock);
+        const catalogAvailable = Boolean(product.available && type.available);
+        const available = isVariantAvailable(stock, catalogAvailable);
 
         productTotalStock += stock;
-        if (available) productAnyAvailable = true;
-        const status = getStockStatus(stockMode, isAvailable, stock);
+        if (available) productAnyInStock = true;
+        const status = getStockStatus(stock, catalogAvailable);
 
         const itemPrice = typeof type.price === "number" ? type.price : Number(product.price) || 0;
         const itemImage = type.subImage || product.imageSrc || "";
@@ -265,10 +435,9 @@ function buildNestedCatalog(products, stockMap = new Map()) {
           displayName: `${product.title} - ${type.subTitle || "Type"}`,
           price: itemPrice,
           imageSrc: itemImage,
-          stockMode,
           stock,
           totalStock: stock,
-          isAvailable,
+          catalogAvailable,
           available,
           status,
           slug,
@@ -295,8 +464,9 @@ function buildNestedCatalog(products, stockMap = new Map()) {
       hasSubProducts: mappedTypes.some((t) => t.hasSubProducts),
       totalVariants,
       totalStock: productTotalStock,
-      isAvailable: productAnyAvailable,
-      status: productAnyAvailable ? "in_stock" : "out_of_stock",
+      catalogAvailable: Boolean(product.available),
+      available: productAnyInStock,
+      status: productAnyInStock ? "in_stock" : "out_of_stock",
       types: mappedTypes,
     };
   });
@@ -315,6 +485,11 @@ function getPurchasableCatalogMap() {
 module.exports = {
   normalizeId,
   makeCanonicalKey,
+  validateBooleanField,
+  resolveProductAvailability,
+  computeAvailablePriceRange,
+  filterProductForStorefront,
+  filterAvailableProducts,
   isVariantAvailable,
   getStockStatus,
   loadProductsJson,

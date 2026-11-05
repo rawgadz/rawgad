@@ -1,5 +1,5 @@
 // api/checkout.js
-// POST /api/checkout — Production checkout handler with 2-Mode Variant Stock verification
+// POST /api/checkout — Production checkout handler with Markdown-compiled availability & physical stock verification
 // Sole origin for COD Order Creation and Meta Conversions API (CAPI) Purchase tracking
 
 const fs = require("fs");
@@ -7,7 +7,7 @@ const path = require("path");
 const crypto = require("crypto");
 const { ObjectId } = require("mongodb");
 const { getDb, getInventoryCollection, getOrdersCollection } = require("./_db");
-const { normalizeId, makeCanonicalKey } = require("./_catalog");
+const { normalizeId, makeCanonicalKey, getPurchasableCatalogMap } = require("./_catalog");
 const { parseBody } = require("./_helpers");
 const { buildPurchaseCustomData, trackServerPurchase } = require("./_meta");
 
@@ -182,6 +182,7 @@ module.exports = async function handler(req, res) {
     }
 
     const priceCatalog = loadPriceJson();
+    const { map: catalogMap } = getPurchasableCatalogMap();
     const validatedLineItems = [];
     let calculatedSubtotal = 0;
 
@@ -197,10 +198,19 @@ module.exports = async function handler(req, res) {
       const canonicalKey = makeCanonicalKey(pId, tId, sId);
 
       const priceEntry = priceCatalog[canonicalKey];
-      if (!priceEntry) {
+      const catalogItem = catalogMap.get(canonicalKey);
+      if (!priceEntry || !catalogItem) {
         return res.status(400).json({
           success: false,
           error: `Invalid product or variant: ${raw.name || raw.title || canonicalKey}`
+        });
+      }
+
+      // Enforce Markdown-defined product and variant availability server-side before order creation
+      if (catalogItem.available !== true) {
+        return res.status(400).json({
+          success: false,
+          error: `Item "${priceEntry.name}" is currently unavailable.`
         });
       }
 
@@ -268,7 +278,6 @@ module.exports = async function handler(req, res) {
     if (existingOrder) {
       const existingEventId = existingOrder.meta_tracking?.event_id || existingOrder.invoice_number;
 
-      // If previous CAPI delivery failed (e.g., Meta API was down), allow safe retry without duplicating the order
       if (
         existingOrder.payment_method === "cod" &&
         existingOrder.meta_tracking?.purchase_sent !== true &&
@@ -379,41 +388,31 @@ module.exports = async function handler(req, res) {
 
             const doc = await inventoryCol.findOne(filter, { session });
             if (!doc) {
-              const err = new Error(`Item "${item.name}" is currently unavailable.`);
-              err.code = "ITEM_UNAVAILABLE";
+              const err = new Error(`Item "${item.name}" is currently out of stock.`);
+              err.code = "OUT_OF_STOCK";
               throw err;
             }
 
-            const stockMode = doc.stockMode || "quantity";
+            const updateRes = await inventoryCol.findOneAndUpdate(
+              {
+                productId: item.productId,
+                typeId: item.typeId ?? null,
+                subProductId: item.subProductId ?? null,
+                stock: { $gte: item.qty }
+              },
+              {
+                $inc: { stock: -item.qty },
+                $set: { updatedAt: new Date() },
+                $unset: { isAvailable: "", stockMode: "" }
+              },
+              { session, returnDocument: "after" }
+            );
 
-            if (stockMode === "unlimited") {
-              if (doc.isAvailable !== true) {
-                const err = new Error(`Item "${item.name}" is currently out of stock.`);
-                err.code = "OUT_OF_STOCK";
-                throw err;
-              }
-            } else {
-              const updateRes = await inventoryCol.findOneAndUpdate(
-                {
-                  productId: item.productId,
-                  typeId: item.typeId ?? null,
-                  subProductId: item.subProductId ?? null,
-                  stockMode: "quantity",
-                  stock: { $gte: item.qty }
-                },
-                {
-                  $inc: { stock: -item.qty },
-                  $set: { updatedAt: new Date() }
-                },
-                { session, returnDocument: "after" }
-              );
-
-              if (!updateRes) {
-                const availableStock = typeof doc.stock === "number" ? doc.stock : 0;
-                const err = new Error(`Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${availableStock} available.`);
-                err.code = "INSUFFICIENT_STOCK";
-                throw err;
-              }
+            if (!updateRes) {
+              const availableStock = typeof doc.stock === "number" ? doc.stock : 0;
+              const err = new Error(`Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${availableStock} available.`);
+              err.code = "INSUFFICIENT_STOCK";
+              throw err;
             }
           }
 
@@ -440,38 +439,30 @@ module.exports = async function handler(req, res) {
 
           const doc = await inventoryCol.findOne(filter);
           if (!doc) {
-            throw new Error(`Item "${item.name}" is currently unavailable.`);
+            throw new Error(`Item "${item.name}" is currently out of stock.`);
           }
 
-          const stockMode = doc.stockMode || "quantity";
+          const updateRes = await inventoryCol.findOneAndUpdate(
+            {
+              productId: item.productId,
+              typeId: item.typeId ?? null,
+              subProductId: item.subProductId ?? null,
+              stock: { $gte: item.qty }
+            },
+            {
+              $inc: { stock: -item.qty },
+              $set: { updatedAt: new Date() },
+              $unset: { isAvailable: "", stockMode: "" }
+            },
+            { returnDocument: "after" }
+          );
 
-          if (stockMode === "unlimited") {
-            if (doc.isAvailable !== true) {
-              throw new Error(`Item "${item.name}" is currently out of stock.`);
-            }
-          } else {
-            const updateRes = await inventoryCol.findOneAndUpdate(
-              {
-                productId: item.productId,
-                typeId: item.typeId ?? null,
-                subProductId: item.subProductId ?? null,
-                stockMode: "quantity",
-                stock: { $gte: item.qty }
-              },
-              {
-                $inc: { stock: -item.qty },
-                $set: { updatedAt: new Date() }
-              },
-              { returnDocument: "after" }
-            );
-
-            if (!updateRes) {
-              const availableStock = typeof doc.stock === "number" ? doc.stock : 0;
-              throw new Error(`Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${availableStock} available.`);
-            }
-
-            decrementedItems.push(item);
+          if (!updateRes) {
+            const availableStock = typeof doc.stock === "number" ? doc.stock : 0;
+            throw new Error(`Insufficient stock for "${item.name}". Requested ${item.qty}, but only ${availableStock} available.`);
           }
+
+          decrementedItems.push(item);
         }
 
         await ordersCol.insertOne(orderDoc);
