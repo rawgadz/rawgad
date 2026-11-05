@@ -1513,46 +1513,32 @@
           this.loadCarousel();
 
           try {
-
-            const res =
-              await fetch(
-                '/data/products.json'
-              );
+            const res = await fetch('/data/products.json');
 
             if (!res.ok) {
-              throw new Error(
-                'HTTP ' + res.status
-              );
+              throw new Error('HTTP ' + res.status);
             }
 
             const all = await res.json();
 
             // Filter products to only show those with the tag "steering cover"
-            const resolved = window.RawgadStock && typeof window.RawgadStock.resolveProductAvailability === 'function' ? all.map(p => window.RawgadStock.resolveProductAvailability(p)) : all;
+            const resolved = window.RawgadStock && typeof window.RawgadStock.resolveProductAvailability === 'function' 
+              ? all.map(p => window.RawgadStock.resolveProductAvailability(p)) 
+              : all;
+
             this.allProducts = resolved.filter(p => {
               const isNormal = !p.tab || p.tab === 'normal';
               const hasTag = (p.tags || '').toLowerCase().includes('steering cover');
-              return isNormal && hasTag;
-            });
               return isNormal && hasTag;
             });
 
             this.filteredProducts = [...this.allProducts];
 
           } catch (err) {
-
-            console.error(
-              'Failed to load products:',
-              err
-            );
-
-            this.error =
-              'Failed to load catalog.';
-
+            console.error('Failed to load products:', err);
+            this.error = 'Failed to load catalog.';
           } finally {
-
             this.loading = false;
-
           }
 
         },
