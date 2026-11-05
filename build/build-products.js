@@ -331,8 +331,8 @@ function generateStandaloneProductHTML(rawProduct) {
             </div>
           </template>
 
-          <!-- Action Buttons -->
-          <div class="space-y-3 pt-4 border-t border-neutral-200">
+          <!-- Action Buttons (Desktop) -->
+          <div class="hidden sm:block space-y-3 pt-4 border-t border-neutral-200">
             <div class="flex flex-wrap sm:flex-nowrap gap-3">
               <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
                 <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
@@ -353,6 +353,35 @@ function generateStandaloneProductHTML(rawProduct) {
                 @click="buyNow"
                 :disabled="isOutOfStock"
                 class="flex-1 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider transition-all"
+                :class="isOutOfStock ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Buy Now'"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons (Mobile Floating Bottom Bar) -->
+          <div class="sm:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-4 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] pb-6">
+            <div class="flex gap-3">
+              <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden shrink-0" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
+                <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
+              </div>
+              <button
+                type="button"
+                @click="updateCart(inCartQuantity + 1)"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3 px-2 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wider transition-all border"
+                :class="isOutOfStock ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed' : 'bg-white hover:bg-neutral-100 text-black border-black cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Add to Cart'"></span>
+              </button>
+              <button
+                type="button"
+                @click="buyNow"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3 px-2 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wider transition-all"
                 :class="isOutOfStock ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer'"
               >
                 <span x-text="isOutOfStock ? 'Out of Stock' : 'Buy Now'"></span>
@@ -834,4 +863,4 @@ module.exports = {
   buildStandaloneProductPages,
   buildGadgetsPage,
   normalizeSubProduct
-};
+}; 
