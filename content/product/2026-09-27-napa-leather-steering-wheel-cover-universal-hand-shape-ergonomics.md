@@ -15,7 +15,7 @@ price: 1450
 tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0901
-    available: true
+    available: false
     subTitle: Red Wine
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp
     price: 1450
