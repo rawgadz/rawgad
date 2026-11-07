@@ -2,6 +2,8 @@
 id: MRA-23
 slug: high-quality-leather-and-fabric-super-soft-steering-cover-with-green-black-and-coffee-color-universal/
 tab: normal
+available: "yes"
+published: "yes"
 title: High Quality Leather and Fabric Super Soft Steering cover with green,
   black and coffee color – Universal
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086813/green-1-1.webp
@@ -21,14 +23,20 @@ types:
     subTitle: Green
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
     price: 1650
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2302
     subTitle: Coffee
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790832495/Upload-to-rawgadz-increase-price-1.webp
     price: 1650
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2303
     subTitle: Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790832495/green-1-1.webp
     price: 1650
+    available: "yes"
+    published: "yes"
 ---
 Upgrade your driving comfort and interior aesthetics with the Premium Cowhide Leather & Fabric Steering Wheel Cover.
 

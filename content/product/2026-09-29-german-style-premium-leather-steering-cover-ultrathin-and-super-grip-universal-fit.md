@@ -2,6 +2,8 @@
 id: MRA-19
 slug: bmw-style-premium-leather-steering-cover-ultrathin-and-super-grip/
 tab: normal
+available: "yes"
+published: "yes"
 title: German Style Premium Leather Steering Cover Ultrathin and Super Grip
   (Universal Fit)
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp
@@ -16,10 +18,14 @@ types:
     subTitle: With Toyota Logo
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp
     price: 1990
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-1902
     subTitle: Without Logo
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp
     price: 1990
+    available: "yes"
+    published: "yes"
 ---
 Experience luxury and ultimate driving control with the Rawgadaz Authentic Nappa Leather Steering Wheel Cover.
 

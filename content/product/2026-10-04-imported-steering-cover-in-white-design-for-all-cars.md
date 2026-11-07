@@ -2,6 +2,8 @@
 id: MRA-34
 slug: imported-steering-cover-in-white-design-for-all-cars/
 tab: normal
+available: "yes"
+published: "yes"
 title: Imported Steering Cover in White Design for All cars
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-29.webp
 images:
@@ -19,14 +21,20 @@ types:
     subTitle: White and Black Leather
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-28.webp
     price: 1800
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3402
     subTitle: White and Orange Leather
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-29.webp
     price: 1800
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3403
     subTitle: White and Carbon Fiber
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791100801/Untitled-design-27.webp
     price: 1550
+    available: "yes"
+    published: "yes"
 ---
 Upgrade your vehicle's interior aesthetic and driving comfort with the Imported White Design Steering Wheel Cover.
 

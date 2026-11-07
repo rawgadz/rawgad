@@ -2,6 +2,8 @@
 id: prod_003
 slug: retro-instant-camera
 tab: gadget
+available: "no"
+published: "no"
 title: Retro Instant Camera
 images:
   - 'https://placehold.co/600x600/262626/ffffff?text=Retro+Instant+Camera'
@@ -22,6 +24,8 @@ types:
       - 'https://placehold.co/600x600/f8fafc/171717?text=Classic+White+Camera'
       - 'https://placehold.co/600x600/f8fafc/171717?text=Classic%20White%2BAlt'
     price: 89.99
+    available: "no"
+    published: "no"
     subProducts:
       - subProductId: prod_003_type_001_sub_001
         subTitle: Camera Only
@@ -29,6 +33,8 @@ types:
           - 'https://placehold.co/600x600/f8fafc/171717?text=White+Camera+Only'
           - 'https://placehold.co/600x600/f8fafc/171717?text=Camera%20Only%2BAlt'
         price: 89.99
+        available: "no"
+        published: "no"
       - subProductId: prod_003_type_001_sub_002
         subTitle: Camera + 20 Film Pack
         images:
@@ -36,12 +42,16 @@ types:
           - >-
             https://placehold.co/600x600/f8fafc/171717?text=Camera%20%2B%2020%20Film%20Pack%2BAlt
         price: 109.99
+        available: "no"
+        published: "no"
   - subProductId: prod_003_type_002
     subTitle: Mint Green
     images:
       - 'https://placehold.co/600x600/a7f3d0/064e3b?text=Mint+Green+Camera'
       - 'https://placehold.co/600x600/a7f3d0/064e3b?text=Mint%20Green%2BAlt'
     price: 89.99
+    available: "no"
+    published: "no"
     subProducts:
       - subProductId: prod_003_type_002_sub_001
         subTitle: Camera Only
@@ -49,6 +59,8 @@ types:
           - 'https://placehold.co/600x600/a7f3d0/064e3b?text=Mint+Camera+Only'
           - 'https://placehold.co/600x600/a7f3d0/064e3b?text=Camera%20Only%2BAlt'
         price: 89.99
+        available: "no"
+        published: "no"
       - subProductId: prod_003_type_002_sub_002
         subTitle: Camera + 20 Film Pack
         images:
@@ -56,12 +68,16 @@ types:
           - >-
             https://placehold.co/600x600/a7f3d0/064e3b?text=Camera%20%2B%2020%20Film%20Pack%2BAlt
         price: 109.99
+        available: "no"
+        published: "no"
   - subProductId: prod_003_type_003
     subTitle: Sunset Orange
     images:
       - 'https://placehold.co/600x600/fed7aa/7c2d12?text=Sunset+Orange+Camera'
       - 'https://placehold.co/600x600/fed7aa/7c2d12?text=Sunset%20Orange%2BAlt'
     price: 94.99
+    available: "no"
+    published: "no"
     subProducts:
       - subProductId: prod_003_type_003_sub_001
         subTitle: Camera Only
@@ -69,6 +85,8 @@ types:
           - 'https://placehold.co/600x600/fed7aa/7c2d12?text=Sunset+Camera+Only'
           - 'https://placehold.co/600x600/fed7aa/7c2d12?text=Camera%20Only%2BAlt'
         price: 94.99
+        available: "no"
+        published: "no"
       - subProductId: prod_003_type_003_sub_002
         subTitle: Camera + 20 Film Pack
         images:
@@ -76,6 +94,8 @@ types:
           - >-
             https://placehold.co/600x600/fed7aa/7c2d12?text=Camera%20%2B%2020%20Film%20Pack%2BAlt
         price: 114.99
+        available: "no"
+        published: "no"
 ---
 # Retro Instant Camera
 

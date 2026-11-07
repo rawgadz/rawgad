@@ -2,6 +2,8 @@
 id: MRA-13
 slug: car-steering-cover-anti-slip-artificial-leather/
 tab: normal
+available: "yes"
+published: "yes"
 title: Car steering cover anti-slip artificial leather
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01yUvX2Q238gkA87fYA_2211268807211-0-cib.webp
 images:
@@ -18,14 +20,20 @@ types:
     subTitle: Red Wine
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01yUvX2Q238gkA87fYA_2211268807211-0-cib.webp
     price: 1100
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-1302
     subTitle: Red and Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01vcCRrD238gkGuWHaF_2211268807211-0-cib.webp
     price: 1100
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-1303
     subTitle: Sky Blue
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790599283/O1CN01iW1zfY238gkGuUTMX_2211268807211-0-cib.webp
     price: 1100
+    available: "yes"
+    published: "yes"
 ---
 Anti-Slip Artificial Leather Car Steering Cover
 

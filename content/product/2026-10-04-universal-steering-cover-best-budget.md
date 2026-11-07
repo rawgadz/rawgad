@@ -2,6 +2,8 @@
 id: MRA-31
 slug: universal-steering-cover-best-budget/
 tab: normal
+available: "yes"
+published: "yes"
 title: Universal Steering Cover Best Budget
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791089965/gallery-image.webp
 images:

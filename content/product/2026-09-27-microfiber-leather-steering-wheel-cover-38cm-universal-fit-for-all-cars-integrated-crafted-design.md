@@ -2,6 +2,8 @@
 id: MRA-10
 slug: microfiber-leather-steering-wheel-cover-38cm-universal-fit-for-all-cars-integrated-crafted-design/
 tab: normal
+available: "yes"
+published: "yes"
 title: Microfiber Leather Steering Wheel Cover 38cm – Universal Fit for All
   Cars, Integrated Crafted Design
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-3.webp
@@ -16,10 +18,14 @@ types:
     subTitle: Red Wine
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-3.webp
     price: 1899
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-1002
     subTitle: Deep Brown
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790501395/white-2-piece-4.webp
     price: 1899
+    available: "yes"
+    published: "yes"
 ---
 Premium Microfiber Leather Steering Wheel Cover
 

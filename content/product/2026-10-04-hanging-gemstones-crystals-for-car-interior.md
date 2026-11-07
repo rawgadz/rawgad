@@ -2,6 +2,8 @@
 id: MRA-33
 slug: hanging-gemstones-crystals-for-car-interior/
 tab: normal
+available: "yes"
+published: "yes"
 title: Hanging Gemstones Crystals for Car Interior
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/61H-myi9YL._AC_SL1000_-1.webp
 images:
@@ -22,14 +24,20 @@ types:
     subTitle: Type-1
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/Untitled-design-19.webp
     price: 850
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3302
     subTitle: Type-2
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/Untitled-design-18.webp
     price: 1050
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3303
     subTitle: Type-3
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791097345/Untitled-design-20.webp
     price: 1050
+    available: "yes"
+    published: "yes"
 ---
 Add elegance and radiant charm to your car interior with the Premium Imported Crystal Hanging Charm.
 

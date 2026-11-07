@@ -2,6 +2,8 @@
 id: SH-03
 slug: car-seat-storage-hanging-bag-multi-pocket-seat-side-organizer/
 tab: normal
+available: "yes"
+published: "yes"
 title: Seat Storage Hanging Bag for Cars, Multi-Pocket Seat Side Organizer
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793160542/71JPzjzuvFL._AC_SL1500_.webp
 images:

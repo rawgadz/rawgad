@@ -2,6 +2,8 @@
 id: MRA-16
 slug: sporty-vibe-high-quality-cow-leather-car-steering-cover-with-super-grip/
 tab: normal
+available: "yes"
+published: "yes"
 title: Car Steering cover with sports look, leather with super grip
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp
 description: Upgrade your drive with the durable, breathable, and anti-slip
@@ -14,6 +16,8 @@ types:
     subTitle: Red Dots
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp
     price: 1750
+    available: "yes"
+    published: "yes"
 ---
 Upgrade your driving comfort and interior aesthetic with the Rawgadaz Premium Steering Wheel Cover.
 

@@ -4,10 +4,20 @@ const path = require('path');
 const matter = require('gray-matter');
 const { marked } = require('marked');
 const {
-  validateBooleanField,
   resolveProductAvailability,
   computeAvailablePriceRange,
 } = require('../api/_catalog');
+
+function parseYesNo(val) {
+  if (typeof val === 'string' && val.trim().toLowerCase() === 'yes') {
+    return 'yes';
+  }
+  return 'no';
+}
+
+function isYes(val) {
+  return parseYesNo(val) === 'yes';
+}
 
 const ROOT_DIR = process.cwd();
 const CONTENT_DIR = path.join(ROOT_DIR, 'content', 'product');
@@ -41,12 +51,17 @@ function normalizeId(val) {
   return (s === '' || s === 'null' || s === '_') ? '_' : s;
 }
 
-function normalizeSubProduct(sub, parentPrice = null, parentAvailable = true, contextPrefix = '') {
+function normalizeSubProduct(sub, parentPrice = null, globalAvailable = 'no', contextPrefix = '') {
   if (!sub || typeof sub !== 'object') return null;
 
-  const rawTypeAvailable = validateBooleanField(sub.available, `${contextPrefix}.available`);
-  const inheritedTypeAvailable = rawTypeAvailable !== undefined ? rawTypeAvailable : parentAvailable;
-  const parentAndTypeAvailable = Boolean(parentAvailable && inheritedTypeAvailable);
+  // Variant publishing: include only variants with published: "yes"
+  if (parseYesNo(sub.published) !== 'yes') return null;
+
+  const parentGlobalAvailable = (globalAvailable === 'yes' || globalAvailable === true) ? 'yes' : 'no';
+  const variantAvailable = parseYesNo(sub.available);
+  const effectiveAvailable =
+    parentGlobalAvailable === 'yes' &&
+    variantAvailable === 'yes';
 
   const typePrice = (sub.price !== undefined && sub.price !== null && sub.price !== '')
     ? (Number(sub.price) || 0)
@@ -58,14 +73,12 @@ function normalizeSubProduct(sub, parentPrice = null, parentAvailable = true, co
       ? sub.subproducts
       : (Array.isArray(sub.types) ? sub.types : []));
 
-  const subProducts = rawNested.map((item, sIdx) => {
+  const subProducts = rawNested.map((item) => {
     if (!item || typeof item !== 'object') return null;
-    const rawSubAvailable = validateBooleanField(
-      item.available,
-      `${contextPrefix}.subProducts[${sIdx}].available`
-    );
-    const inheritedSubAvailable = rawSubAvailable !== undefined ? rawSubAvailable : parentAndTypeAvailable;
-    const effectiveSubAvailable = Boolean(parentAndTypeAvailable && inheritedSubAvailable);
+    if (item.published !== undefined && parseYesNo(item.published) !== 'yes') return null;
+
+    const itemAvailable = item.available !== undefined ? parseYesNo(item.available) : variantAvailable;
+    const effectiveSubAvailable = Boolean(effectiveAvailable && itemAvailable === 'yes');
 
     const itemPrice = (item.price !== undefined && item.price !== null && item.price !== '')
       ? (Number(item.price) || 0)
@@ -75,7 +88,15 @@ function normalizeSubProduct(sub, parentPrice = null, parentAvailable = true, co
       ? item.images.map(img => String(img).trim()).filter(Boolean)
       : (item.subImage || item.imageSrc || item.image ? [String(item.subImage || item.imageSrc || item.image).trim()] : []);
 
+    const extraNestedProps = {};
+    for (const [k, v] of Object.entries(item)) {
+      if (!['subProductId', 'id', 'subImage', 'images', 'subTitle', 'title', 'available', 'published', 'price'].includes(k)) {
+        extraNestedProps[k] = v;
+      }
+    }
+
     const nestedItem = {
+      ...extraNestedProps,
       subProductId: String(item.subProductId || item.id || '').trim(),
       subImage: nestedImages[0] || item.subImage || item.imageSrc || item.image || '',
       images: nestedImages,
@@ -92,11 +113,19 @@ function normalizeSubProduct(sub, parentPrice = null, parentAvailable = true, co
     ? sub.images.map(img => String(img).trim()).filter(Boolean)
     : (sub.subImage || sub.imageSrc || sub.image ? [String(sub.subImage || sub.imageSrc || sub.image).trim()] : []);
 
-  const effectiveTypeAvailable = subProducts.length > 0
-    ? Boolean(parentAndTypeAvailable && subProducts.some(s => s.available === true))
-    : parentAndTypeAvailable;
+  const effectiveTypeAvailable = rawNested.length > 0
+    ? Boolean(effectiveAvailable && subProducts.some(s => s.available === true))
+    : Boolean(effectiveAvailable);
+
+  const extraVariantProps = {};
+  for (const [k, v] of Object.entries(sub)) {
+    if (!['subProductId', 'id', 'subImage', 'images', 'subTitle', 'title', 'available', 'published', 'price', 'subProducts', 'subproducts', 'types'].includes(k)) {
+      extraVariantProps[k] = v;
+    }
+  }
 
   const normalized = {
+    ...extraVariantProps,
     subProductId: String(sub.subProductId || sub.id || '').trim(),
     subImage: typeImages[0] || sub.subImage || sub.imageSrc || sub.image || '',
     images: typeImages,
@@ -288,11 +317,10 @@ function generateStandaloneProductHTML(rawProduct) {
                   <button
                     type="button"
                     @click="selectType(tIdx)"
-                    :disabled="type.available === false"
-                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2"
-                    :class="type.available === false
-                      ? 'border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-75'
-                      : (selectedTypeIndex === tIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
+                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer"
+                    :class="selectedTypeIndex === tIdx
+                      ? (type.available === false ? 'border-rose-600 bg-rose-50 text-neutral-700 ring-1 ring-rose-600' : 'border-black bg-black text-white')
+                      : (type.available === false ? 'border-neutral-200 bg-neutral-100 text-neutral-400 opacity-75 hover:border-neutral-400' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
                   >
                     <span :class="type.available === false ? 'line-through' : ''" x-text="type.subTitle"></span>
                     <template x-if="type.available === false">
@@ -315,11 +343,10 @@ function generateStandaloneProductHTML(rawProduct) {
                   <button
                     type="button"
                     @click="selectSubProduct(sIdx)"
-                    :disabled="sub.available === false"
-                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2"
-                    :class="sub.available === false
-                      ? 'border-neutral-200 bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-75'
-                      : (selectedSubProductIndex === sIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
+                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer"
+                    :class="selectedSubProductIndex === sIdx
+                      ? (sub.available === false ? 'border-rose-600 bg-rose-50 text-neutral-700 ring-1 ring-rose-600' : 'border-black bg-black text-white')
+                      : (sub.available === false ? 'border-neutral-200 bg-neutral-100 text-neutral-400 opacity-75 hover:border-neutral-400' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
                   >
                     <span :class="sub.available === false ? 'line-through' : ''" x-text="sub.subTitle"></span>
                     <template x-if="sub.available === false">
@@ -543,7 +570,7 @@ function generateStandaloneProductHTML(rawProduct) {
           selectType(index) {
             const idx = Number(index) || 0;
             const targetType = this.product.types && this.product.types[idx];
-            if (!targetType || targetType.available === false) return;
+            if (!targetType) return;
             this.selectedTypeIndex = idx;
             if (Array.isArray(targetType.subProducts) && targetType.subProducts.length > 0) {
               const firstAvailSub = targetType.subProducts.findIndex(s => s.available !== false);
@@ -559,7 +586,7 @@ function generateStandaloneProductHTML(rawProduct) {
             const idx = Number(index) || 0;
             const type = this.selectedType;
             const targetSub = type && type.subProducts && type.subProducts[idx];
-            if (!targetSub || targetSub.available === false) return;
+            if (!targetSub) return;
             this.selectedSubProductIndex = idx;
             this.selectedGalleryImage = null;
             this.syncCart();
@@ -677,6 +704,12 @@ function generateProductJson() {
 
     if (!data.id || !data.title) continue;
 
+    // A. Global Product Publishing: include only products with published: "yes"
+    const globalPublished = parseYesNo(data.published);
+    if (globalPublished !== 'yes') {
+      continue;
+    }
+
     let slug = '';
     if (data.slug) {
       slug = sanitizeSlug(String(data.slug));
@@ -692,18 +725,19 @@ function generateProductJson() {
       tab = (rawTab === 'gadget' || rawTab === 'gadgets') ? 'gadget' : 'normal';
     }
 
-    const rawProductAvailable = validateBooleanField(data.available, `${file}:available`);
-    const baseProductAvailable = rawProductAvailable !== undefined ? rawProductAvailable : true;
+    // C. Global and Variant Availability Calculation
+    const globalAvailable = parseYesNo(data.available);
+    const baseProductAvailable = globalAvailable === 'yes';
 
     const htmlContent = marked.parse(content || '');
     const rawTypes = Array.isArray(data.types) ? data.types : (Array.isArray(data.subProducts) ? data.subProducts : []);
     const productPrice = Number(data.price) || 0;
     const types = rawTypes
-      .map((item, idx) => normalizeSubProduct(item, productPrice, baseProductAvailable, `${file}:types[${idx}]`))
+      .map((item, idx) => normalizeSubProduct(item, productPrice, globalAvailable, `${file}:types[${idx}]`))
       .filter(Boolean);
 
     const effectiveProductAvailable = types.length > 0
-      ? Boolean(baseProductAvailable && types.some(t => t.available === true))
+      ? Boolean(globalAvailable === 'yes' && types.some(t => t.available === true))
       : Boolean(baseProductAvailable);
 
     const rawImages = Array.isArray(data.images) ? data.images.map(img => String(img).trim()).filter(Boolean) : [];
@@ -724,7 +758,16 @@ function generateProductJson() {
 
     const tags = Array.isArray(data.tags) ? data.tags.filter(Boolean).join(', ') : (typeof data.tags === 'string' ? data.tags : '');
 
+    // D. Preserve any additional frontmatter properties
+    const extraProductProps = {};
+    for (const [k, v] of Object.entries(data)) {
+      if (!['id', 'slug', 'tab', 'available', 'published', 'imageSrc', 'images', 'title', 'description', 'price', 'priceRange', 'tags', 'types', 'subProducts'].includes(k)) {
+        extraProductProps[k] = v;
+      }
+    }
+
     products.push({
+      ...extraProductProps,
       id: String(data.id),
       slug,
       tab,
@@ -756,18 +799,19 @@ function generateProductJson() {
     const types = Array.isArray(product.types) ? product.types : [];
 
     if (types.length === 0) {
-      const price = Number(product.price);
-      if (!price || isNaN(price) || price <= 0) {
-        throw new Error(`[build-products] Build failed: Invalid price (${product.price}) for base product ${pId}`);
+      const price = Number(product.price) > 0
+        ? Number(product.price)
+        : (Number(product.priceRange?.min) > 0 ? Number(product.priceRange.min) : 0);
+      if (price > 0) {
+        const key = `${normalizeId(pId)}:::_:::_`;
+        priceCatalog[key] = {
+          productId: pId,
+          typeId: null,
+          subProductId: null,
+          name: product.title || 'Product',
+          price
+        };
       }
-      const key = `${normalizeId(pId)}:::_:::_`;
-      priceCatalog[key] = {
-        productId: pId,
-        typeId: null,
-        subProductId: null,
-        name: product.title || 'Product',
-        price
-      };
       continue;
     }
 
@@ -862,5 +906,7 @@ module.exports = {
   generateProductJson,
   buildStandaloneProductPages,
   buildGadgetsPage,
-  normalizeSubProduct
-}; 
+  normalizeSubProduct,
+  parseYesNo,
+  isYes
+};

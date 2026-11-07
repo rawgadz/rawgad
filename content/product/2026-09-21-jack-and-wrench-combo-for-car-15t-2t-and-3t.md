@@ -2,6 +2,8 @@
 id: MRA-36
 slug: jack-and-wrench-combo-for-car-15t-2t-and-3t
 tab: normal
+available: "yes"
+published: "yes"
 title: Jack and Wrench Combo for Car 1.5T, 2T and 3T (জ্যাক এবং হ্যান্ডেল কম্বো)
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp
 description: Built with heavy-duty anti-rust steel, this car jack and speed
@@ -17,14 +19,20 @@ types:
     subTitle: 1.5Ton
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp
     price: 1999
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3602
     subTitle: 2 Ton
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp
     price: 2499
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3603
     subTitle: 3Ton
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791101686/jack-plus-wrench.webp
     price: 2899
+    available: "yes"
+    published: "yes"
 ---
 Handle emergency tire changes effortlessly with the Heavy-Duty Car Jack and Speed Wrench Combo.
 

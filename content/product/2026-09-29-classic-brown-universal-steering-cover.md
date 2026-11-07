@@ -2,6 +2,8 @@
 id: MRA-17
 slug: classic-brown-universal-steering-cover/
 tab: normal
+available: "yes"
+published: "yes"
 title: Classic Brown Universal Steering Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp
 images:
@@ -15,6 +17,8 @@ types:
     subTitle: Light Brown
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp
     price: 1050
+    available: "yes"
+    published: "yes"
 ---
 Protect your steering wheel and improve your grip affordably with the Rawgadaz Basic Steering Wheel Cover.
 

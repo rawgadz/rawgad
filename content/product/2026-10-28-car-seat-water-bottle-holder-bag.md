@@ -2,6 +2,8 @@
 id: SH-02
 slug: car-seat-water-bottle-holder-bag/
 tab: normal
+available: "yes"
+published: "yes"
 title: Car Seat Water Bottle Holder Bag
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp
 images:
@@ -23,36 +25,52 @@ types:
     subTitle: 1 Liter
     subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp
     price: 950
+    available: "yes"
+    published: "yes"
     subProducts:
       - subProductId: SH-020101
         subTitle: Black
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp
         price: 950
+        available: "yes"
+        published: "yes"
       - subProductId: SH-020102
         subTitle: Coffee
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp
         price: 950
+        available: "yes"
+        published: "yes"
       - subProductId: SH-020103
         subTitle: Gray
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp
         price: 950
+        available: "yes"
+        published: "yes"
   - subProductId: SH-0202
     subTitle: 2 Litre
     subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp
     price: 1049
+    available: "yes"
+    published: "yes"
     subProducts:
       - subProductId: SH-020201
         subTitle: Black
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp
         price: 1049
+        available: "yes"
+        published: "yes"
       - subProductId: SH-020202
         subTitle: Coffee
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp
         price: 1049
+        available: "yes"
+        published: "yes"
       - subProductId: SH-020203
         subTitle: Gray
         subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp
         price: 1049
+        available: "yes"
+        published: "yes"
 ---
 **Rawgadz Premium Car Seat Bottle Holder Bag**
 

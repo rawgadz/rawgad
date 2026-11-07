@@ -49,6 +49,12 @@
         <div class="sticky top-24">
           <div class="aspect-square bg-neutral-100 rounded-3xl overflow-hidden border border-neutral-200 mb-4 shadow-sm relative">
             <img :src="currentImage" :alt="activeVariantTitle" class="w-full h-full object-cover">
+
+            <template x-if="isOutOfStock">
+              <span class="absolute top-4 right-4 z-10 bg-rose-600 text-white text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md">
+                Out of Stock
+              </span>
+            </template>
             
             <template x-if="currentVariantImages.length > 1">
               <div class="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
@@ -86,10 +92,9 @@
             <span class="text-[11px] font-black uppercase px-2.5 py-1 rounded-full border"
               :class="{
                 'bg-emerald-50 text-emerald-700 border-emerald-200': stockStatus === 'in_stock',
-                'bg-amber-50 text-amber-700 border-amber-200': stockStatus === 'low_stock',
                 'bg-rose-50 text-rose-700 border-rose-200': stockStatus === 'out_of_stock'
               }"
-              x-text="stockStatus === 'in_stock' ? 'In Stock' : (stockStatus === 'low_stock' ? ('Low Stock (' + currentStock + ')') : 'Out of Stock')">
+              x-text="stockStatus === 'in_stock' ? 'In Stock' : 'Out of Stock'">
             </span>
           </div>
 
@@ -101,8 +106,18 @@
               </label>
               <div class="flex flex-wrap gap-2.5">
                 <template x-for="(type, tIdx) in product.types" :key="tIdx">
-                  <button @click="selectType(tIdx)" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2" :class="selectedTypeIndex === tIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400'">
-                    <span x-text="type.subTitle"></span>
+                  <button
+                    type="button"
+                    @click="selectType(tIdx)"
+                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer"
+                    :class="selectedTypeIndex === tIdx
+                      ? (type.available === false ? 'border-rose-600 bg-rose-50 text-neutral-700 ring-1 ring-rose-600' : 'border-black bg-black text-white')
+                      : (type.available === false ? 'border-neutral-200 bg-neutral-100 text-neutral-400 opacity-75 hover:border-neutral-400' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
+                  >
+                    <span :class="type.available === false ? 'line-through' : ''" x-text="type.subTitle"></span>
+                    <template x-if="type.available === false">
+                      <span class="bg-rose-100 text-rose-700 border border-rose-200 text-[9px] font-black uppercase px-1.5 py-0.5 rounded">Out of Stock</span>
+                    </template>
                   </button>
                 </template>
               </div>
@@ -117,33 +132,80 @@
               </label>
               <div class="flex flex-wrap gap-2.5">
                 <template x-for="(sub, sIdx) in selectedType.subProducts" :key="sIdx">
-                  <button @click="selectSubProduct(sIdx)" class="px-4 py-2 rounded-xl text-xs font-bold border transition-all" :class="selectedSubProductIndex === sIdx ? 'border-black bg-black text-white' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400'">
-                    <span x-text="sub.subTitle"></span>
+                  <button
+                    type="button"
+                    @click="selectSubProduct(sIdx)"
+                    class="px-4 py-2 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 cursor-pointer"
+                    :class="selectedSubProductIndex === sIdx
+                      ? (sub.available === false ? 'border-rose-600 bg-rose-50 text-neutral-700 ring-1 ring-rose-600' : 'border-black bg-black text-white')
+                      : (sub.available === false ? 'border-neutral-200 bg-neutral-100 text-neutral-400 opacity-75 hover:border-neutral-400' : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400')"
+                  >
+                    <span :class="sub.available === false ? 'line-through' : ''" x-text="sub.subTitle"></span>
+                    <template x-if="sub.available === false">
+                      <span class="bg-rose-100 text-rose-700 border border-rose-200 text-[9px] font-black uppercase px-1.5 py-0.5 rounded">Out of Stock</span>
+                    </template>
                   </button>
                 </template>
               </div>
             </div>
           </template>
 
-          <!-- Action Buttons -->
-          <div class="space-y-3 pt-4 border-t border-neutral-200">
-            <template x-if="!isOutOfStock">
-              <div class="flex gap-3">
-                <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden">
-                  <button @click="updateCart(inCartQuantity - 1)" class="px-3.5 py-3 hover:bg-neutral-100 transition-colors font-bold text-neutral-600">-</button>
-                  <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
-                  <button @click="updateCart(inCartQuantity + 1)" class="px-3.5 py-3 hover:bg-neutral-100 transition-colors font-bold text-neutral-600">+</button>
-                </div>
-                <button @click="buyNow" class="flex-1 bg-black hover:bg-neutral-800 text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition-all">
-                  Buy Now
-                </button>
+          <!-- Action Buttons (Desktop) -->
+          <div class="hidden sm:block space-y-3 pt-4 border-t border-neutral-200">
+            <div class="flex flex-wrap sm:flex-nowrap gap-3">
+              <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
+                <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
               </div>
-            </template>
-            <template x-if="isOutOfStock">
-              <button disabled class="w-full bg-neutral-200 text-neutral-500 font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider cursor-not-allowed">
-                Out of Stock
+              <button
+                type="button"
+                @click="updateCart(inCartQuantity + 1)"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider transition-all border"
+                :class="isOutOfStock ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed' : 'bg-white hover:bg-neutral-100 text-black border-black cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Add to Cart'"></span>
               </button>
-            </template>
+              <button
+                type="button"
+                @click="buyNow"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider transition-all"
+                :class="isOutOfStock ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Buy Now'"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons (Mobile Floating Bottom Bar) -->
+          <div class="sm:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-4 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] pb-6">
+            <div class="flex gap-3">
+              <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden shrink-0" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
+                <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
+              </div>
+              <button
+                type="button"
+                @click="updateCart(inCartQuantity + 1)"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3 px-2 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wider transition-all border"
+                :class="isOutOfStock ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed' : 'bg-white hover:bg-neutral-100 text-black border-black cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Add to Cart'"></span>
+              </button>
+              <button
+                type="button"
+                @click="buyNow"
+                :disabled="isOutOfStock"
+                class="flex-1 font-bold py-3 px-2 rounded-xl flex items-center justify-center gap-2 text-xs uppercase tracking-wider transition-all"
+                :class="isOutOfStock ? 'bg-neutral-200 text-neutral-500 cursor-not-allowed' : 'bg-black hover:bg-neutral-800 text-white cursor-pointer'"
+              >
+                <span x-text="isOutOfStock ? 'Out of Stock' : 'Buy Now'"></span>
+              </button>
+            </div>
           </div>
 
           <div class="mt-8 text-neutral-600 text-sm leading-relaxed" x-text="product.description"></div>
@@ -161,6 +223,9 @@
   <script>
     (function() {
       const pageProduct = {"id":"MRA-17","slug":"classic-brown-universal-steering-cover","tab":"normal","available":true,"imageSrc":"https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083638/h-1.webp"],"title":"Classic Brown Universal Steering Cover","description":"Get reliable, all-season anti-slip grip on a budget with the universal Rawgadaz Basic Steering Cover.","price":1050,"priceRange":{"min":1050,"max":1050},"tags":"Car Accessories, steering cover","types":[{"subProductId":"MRA-1701","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp"],"subTitle":"Light Brown","available":true,"price":1050}],"content":"\u003cp>Protect your steering wheel and improve your grip affordably with the Rawgadaz Basic Steering Wheel Cover.\u003c/p>\n\u003cp>Budget-Friendly Quality\u003c/p>\n\u003cp>\u003cstrong>✅ Anti-slip rubber outer:\u003c/strong> Textured rubber exterior ensures steady, reliable steering control while driving\u003cbr>\u003cstrong>✅ Durable construction:\u003c/strong> Built to withstand daily wear and tear for dependable, long-term use\u003cbr>\u003cstrong>✅ All-season reliability:\u003c/strong> Delivers comfortable handling across hot summer days and chilly winters\u003cbr>\u003cstrong>✅ Universal fit:\u003c/strong> Simple, flexible design compatible with most standard car models\u003cbr>\u003cstrong>✅ Functional inner surface:\u003c/strong> Practical interior build designed for hassle-free daily driving\u003cbr>\u003cstrong>✅ Budget-smart choice:\u003c/strong> The perfect everyday option for drivers seeking decent aesthetics at an accessible price\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling high-quality and unique products is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>📞 For Returns &amp; Refunds: 01608-331322\u003c/strong>\u003c/p>\n"};
+      if (window.RawgadStock && typeof window.RawgadStock.registerProduct === 'function') {
+        window.RawgadStock.registerProduct(pageProduct);
+      }
       if (window.RawgadzPixel) {
         window.RawgadzPixel.trackViewContent(pageProduct);
       }
@@ -171,13 +236,12 @@
           selectedSubProductIndex: 0,
           selectedGalleryImage: null,
           inCartQuantity: 0,
-          inventoryMap: {},
           availabilityMap: {},
-          loadingInventory: true,
 
           init() {
+            this.ensureValidSelection();
             this.syncCart();
-            this.loadInventory();
+            this.loadAvailability();
             if (window.RawgadzPixel) {
               window.RawgadzPixel.trackViewContent(this.product, {
                 contentId: this.getCartKey(),
@@ -187,24 +251,30 @@
             }
             window.addEventListener('storage', () => this.syncCart());
             window.addEventListener('cart-update-main_store_cart', () => this.syncCart());
-            window.addEventListener('rawgad-stock-updated', () => this.loadInventory());
+            window.addEventListener('rawgad-stock-updated', () => this.loadAvailability());
           },
 
-          loadInventory() {
-            if (window.RawgadStock) {
-              const cachedMap = window.RawgadStock.getProductStockMap(this.product.id);
-              const cachedAvail = window.RawgadStock.getProductAvailabilityMap(this.product.id);
-              if (cachedMap && Object.keys(cachedMap).length > 0) {
-                this.inventoryMap = cachedMap;
-                this.availabilityMap = cachedAvail;
-                this.loadingInventory = false;
-                return;
+          ensureValidSelection() {
+            if (Array.isArray(this.product.types) && this.product.types.length > 0) {
+              const curType = this.product.types[this.selectedTypeIndex];
+              if (!curType || curType.available === false) {
+                const availIdx = this.product.types.findIndex(t => t.available !== false);
+                if (availIdx >= 0) this.selectedTypeIndex = availIdx;
               }
-              window.RawgadStock.fetchAndStoreAllStock().then(() => {
-                this.inventoryMap = window.RawgadStock.getProductStockMap(this.product.id);
-                this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id);
-                this.loadingInventory = false;
-              }).catch(() => { this.loadingInventory = false; });
+              const activeType = this.product.types[this.selectedTypeIndex];
+              if (activeType && Array.isArray(activeType.subProducts) && activeType.subProducts.length > 0) {
+                const curSub = activeType.subProducts[this.selectedSubProductIndex];
+                if (!curSub || curSub.available === false) {
+                  const availSubIdx = activeType.subProducts.findIndex(s => s.available !== false);
+                  if (availSubIdx >= 0) this.selectedSubProductIndex = availSubIdx;
+                }
+              }
+            }
+          },
+
+          loadAvailability() {
+            if (window.RawgadStock) {
+              this.availabilityMap = window.RawgadStock.getProductAvailabilityMap(this.product.id) || {};
             }
           },
 
@@ -267,47 +337,49 @@
             return Number(this.product.price) || 0;
           },
 
-          get currentStock() {
-            const type = this.selectedType;
-            const sub = this.selectedSubProduct;
-            const typeId = type ? String(type.subProductId || type.id) : '_';
-            const subId = sub ? String(sub.subProductId || sub.id) : '_';
-            if (window.RawgadStock) {
-              return window.RawgadStock.getItemStock(this.product.id, typeId, subId);
-            }
-            return 0;
-          },
-
           get itemInStock() {
+            if (this.product.available === false) return false;
             const type = this.selectedType;
+            if (type && type.available === false) return false;
             const sub = this.selectedSubProduct;
+            if (sub && sub.available === false) return false;
             const typeId = type ? String(type.subProductId || type.id) : '_';
             const subId = sub ? String(sub.subProductId || sub.id) : '_';
-            if (window.RawgadStock) {
+            if (window.RawgadStock && typeof window.RawgadStock.isItemAvailable === 'function') {
               return window.RawgadStock.isItemAvailable(this.product.id, typeId, subId);
             }
             return true;
           },
 
           get stockStatus() {
-            if (this.loadingInventory) return 'in_stock';
-            if (!this.itemInStock) return 'out_of_stock';
-            const s = this.currentStock;
-            if (typeof s === 'number' && s > 0 && s <= 5) return 'low_stock';
-            return 'in_stock';
+            return this.itemInStock ? 'in_stock' : 'out_of_stock';
           },
 
-          get isOutOfStock() { return !this.loadingInventory && !this.itemInStock; },
+          get isOutOfStock() {
+            return !this.itemInStock;
+          },
 
           selectType(index) {
-            this.selectedTypeIndex = Number(index) || 0;
-            this.selectedSubProductIndex = 0;
+            const idx = Number(index) || 0;
+            const targetType = this.product.types && this.product.types[idx];
+            if (!targetType) return;
+            this.selectedTypeIndex = idx;
+            if (Array.isArray(targetType.subProducts) && targetType.subProducts.length > 0) {
+              const firstAvailSub = targetType.subProducts.findIndex(s => s.available !== false);
+              this.selectedSubProductIndex = firstAvailSub >= 0 ? firstAvailSub : 0;
+            } else {
+              this.selectedSubProductIndex = 0;
+            }
             this.selectedGalleryImage = null;
             this.syncCart();
           },
 
           selectSubProduct(index) {
-            this.selectedSubProductIndex = Number(index) || 0;
+            const idx = Number(index) || 0;
+            const type = this.selectedType;
+            const targetSub = type && type.subProducts && type.subProducts[idx];
+            if (!targetSub) return;
+            this.selectedSubProductIndex = idx;
             this.selectedGalleryImage = null;
             this.syncCart();
           },

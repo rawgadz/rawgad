@@ -2,6 +2,8 @@
 id: MRA-02
 slug: 1st-and-no1-choice-for-all-interior-steering-cover-with-sports-look-leather-with-super-grip/
 tab: normal
+available: "yes"
+published: "yes"
 title: 1st and No1 Choice for all interior- Steering cover with sports look,
   leather with super grip
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp
@@ -15,10 +17,14 @@ types:
     subTitle: White Dots
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/White_dots_-_1_900.00.webp
     price: 1900
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0202
     subTitle: Red Dots
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp
     price: 1900
+    available: "yes"
+    published: "yes"
 ---
 Elevate your driving experience and upgrade your car's interior with the Rawgadaz Premium Steering Wheel Cover.
 

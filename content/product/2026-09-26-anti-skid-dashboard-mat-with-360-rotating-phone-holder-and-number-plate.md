@@ -2,6 +2,8 @@
 id: MRA-03
 slug: anti-skid-dashboard-mat-with-360-rotating-phone-holder-and-number-plate/
 tab: normal
+available: "yes"
+published: "yes"
 title: Anti-Skid Dashboard Mat with 360° Rotating Phone Holder and Number Plate
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01xhvoYo1WC0cypPbv3_976492751-0-cib.webp
 images:
@@ -19,22 +21,32 @@ types:
     subTitle: Chocolate Color Oval
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/chocolate-color-1.webp
     price: 720
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0302
     subTitle: Gray Color Oval
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/gray-color.webp
     price: 720
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0303
     subTitle: Chocolate Rectangle
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790423744/O1CN013Su7se1WC0dG5kNDx_976492751-0-cib.webp
     price: 790
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0304
     subTitle: Gray Rectangle
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01isX37p1WC0dHC04tu_976492751-0-cib.webp
     price: 790
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0305
     subTitle: White and Blue
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790423743/O1CN01xhvoYo1WC0cypPbv3_976492751-0-cib.webp
     price: 1100
+    available: "yes"
+    published: "yes"
 ---
 Keep your mobile phone, keys, and accessories secure and accessible with the Rawgadaz Non-Slip Car Dashboard Mat.
 

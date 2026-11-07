@@ -676,11 +676,11 @@
                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 loading="lazy"
               >
-              <template x-if="p.available === false">
-                <span class="absolute top-2.5 right-2.5 z-10 bg-rose-600 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
-                  Out of Stock
-                </span>
-              </template>
+              <span
+                class="absolute top-2.5 right-2.5 z-10 text-white text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs"
+                :class="p.available === false ? 'bg-rose-600' : 'bg-emerald-600'"
+                x-text="p.available === false ? 'Out of Stock' : 'In Stock'"
+              ></span>
             </a>
 
             <div class="p-3 sm:p-5 flex flex-col flex-grow">

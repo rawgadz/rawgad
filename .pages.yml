@@ -34,46 +34,62 @@ content:
         type: string
         label: Product ID
         required: true
+
+      - name: published
+        type: string
+        label: Published
+        required: false
+        default: "yes"
+        description: 'Use "yes" to publish this product or "no" to hide it from the public storefront.'
+
       - name: available
-        type: boolean
+        type: string
         label: Available
         required: false
-        default: true
-        description: "Product availability on storefront (true = available, false = unavailable)"
+        default: "yes"
+        description: 'Use "yes" if the product is in stock or "no" if it is out of stock.'
+
       - name: slug
         type: string
         label: Slug / URL
         required: false
-        description: "URL slug for standalone product page (e.g. minimalist-smart-watch)"
+        description: "URL slug for standalone product page (e.g., minimalist-smart-watch)"
+
       - name: tab
         type: string
         label: Product Classification
         required: false
         default: normal
         description: "Product category: normal for Home & Shop, gadget for Gadgets catalog."
+
       - name: title
         type: string
         label: Title
         required: true
+
       - name: imageSrc
         type: string
         label: Main Image URL
         required: false
         description: "Paste the full image link (e.g., https://example.com/image.png)"
+
       - name: images
         type: string
         label: Product Images Gallery
         list: true
         required: false
         description: "List of image links for the product"
+
       - name: description
         type: string
         label: Description
         required: true
+
       - name: price
         type: number
         label: Price
         required: true
+
       - name: priceRange
         type: object
         label: Price Range
@@ -85,11 +101,13 @@ content:
           - name: max
             type: number
             label: Maximum Price
+
       - name: tags
         type: string
         label: Tags
         required: false
         description: "Comma-separated tags (e.g., wearables, tech, fitness)"
+
       - name: types
         type: object
         label: Product Variants
@@ -99,30 +117,44 @@ content:
             type: string
             label: Variant ID
             required: true
+
+          - name: published
+            type: string
+            label: Published
+            required: false
+            default: "yes"
+            description: 'Use "yes" to show this variant or "no" to hide it.'
+
           - name: available
-            type: boolean
+            type: string
             label: Available
             required: false
-            default: true
+            default: "yes"
+            description: 'Use "yes" if this variant is in stock or "no" if it is out of stock.'
+
           - name: subTitle
             type: string
             label: Variant Title
             required: true
+
           - name: subImage
             type: string
             label: Variant Image URL
             required: false
             description: "Paste the full image link"
+
           - name: images
             type: string
             label: Variant Images
             list: true
             required: false
             description: "List of image links for this variant"
+
           - name: price
             type: number
             label: Variant Price (Optional)
             required: false
+
           - name: subProducts
             type: object
             label: Sub-Variants / Options
@@ -132,30 +164,44 @@ content:
                 type: string
                 label: Sub-Variant ID
                 required: true
+
+              - name: published
+                type: string
+                label: Published
+                required: false
+                default: "yes"
+                description: 'Use "yes" to show this option or "no" to hide it.'
+
               - name: available
-                type: boolean
+                type: string
                 label: Available
                 required: false
-                default: true
+                default: "yes"
+                description: 'Use "yes" if this option is in stock or "no" if it is out of stock.'
+
               - name: subTitle
                 type: string
                 label: Sub-Variant Title
                 required: true
+
               - name: subImage
                 type: string
                 label: Sub-Variant Image URL
                 required: false
                 description: "Paste the full image link"
+
               - name: images
                 type: string
                 label: Option Images
                 list: true
                 required: false
                 description: "List of image links for this option"
+
               - name: price
                 type: number
                 label: Option Price (Optional)
                 required: false
+
       - name: body
         type: rich-text
         label: Body
@@ -175,7 +221,7 @@ content:
         type: string
         label: Slug / URL
         required: false
-        description: "URL slug for standalone blog post (e.g. building-modern-web-applications)"
+        description: "URL slug for standalone blog post (e.g., building-modern-web-applications)"
       - name: title
         type: string
         label: Title
@@ -193,7 +239,6 @@ content:
         type: string
         label: Excerpt
         required: true
-        description: "Short summary that will appear on the blog cards."
       - name: imageSrc
         type: string
         label: Main Image URL
@@ -223,7 +268,7 @@ content:
         type: string
         label: Slug / URL
         required: false
-        description: "URL slug for standalone vehicle page (e.g. porsche-911-gt3-rs)"
+        description: "URL slug for standalone vehicle page (e.g., porsche-911-gt3-rs)"
       - name: title
         type: string
         label: Vehicle Title
@@ -358,7 +403,7 @@ content:
         label: Media Type
         required: true
         default: image
-        description: "Enter the media type manually, e.g. image, video, youtube"
+        description: "Enter the media type manually, e.g., image, video, youtube"
       - name: src
         type: string
         label: Media URL

@@ -2,6 +2,8 @@
 id: MRA-25
 slug: leather-steering-wheel-cover-universal-hand-shape/
 tab: normal
+available: "yes"
+published: "yes"
 title: Leather steering Wheel Cover Universal Hand Shape
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp
 images:
@@ -17,14 +19,20 @@ types:
     subTitle: Red Wine
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp
     price: 1450
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2502
     subTitle: Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp
     price: 1450
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2503
     subTitle: Gray
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp
     price: 1450
+    available: "yes"
+    published: "yes"
 ---
 Enhance your driving comfort, safety, and cabin style with the RawGadz Ergonomic Hand-Shape Leather Steering Wheel Cover.
 

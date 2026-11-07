@@ -2,6 +2,8 @@
 id: MRA-38
 slug: high-quality-iphone-speaker-dust-protector/
 tab: normal
+available: "yes"
+published: "yes"
 title: High Quality iPhone Speaker Dust Protector
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/IMG_5603.webp
 images:
@@ -17,10 +19,14 @@ types:
     subTitle: Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/IMG_5603.webp
     price: 80
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-3802
     subTitle: Silver/White
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1791102680/Untitled-design-3.webp
     price: 80
+    available: "yes"
+    published: "yes"
 ---
 Protect your iPhone’s speakers from dust while enhancing its sleek look with the Non-Scratch Metal Dust Grill.
 

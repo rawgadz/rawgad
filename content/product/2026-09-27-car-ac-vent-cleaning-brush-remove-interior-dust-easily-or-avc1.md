@@ -2,6 +2,8 @@
 id: SH01
 slug: car-ac-vent-cleaning-brush-remove-interior-dust-easily/
 tab: normal
+available: "yes"
+published: "yes"
 title: Car AC Vent Cleaning Brush – Remove Interior Dust Easily | avc1
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1790524205/car-ac-cleaner.webp
 images:

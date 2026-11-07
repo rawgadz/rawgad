@@ -83,13 +83,6 @@
     "name": "Rawgadz Factory Direct Leather Semi-Perforated Steering Wheel Cover - Black and Grey",
     "price": 1860
   },
-  "MRA-05:::MRA-0503:::_": {
-    "productId": "MRA-05",
-    "typeId": "MRA-0503",
-    "subProductId": null,
-    "name": "Rawgadz Factory Direct Leather Semi-Perforated Steering Wheel Cover - Black",
-    "price": 1860
-  },
   "MRA-06:::MRA-0601:::_": {
     "productId": "MRA-06",
     "typeId": "MRA-0601",
@@ -291,13 +284,6 @@
     "typeId": "MRA-1404",
     "subProductId": null,
     "name": "Car Steering cover High Quality, Premium Leather Best Quality with Guarantee - No Logo Plain Red",
-    "price": 1650
-  },
-  "MRA-14:::MRA-1405:::_": {
-    "productId": "MRA-14",
-    "typeId": "MRA-1405",
-    "subProductId": null,
-    "name": "Car Steering cover High Quality, Premium Leather Best Quality with Guarantee - With Toyota Logo Chocolate",
     "price": 1650
   },
   "MRA-15:::MRA-1501:::_": {
@@ -768,97 +754,6 @@
     "subProductId": null,
     "name": "High Quality iPhone Speaker Dust Protector - Silver/White",
     "price": 80
-  },
-  "pro_test:::_:::_": {
-    "productId": "pro_test",
-    "typeId": "",
-    "subProductId": null,
-    "name": "Cable Organizers For Charging Cable and other cables slider magnet - Type",
-    "price": 100
-  },
-  "prod_002:::prod_002_type_001:::prod_002_type_001_sub_001": {
-    "productId": "prod_002",
-    "typeId": "prod_002_type_001",
-    "subProductId": "prod_002_type_001_sub_001",
-    "name": "Studio ANC Headphones - Matte Black (Standard Cushions)",
-    "price": 249.5
-  },
-  "prod_002:::prod_002_type_001:::prod_002_type_001_sub_002": {
-    "productId": "prod_002",
-    "typeId": "prod_002_type_001",
-    "subProductId": "prod_002_type_001_sub_002",
-    "name": "Studio ANC Headphones - Matte Black (Cooling Gel Cushions)",
-    "price": 279.5
-  },
-  "prod_002:::prod_002_type_002:::prod_002_type_002_sub_001": {
-    "productId": "prod_002",
-    "typeId": "prod_002_type_002",
-    "subProductId": "prod_002_type_002_sub_001",
-    "name": "Studio ANC Headphones - Polar White (Standard Cushions)",
-    "price": 249.5
-  },
-  "prod_002:::prod_002_type_002:::prod_002_type_002_sub_002": {
-    "productId": "prod_002",
-    "typeId": "prod_002_type_002",
-    "subProductId": "prod_002_type_002_sub_002",
-    "name": "Studio ANC Headphones - Polar White (Cooling Gel Cushions)",
-    "price": 279.5
-  },
-  "prod_002:::prod_002_type_003:::prod_002_type_003_sub_001": {
-    "productId": "prod_002",
-    "typeId": "prod_002_type_003",
-    "subProductId": "prod_002_type_003_sub_001",
-    "name": "Studio ANC Headphones - Midnight Blue (Standard Cushions)",
-    "price": 259.5
-  },
-  "prod_002:::prod_002_type_003:::prod_002_type_003_sub_002": {
-    "productId": "prod_002",
-    "typeId": "prod_002_type_003",
-    "subProductId": "prod_002_type_003_sub_002",
-    "name": "Studio ANC Headphones - Midnight Blue (Cooling Gel Cushions)",
-    "price": 289.5
-  },
-  "prod_003:::prod_003_type_001:::prod_003_type_001_sub_001": {
-    "productId": "prod_003",
-    "typeId": "prod_003_type_001",
-    "subProductId": "prod_003_type_001_sub_001",
-    "name": "Retro Instant Camera - Classic White (Camera Only)",
-    "price": 89.99
-  },
-  "prod_003:::prod_003_type_001:::prod_003_type_001_sub_002": {
-    "productId": "prod_003",
-    "typeId": "prod_003_type_001",
-    "subProductId": "prod_003_type_001_sub_002",
-    "name": "Retro Instant Camera - Classic White (Camera + 20 Film Pack)",
-    "price": 109.99
-  },
-  "prod_003:::prod_003_type_002:::prod_003_type_002_sub_001": {
-    "productId": "prod_003",
-    "typeId": "prod_003_type_002",
-    "subProductId": "prod_003_type_002_sub_001",
-    "name": "Retro Instant Camera - Mint Green (Camera Only)",
-    "price": 89.99
-  },
-  "prod_003:::prod_003_type_002:::prod_003_type_002_sub_002": {
-    "productId": "prod_003",
-    "typeId": "prod_003_type_002",
-    "subProductId": "prod_003_type_002_sub_002",
-    "name": "Retro Instant Camera - Mint Green (Camera + 20 Film Pack)",
-    "price": 109.99
-  },
-  "prod_003:::prod_003_type_003:::prod_003_type_003_sub_001": {
-    "productId": "prod_003",
-    "typeId": "prod_003_type_003",
-    "subProductId": "prod_003_type_003_sub_001",
-    "name": "Retro Instant Camera - Sunset Orange (Camera Only)",
-    "price": 94.99
-  },
-  "prod_003:::prod_003_type_003:::prod_003_type_003_sub_002": {
-    "productId": "prod_003",
-    "typeId": "prod_003_type_003",
-    "subProductId": "prod_003_type_003_sub_002",
-    "name": "Retro Instant Camera - Sunset Orange (Camera + 20 Film Pack)",
-    "price": 114.99
   },
   "SH-02:::SH-0201:::SH-020101": {
     "productId": "SH-02",

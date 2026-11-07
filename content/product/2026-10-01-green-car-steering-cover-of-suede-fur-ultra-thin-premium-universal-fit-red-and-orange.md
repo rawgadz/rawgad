@@ -2,6 +2,8 @@
 id: MRA-22
 slug: green-car-steering-cover-of-suede-fur-ultra-thin-premium-universal-fit-red-and-orange/
 tab: normal
+available: "yes"
+published: "yes"
 title: Green car Steering cover of suede fur ultra thin premium Universal Fit
   (red and orange)
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
@@ -18,14 +20,20 @@ types:
     subTitle: Green Texture
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
     price: 1690
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2202
     subTitle: Red Texture
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Upload-to-rawgadz-increase-price-6.webp
     price: 1690
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2203
     subTitle: Orange Texture
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790656669/Upload-to-rawgadz-increase-price-5.webp
     price: 1690
+    available: "yes"
+    published: "yes"
 ---
 Elevate your driving comfort and interior luxury with the Suede Fur Ultra-Thin Premium Steering Wheel Cover.
 

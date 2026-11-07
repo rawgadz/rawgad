@@ -2,6 +2,8 @@
 id: MRA-20
 slug: glossy-handshape-dragon-skin-steering-cover/
 tab: normal
+available: "yes"
+published: "yes"
 title: Glossy Handshape Dragon Skin Steering cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01BOmfnH25typd8KVPw_2756927585-0-cib.webp
 images:
@@ -16,10 +18,14 @@ types:
     subTitle: Red Dragon
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01JoBQ3625tyqilBjYS_2756927585-0-cib.webp
     price: 1550
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-2002
     subTitle: Blue Dragon
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN013BchY625tyqovMRLi_2756927585-0-cib.webp
     price: 1550
+    available: "yes"
+    published: "yes"
 ---
 Upgrade your vehicle's interior luxury and road control with the Rawgadaz Glossy Dragon Skin & Peach Wood Grain Steering Cover.
 

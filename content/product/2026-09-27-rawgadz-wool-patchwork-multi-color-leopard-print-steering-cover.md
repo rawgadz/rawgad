@@ -2,6 +2,8 @@
 id: MRA-08
 slug: rawgadz-wool-patchwork-multi-color-leopard-print-steering-cover/
 tab: normal
+available: "yes"
+published: "yes"
 title: Rawgadz Wool Patchwork Multi-Color Leopard Print Steering Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-51.webp
 images:
@@ -17,14 +19,20 @@ types:
     subTitle: Beige
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-51.webp
     price: 920
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0802
     subTitle: Ash
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-49.webp
     price: 920
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0803
     subTitle: Red Wine
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790491818/Untitled-design-50.webp
     price: 920
+    available: "yes"
+    published: "yes"
 ---
 Unique Wool Patchwork Steering Wheel Cover
 

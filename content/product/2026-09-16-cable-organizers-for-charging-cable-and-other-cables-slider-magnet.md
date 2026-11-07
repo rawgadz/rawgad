@@ -2,6 +2,8 @@
 id: pro_test
 slug: cable-organizers-for-charging-cable-and-other-cables-slider-magnet
 tab: gadget
+available: "no"
+published: "no"
 title: Cable Organizers For Charging Cable and other cables slider magnet
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089323/O1CN01i3cew61lBIFIP8Rfx_2210908094780-0-cib.webp
 images:
@@ -16,7 +18,8 @@ priceRange:
   max: 100
 tags: wearables
 types:
-  - {}
+  - available: "no"
+    published: "no"
 ---
 Eliminate desk clutter and keep your charging cords neatly secured with the Magnetic Adjustable Cable Organiser Clips.
 

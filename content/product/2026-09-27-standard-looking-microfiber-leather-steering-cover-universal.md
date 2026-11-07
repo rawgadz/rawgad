@@ -2,6 +2,8 @@
 id: MRA-07
 slug: microfiber-leather-steering-wheel-cover-38cm/
 tab: normal
+available: "yes"
+published: "yes"
 title: Standard looking Microfiber Leather Steering Cover Universal
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp
 images:
@@ -16,10 +18,14 @@ types:
     subTitle: Red Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp
     price: 1699
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0702
     subTitle: Coffee Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01AFZCvv26HLEWDMCcU_2215748707636-0-cib.webp
     price: 1699
+    available: "yes"
+    published: "yes"
 ---
 Elegant Mahogany Grain Steering Wheel Cover
 

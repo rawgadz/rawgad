@@ -2,6 +2,8 @@
 id: MRA-05
 slug: rawgadz-factory-direct-leather-semi-perforated-steering-wheel-cover/
 tab: normal
+available: "yes"
+published: "yes"
 title: Rawgadz Factory Direct Leather Semi-Perforated Steering Wheel Cover
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790440793/Untitled-design-48.webp
 images:
@@ -17,14 +19,20 @@ types:
     subTitle: Black and Red
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib.webp
     price: 1860
+    available: "yes"
+    published: "yes"
   - subProductId: MRA-0502
     subTitle: Black and Grey
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790440811/O1CN01zKWp3z25tz6gQhW6C_2756927585-0-cib.webp
     price: 1860
+    available: "no"
+    published: "yes"
   - subProductId: MRA-0503
     subTitle: Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790440810/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib.webp
     price: 1860
+    available: "yes"
+    published: "no"
 ---
 Transform your daily driving comfort and protect your steering wheel with the Rawgadaz Massage Grip Steering Wheel Cover.
 
