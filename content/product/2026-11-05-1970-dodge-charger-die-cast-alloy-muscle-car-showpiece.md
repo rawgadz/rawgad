@@ -12,7 +12,7 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793895546/WhatsApp_Image_2026-11-05_at_19.21.17_2.jpg
 description: 1:24 die-cast 1970 Charger showpiece with working lights, sounds,
   and openable parts.
-price: 0
+price: 2500
 tags: Showpiece
 ---
 Elevate your workspace, car dashboard, or collector's shelf with the iconic 1:24 Scale 1970 Dodge Charger Die-Cast Alloy Muscle Car Showpiece!
