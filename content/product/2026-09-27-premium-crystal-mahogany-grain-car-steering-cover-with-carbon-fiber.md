@@ -6,7 +6,7 @@ tab: normal
 title: Premium Crystal Mahogany Grain Car Steering Cover with Carbon Fiber
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
 images:
-  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082682/Untitled-design-34.webp
+  - https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082681/Untitled-design-33-1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082680/Untitled-design-32-1.webp
 description: Premium carbon fiber & microfiber steering cover with super grip,
