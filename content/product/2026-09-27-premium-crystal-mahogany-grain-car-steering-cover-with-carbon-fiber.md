@@ -1,5 +1,6 @@
 ---
 id: MRA-11
+available: true
 slug: premium-crystal-mahogany-grain-car-steering-cover/
 tab: normal
 available: "yes"
@@ -7,7 +8,7 @@ published: "yes"
 title: Premium Crystal Mahogany Grain Car Steering Cover with Carbon Fiber
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
 images:
-  - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082682/Untitled-design-34.webp
+  - https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082681/Untitled-design-33-1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082680/Untitled-design-32-1.webp
 description: Premium carbon fiber & microfiber steering cover with super grip,
@@ -16,18 +17,21 @@ price: 2400
 tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-1101
+    available: true
     subTitle: Black and Red
-    subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082590/Upload-to-rawgadz-increase-price-1.webp
+    subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
     price: 2400
     available: "yes"
     published: "yes"
   - subProductId: MRA-1102
+    available: true
     subTitle: Black and Brown
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790509577/Untitled-design-34.webp
     price: 2400
     available: "yes"
     published: "yes"
   - subProductId: MRA-1103
+    available: true
     subTitle: Black and Gray
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/Untitled-design-32-1.webp
     price: 2400

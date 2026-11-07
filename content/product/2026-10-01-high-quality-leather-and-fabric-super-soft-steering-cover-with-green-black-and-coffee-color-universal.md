@@ -1,5 +1,6 @@
 ---
 id: MRA-23
+available: true
 slug: high-quality-leather-and-fabric-super-soft-steering-cover-with-green-black-and-coffee-color-universal/
 tab: normal
 available: "yes"
@@ -20,18 +21,21 @@ price: 1650
 tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2301
+    available: true
     subTitle: Green
-    subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790656670/Untitled-design-42.webp
+    subImage: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086800/O1CN014J8oei1CnITJp4b0c_2217254080125-0-cib.webp
     price: 1650
     available: "yes"
     published: "yes"
   - subProductId: MRA-2302
+    available: true
     subTitle: Coffee
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790832495/Upload-to-rawgadz-increase-price-1.webp
     price: 1650
     available: "yes"
     published: "yes"
   - subProductId: MRA-2303
+    available: true
     subTitle: Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790832495/green-1-1.webp
     price: 1650
