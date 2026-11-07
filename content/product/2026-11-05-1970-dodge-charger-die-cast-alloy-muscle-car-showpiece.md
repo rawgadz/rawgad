@@ -1,6 +1,7 @@
 ---
 id: Car-03
-available: true
+available: "yes"
+published: "yes"
 tab: gadget
 title: 1970 Dodge Charger Die-Cast Alloy Muscle Car Showpiece
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793895546/WhatsApp_Image_2026-11-05_at_19.21.16_2.jpg

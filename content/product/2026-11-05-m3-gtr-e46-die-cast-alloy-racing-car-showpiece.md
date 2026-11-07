@@ -1,6 +1,7 @@
 ---
 id: Car-01
-available: true
+available: "yes"
+published: "yes"
 tab: gadget
 title: M3 GTR E46 Die-Cast Alloy Racing Car Showpiece
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793894058/WhatsApp_Image_2026-11-05_at_19.18.12_1.jpg

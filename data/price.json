@@ -1,4 +1,25 @@
 {
+  "Car-01:::_:::_": {
+    "productId": "Car-01",
+    "typeId": null,
+    "subProductId": null,
+    "name": "M3 GTR E46 Die-Cast Alloy Racing Car Showpiece",
+    "price": 2500
+  },
+  "Car-02:::_:::_": {
+    "productId": "Car-02",
+    "typeId": null,
+    "subProductId": null,
+    "name": "Rolls-Royce Phantom Luxury Die-Cast Alloy Showpiece",
+    "price": 2500
+  },
+  "Car-03:::_:::_": {
+    "productId": "Car-03",
+    "typeId": null,
+    "subProductId": null,
+    "name": "1970 Dodge Charger Die-Cast Alloy Muscle Car Showpiece",
+    "price": 2500
+  },
   "MRA-02:::MRA-0201:::_": {
     "productId": "MRA-02",
     "typeId": "MRA-0201",

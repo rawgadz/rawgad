@@ -1,6 +1,7 @@
 ---
 id: Car-02
-available: true
+available: "yes"
+published: "yes"
 tab: gadget
 title: Rolls-Royce Phantom Luxury Die-Cast Alloy Showpiece
 imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1793895159/WhatsApp_Image_2026-11-05_at_19.19.44.jpg
