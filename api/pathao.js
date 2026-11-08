@@ -154,6 +154,100 @@ async function handlePathaoWebhook(req, res, payload) {
   }
 }
 
+const INSIDE_DHAKA_CHARGE = 60;
+const OUTSIDE_DHAKA_CHARGE = 90;
+
+function isInsideDhaka(existingOrder, orderData, fullAddress) {
+  const savedFullAddr = String(
+    existingOrder?.customer?.full_address ||
+    existingOrder?.customer?.address_detail ||
+    ""
+  ).trim();
+  const providedAddr = String(
+    orderData?.custom_recipient_address ||
+    orderData?.recipient_address ||
+    ""
+  ).trim();
+  const hasAddressOverride = Boolean(
+    providedAddr &&
+    savedFullAddr &&
+    providedAddr.toLowerCase() !== savedFullAddr.toLowerCase()
+  );
+
+  const districtVal = String(
+    orderData?.district ||
+    orderData?.jela ||
+    orderData?.customer?.district ||
+    orderData?.customer?.jela ||
+    (!hasAddressOverride ? (existingOrder?.customer?.district || existingOrder?.customer?.jela || "") : "")
+  ).trim().toLowerCase();
+
+  if (districtVal) {
+    return districtVal === "dhaka" || districtVal.includes("dhaka") || districtVal.includes("ঢাকা");
+  }
+
+  const addrLower = String(fullAddress || savedFullAddr || "").trim().toLowerCase();
+  if (addrLower) {
+    return addrLower.includes("dhaka") || addrLower.includes("ঢাকা");
+  }
+
+  const cityId = parseInt(
+    orderData?.recipient_city ||
+    orderData?.custom_city_id ||
+    existingOrder?.customer?.city_id,
+    10
+  );
+  if (cityId && !isNaN(cityId)) {
+    return cityId === 1;
+  }
+
+  return false;
+}
+
+function getOrderBaseAmounts(existingOrder, orderData, fullAddress) {
+  if (existingOrder) {
+    let rawSubtotal = null;
+    if (existingOrder.subtotal !== undefined && existingOrder.subtotal !== null && !isNaN(Number(existingOrder.subtotal))) {
+      rawSubtotal = Number(existingOrder.subtotal);
+    } else if (Array.isArray(existingOrder.items) && existingOrder.items.length > 0) {
+      rawSubtotal = existingOrder.items.reduce((sum, item) => {
+        const lineTotal = (item.subtotal !== undefined && !isNaN(Number(item.subtotal)))
+          ? Number(item.subtotal)
+          : (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1);
+        return sum + lineTotal;
+      }, 0);
+    } else {
+      rawSubtotal = Number(existingOrder.payment_amount) || 0;
+    }
+
+    rawSubtotal = Math.round(rawSubtotal * 100) / 100;
+    const discountAmount = Number(existingOrder.discount_amount) || 0;
+    const basePayable = Math.max(0, Math.round((rawSubtotal - discountAmount) * 100) / 100);
+
+    const insideDhaka = isInsideDhaka(existingOrder, orderData, fullAddress);
+    const expectedDeliveryInclusive = Math.round(
+      (basePayable + (insideDhaka ? INSIDE_DHAKA_CHARGE : OUTSIDE_DHAKA_CHARGE)) * 100
+    ) / 100;
+    const storedPaymentAmount = Number(existingOrder.payment_amount);
+
+    // Use the already-calculated delivery-inclusive order total without adding 60 or 90 again
+    const orderTotal =
+      !isNaN(storedPaymentAmount) && storedPaymentAmount > basePayable
+        ? Math.round(storedPaymentAmount * 100) / 100
+        : expectedDeliveryInclusive;
+
+    return { rawSubtotal, basePayable, orderTotal };
+  }
+
+  const fallbackTotal = Math.max(
+    0,
+    Math.round(
+      (Number(orderData?.payment_amount ?? orderData?.amount_to_collect ?? orderData?.custom_amount_to_collect ?? orderData?.subtotal) || 0) * 100
+    ) / 100
+  );
+  return { rawSubtotal: fallbackTotal, basePayable: fallbackTotal, orderTotal: fallbackTotal };
+}
+
 async function handler(req, res) {
   setCors(req, res);
   if (req.method === "OPTIONS") return res.status(200).end();
@@ -289,12 +383,13 @@ async function handler(req, res) {
         existingOrder = await ordersCol.findOne({ invoice_number: merchantOrderId });
       }
 
-      if (existingOrder && (existingOrder.pathao_consignment_id || existingOrder.courier_status === "dispatched")) {
+      if (existingOrder && (existingOrder.pathao_consignment_id || existingOrder.consignment_id || existingOrder.courier_status === "dispatched")) {
         return res.status(409).json({
           success: false,
           error: "Order is already dispatched to Pathao Courier",
           consignment_id: existingOrder.pathao_consignment_id || existingOrder.consignment_id,
           invoice_number: existingOrder.invoice_number,
+          payment_amount: existingOrder.payment_amount,
         });
       }
 
@@ -308,12 +403,14 @@ async function handler(req, res) {
       }
 
       const recipientName = String(
+        orderData.custom_recipient_name ||
         orderData.recipient_name ||
         existingOrder?.customer?.name ||
         "Customer"
       ).trim();
 
       const rawPhone = String(
+        orderData.custom_recipient_phone ||
         orderData.recipient_phone ||
         existingOrder?.customer?.phone ||
         ""
@@ -332,8 +429,10 @@ async function handler(req, res) {
       }
 
       const fullAddress = String(
+        orderData.custom_recipient_address ||
         orderData.recipient_address ||
         existingOrder?.customer?.full_address ||
+        existingOrder?.customer?.address_detail ||
         ""
       ).trim();
 
@@ -348,14 +447,27 @@ async function handler(req, res) {
         10
       );
 
-      const itemWeight = Math.max(0.5, parseFloat(orderData.item_weight) || (itemQuantity * 0.5));
+      const itemWeight = Math.max(
+        0.5,
+        parseFloat(orderData.custom_weight || orderData.item_weight) || (itemQuantity * 0.5)
+      );
 
+      // Use the already-calculated delivery-inclusive order total without adding 60 or 90 again
+      const { rawSubtotal, orderTotal: updatedOrderTotal } = getOrderBaseAmounts(existingOrder, orderData, fullAddress);
+
+      const paymentMethod = String(existingOrder?.payment_method || orderData.payment_method || "cod").trim().toLowerCase();
       let amountToCollect = 0;
-      if (orderData.amount_to_collect !== undefined) {
-        amountToCollect = Math.max(0, Math.round(Number(orderData.amount_to_collect)));
-      } else if (existingOrder) {
-        const pm = (existingOrder.payment_method || "").toLowerCase();
-        amountToCollect = pm === "cod" ? Math.round(Number(existingOrder.payment_amount) || 0) : 0;
+      if (paymentMethod === "cod") {
+        amountToCollect = Math.round(updatedOrderTotal);
+      } else if (
+        existingOrder?.verified ||
+        existingOrder?.status === "success" ||
+        orderData.amount_to_collect === 0 ||
+        orderData.custom_amount_to_collect === 0
+      ) {
+        amountToCollect = 0;
+      } else {
+        amountToCollect = Math.round(updatedOrderTotal);
       }
 
       // Detailed variant description for Pathao
@@ -381,9 +493,12 @@ async function handler(req, res) {
         item_description: itemDescription,
       };
 
-      if (orderData.recipient_city) payload.recipient_city = parseInt(orderData.recipient_city, 10);
-      if (orderData.recipient_zone) payload.recipient_zone = parseInt(orderData.recipient_zone, 10);
-      if (orderData.recipient_area) payload.recipient_area = parseInt(orderData.recipient_area, 10);
+      const cityId = orderData.custom_city_id || orderData.recipient_city;
+      const zoneId = orderData.custom_zone_id || orderData.recipient_zone;
+      const areaId = orderData.custom_area_id || orderData.recipient_area;
+      if (cityId) payload.recipient_city = parseInt(cityId, 10);
+      if (zoneId) payload.recipient_zone = parseInt(zoneId, 10);
+      if (areaId) payload.recipient_area = parseInt(areaId, 10);
 
       const accessToken = await getAccessToken();
 
@@ -411,20 +526,23 @@ async function handler(req, res) {
         responseData.consignment_id ||
         `PTH-${Date.now()}`;
 
-      const deliveryFee = responseData.data?.delivery_fee || null;
       const orderStatus = responseData.data?.order_status || "Pending";
 
       let orderUpdated = false;
       if (existingOrder) {
         const now = new Date();
         await ordersCol.updateOne(
-          { _id: existingOrder._id },
+          {
+            _id: existingOrder._id,
+            courier_status: { $ne: "dispatched" },
+          },
           {
             $set: {
+              subtotal: rawSubtotal,
+              payment_amount: updatedOrderTotal,
               pathao_consignment_id: consignmentId,
               consignment_id: consignmentId,
               pathao_order_status: orderStatus,
-              pathao_delivery_fee: deliveryFee,
               pathao_dispatched_at: now,
               courier_status: "dispatched",
               status: existingOrder.status === "pending" ? "shipped" : existingOrder.status,
@@ -434,10 +552,14 @@ async function handler(req, res) {
                 consignment_id: consignmentId,
                 store_id: storeId,
                 amount_to_collect: amountToCollect,
-                delivery_fee: deliveryFee,
                 dispatched_at: now,
               },
               updated_at: now,
+            },
+            $unset: {
+              pathao_delivery_fee: "",
+              delivery_charge: "",
+              shipping_charge: "",
             },
           }
         );
@@ -448,8 +570,8 @@ async function handler(req, res) {
         message: "Order dispatched to Pathao successfully",
         orderUpdated,
         consignment_id: consignmentId,
-        delivery_fee: deliveryFee,
         invoice_number: merchantOrderId,
+        payment_amount: updatedOrderTotal,
         amount_to_collect: amountToCollect,
         data: responseData.data || responseData,
       });

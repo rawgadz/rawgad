@@ -42,6 +42,21 @@ function sanitise(str, max = 200) {
   return str.trim().slice(0, max);
 }
 
+const INSIDE_DHAKA_CHARGE = 60;
+const OUTSIDE_DHAKA_CHARGE = 90;
+
+function isInsideDhakaDestination(district, address) {
+  const dist = String(district || "").trim().toLowerCase();
+  if (dist) {
+    return dist === "dhaka" || dist.includes("dhaka") || dist.includes("ঢাকা");
+  }
+  const addr = String(address || "").trim().toLowerCase();
+  if (addr) {
+    return addr.includes("dhaka") || addr.includes("ঢাকা");
+  }
+  return false;
+}
+
 function validatePhone(phone) {
   if (!phone) return false;
   return /^01[0-9]{9}$/.test(phone.replace(/[\s-]/g, ""));
@@ -87,6 +102,8 @@ function buildCheckoutSuccessResponse(orderDoc, duplicatePrevented = false) {
     payment_method: method,
     invoice_number,
     trx_id: orderTrxId,
+    subtotal: orderDoc.subtotal,
+    payment_amount: orderDoc.payment_amount,
     message,
     redirect_url,
     event_id,
@@ -122,6 +139,11 @@ module.exports = async function handler(req, res) {
       cust_phone,
       cust_email,
       cust_address,
+      district,
+      jela,
+      upazila,
+      upozela,
+      address_detail,
       payment_method,
       trx_id,
       sender_number,
@@ -137,6 +159,13 @@ module.exports = async function handler(req, res) {
     const rawEmail = sanitise(cust_email, 200);
     const email = rawEmail || "noemail@gmail.com";
     const address = sanitise(cust_address, 300);
+    const rawDistrict = sanitise(district || jela || body?.customer?.district || body?.customer?.jela || "", 100);
+    const resolvedDistrict = rawDistrict || (() => {
+      const parts = address.split(",").map(s => s.trim()).filter(Boolean);
+      return parts.length > 1 ? parts[parts.length - 1] : "";
+    })();
+    const resolvedUpazila = sanitise(upazila || upozela || body?.customer?.upazila || body?.customer?.upozela || "", 100);
+    const resolvedAddressDetail = sanitise(address_detail || body?.customer?.address_detail || "", 300);
     const method = (payment_method || "cod").toLowerCase().trim();
     const cleanIdempotencyKey = idempotency_key ? sanitise(String(idempotency_key), 120) : null;
 
@@ -249,7 +278,10 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    const finalAmount = Math.max(0, Math.round((calculatedSubtotal - discountAmount) * 100) / 100);
+    const insideDhaka = isInsideDhakaDestination(resolvedDistrict, address);
+    const deliveryCharge = insideDhaka ? INSIDE_DHAKA_CHARGE : OUTSIDE_DHAKA_CHARGE;
+    const netProductAmount = Math.max(0, Math.round((calculatedSubtotal - discountAmount) * 100) / 100);
+    const finalAmount = Math.round((netProductAmount + deliveryCharge) * 100) / 100;
     const payloadFingerprint = computePayloadFingerprint({
       phone,
       name,
@@ -340,7 +372,15 @@ module.exports = async function handler(req, res) {
       trx_id: orderTrxId,
       sender_number: cleanSenderNumber,
       verified: false,
-      customer: { name, phone, email, full_address: address },
+      customer: {
+        name,
+        phone,
+        email,
+        full_address: address,
+        ...(resolvedDistrict ? { district: resolvedDistrict, jela: resolvedDistrict } : {}),
+        ...(resolvedUpazila ? { upazila: resolvedUpazila, upozela: resolvedUpazila } : {}),
+        ...(resolvedAddressDetail ? { address_detail: resolvedAddressDetail } : {}),
+      },
       items: validatedLineItems.map(item => ({
         productId: item.productId,
         typeId: item.typeId,

@@ -1,5 +1,5 @@
 // api/order.js
-// Protected Admin Order Operations
+// Order Management Operations (Admin & Customer Order Details)
 
 const { getOrdersCollection } = require("./_db");
 const {
@@ -9,15 +9,120 @@ const {
   badRequest,
   notFound,
   serverError,
+  verifyAdminRequest,
   requireAdminAuth,
 } = require("./_helpers");
+
+function isOrderInsideDhaka(order) {
+  const district = String(
+    order?.customer?.district ||
+    order?.customer?.jela ||
+    ""
+  ).trim().toLowerCase();
+
+  if (district) {
+    return district === "dhaka" || district.includes("dhaka") || district.includes("ঢাকা");
+  }
+
+  const addr = String(
+    order?.customer?.full_address ||
+    order?.customer?.address_detail ||
+    ""
+  ).trim().toLowerCase();
+
+  if (addr) {
+    return addr.includes("dhaka") || addr.includes("ঢাকা");
+  }
+
+  return false;
+}
+
+function computeOrderTotals(order) {
+  if (!order) return { rawSubtotal: 0, netBase: 0, combinedTotal: 0 };
+
+  let rawSubtotal = null;
+  if (order.subtotal !== undefined && order.subtotal !== null && !isNaN(Number(order.subtotal))) {
+    rawSubtotal = Number(order.subtotal);
+  } else if (Array.isArray(order.items) && order.items.length > 0) {
+    rawSubtotal = order.items.reduce((sum, item) => {
+      const lineTotal = (item.subtotal !== undefined && !isNaN(Number(item.subtotal)))
+        ? Number(item.subtotal)
+        : (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1);
+      return sum + lineTotal;
+    }, 0);
+  } else {
+    rawSubtotal = Number(order.payment_amount) || 0;
+  }
+
+  rawSubtotal = Math.round(rawSubtotal * 100) / 100;
+  const discount = Number(order.discount_amount) || 0;
+  const netBase = Math.max(0, Math.round((rawSubtotal - discount) * 100) / 100);
+  const deliveryCharge = isOrderInsideDhaka(order) ? 60 : 90;
+  const expectedDeliveryInclusive = Math.round((netBase + deliveryCharge) * 100) / 100;
+
+  const storedPaymentAmount = Number(order.payment_amount);
+  const combinedTotal =
+    !isNaN(storedPaymentAmount) && storedPaymentAmount > netBase
+      ? Math.round(storedPaymentAmount * 100) / 100
+      : expectedDeliveryInclusive;
+
+  return { rawSubtotal, netBase, combinedTotal };
+}
+
+function normalizeOrderRecord(order, isAdmin = true) {
+  if (!order) return null;
+  const { rawSubtotal, combinedTotal } = computeOrderTotals(order);
+
+  const normalized = {
+    ...order,
+    subtotal: rawSubtotal,
+    payment_amount: combinedTotal,
+  };
+
+  delete normalized.delivery_charge;
+  delete normalized.shipping_charge;
+  delete normalized.pathao_delivery_fee;
+  delete normalized.delivery_fee;
+  if (normalized.courier && typeof normalized.courier === "object") {
+    normalized.courier = { ...normalized.courier };
+    delete normalized.courier.delivery_fee;
+    if ((normalized.payment_method || "cod").toLowerCase() === "cod") {
+      normalized.courier.amount_to_collect = Math.round(combinedTotal);
+    }
+  }
+
+  if (!isAdmin) {
+    return {
+      invoice_number: normalized.invoice_number,
+      subtotal: normalized.subtotal,
+      discount_amount: normalized.discount_amount || 0,
+      coupon_code: normalized.coupon_code || null,
+      payment_amount: normalized.payment_amount,
+      currency: normalized.currency || "BDT",
+      payment_method: normalized.payment_method,
+      status: normalized.status,
+      courier_status: normalized.courier_status || null,
+      customer: normalized.customer ? {
+        name: normalized.customer.name,
+        phone: normalized.customer.phone,
+        email: normalized.customer.email,
+        full_address: normalized.customer.full_address,
+        ...(normalized.customer.district ? { district: normalized.customer.district, jela: normalized.customer.jela || normalized.customer.district } : {}),
+        ...(normalized.customer.upazila ? { upazila: normalized.customer.upazila, upozela: normalized.customer.upozela || normalized.customer.upazila } : {}),
+        ...(normalized.customer.address_detail ? { address_detail: normalized.customer.address_detail } : {}),
+      } : {},
+      items: normalized.items || [],
+      created_at: normalized.created_at,
+      updated_at: normalized.updated_at,
+    };
+  }
+
+  return normalized;
+}
 
 module.exports = async function handler(req, res) {
   setCors(req, res);
   if (req.method === "OPTIONS") return res.status(200).end();
-
-  const adminUser = requireAdminAuth(req, res);
-  if (!adminUser) return;
 
   try {
     const ordersCol = await getOrdersCollection();
@@ -26,7 +131,31 @@ module.exports = async function handler(req, res) {
     // GET: Fetch orders with search and filters
     // ==========================================
     if (req.method === "GET") {
-      const { search, status, payment_method, courier_status, limit = 200 } = req.query || {};
+      const { invoice_number, search, status, payment_method, courier_status, limit = 200 } = req.query || {};
+
+      // Single-order lookup by invoice_number (supports both customer-facing and admin order details)
+      if (invoice_number && String(invoice_number).trim()) {
+        let isAdmin = false;
+        try {
+          isAdmin = Boolean(verifyAdminRequest(req));
+        } catch (_) {
+          isAdmin = false;
+        }
+
+        const singleOrder = await ordersCol.findOne({ invoice_number: String(invoice_number).trim() });
+        if (!singleOrder) return notFound(res, "Order not found");
+
+        const normalizedOrder = normalizeOrderRecord(singleOrder, isAdmin);
+        return ok(res, {
+          count: 1,
+          order: normalizedOrder,
+          orders: [normalizedOrder],
+        });
+      }
+
+      const adminUser = requireAdminAuth(req, res);
+      if (!adminUser) return;
+
       const query = {};
 
       if (status && status !== "all") query.status = status;
@@ -60,13 +189,17 @@ module.exports = async function handler(req, res) {
       }
 
       const numLimit = Math.min(500, Math.max(1, parseInt(limit, 10) || 200));
-      const orders = await ordersCol.find(query).sort({ created_at: -1 }).limit(numLimit).toArray();
+      const rawOrders = await ordersCol.find(query).sort({ created_at: -1 }).limit(numLimit).toArray();
+      const orders = rawOrders.map(o => normalizeOrderRecord(o, true));
 
       return ok(res, {
         count: orders.length,
         orders
       });
     }
+
+    const adminUser = requireAdminAuth(req, res);
+    if (!adminUser) return;
 
     // ==========================================
     // PATCH / PUT: Update Order Status & Details
@@ -93,6 +226,19 @@ module.exports = async function handler(req, res) {
         if (customer.phone) updateFields["customer.phone"] = customer.phone;
         if (customer.full_address) updateFields["customer.full_address"] = customer.full_address;
         if (customer.email) updateFields["customer.email"] = customer.email;
+        if (customer.district || customer.jela) {
+          const dist = String(customer.district || customer.jela).trim();
+          updateFields["customer.district"] = dist;
+          updateFields["customer.jela"] = dist;
+        }
+        if (customer.upazila || customer.upozela) {
+          const upz = String(customer.upazila || customer.upozela).trim();
+          updateFields["customer.upazila"] = upz;
+          updateFields["customer.upozela"] = upz;
+        }
+        if (customer.address_detail) {
+          updateFields["customer.address_detail"] = String(customer.address_detail).trim();
+        }
       }
 
       const updated = await ordersCol.findOneAndUpdate(
@@ -103,7 +249,7 @@ module.exports = async function handler(req, res) {
 
       return ok(res, {
         message: "Order updated successfully",
-        order: updated
+        order: normalizeOrderRecord(updated, true)
       });
     }
 

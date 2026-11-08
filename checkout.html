@@ -351,15 +351,15 @@
             <div class="border-t border-neutral-100 pt-4 space-y-2.5 text-xs">
               <div class="flex justify-between text-neutral-600 font-medium">
                 <span>Subtotal</span>
-                <span class="font-bold text-neutral-900" x-text="'BDT ' + subtotal.toFixed(2)"></span>
+                <span class="font-bold text-neutral-900" x-text="'BDT ' + (orderDetails ? Number(orderDetails.subtotal || 0) : subtotal).toFixed(2)"></span>
               </div>
               
-              <div x-show="discountPercent > 0" class="flex justify-between text-green-600 font-bold" style="display: none;">
-                <span x-text="'Discount (' + discountPercent + '%)'"></span>
-                <span x-text="'- BDT ' + discountAmount.toFixed(2)"></span>
+              <div x-show="(orderDetails ? Number(orderDetails.discount_amount || 0) : discountPercent) > 0" class="flex justify-between text-green-600 font-bold" style="display: none;">
+                <span x-text="orderDetails ? 'Discount' : ('Discount (' + discountPercent + '%)')"></span>
+                <span x-text="'- BDT ' + (orderDetails ? Number(orderDetails.discount_amount || 0) : discountAmount).toFixed(2)"></span>
               </div>
 
-              <div class="flex justify-between text-neutral-600 font-medium items-center">
+              <div x-show="!orderDetails" class="flex justify-between text-neutral-600 font-medium items-center">
                 <div class="flex items-center gap-1.5">
                   <span>Estimated Shipping</span>
                   <span class="text-[10px] px-2 py-0.5 rounded font-bold border border-neutral-200 bg-neutral-100 text-neutral-800" x-text="isDhaka ? 'Inside Dhaka (৳60)' : 'Outside Dhaka (৳90)'"></span>
@@ -525,14 +525,33 @@
 
         availabilityStatusMap: {},
         checkingStock: false,
+        orderDetails: null,
 
         init() {
           this.initStockFromCache();
           if (window.RawgadzPixel) { window.RawgadzPixel.trackInitiateCheckout(this.cartItems); }
           this.checkLiveStock();
+          const params = new URLSearchParams(window.location.search);
+          const inv = params.get('invoice_number');
+          if (inv) {
+            this.fetchOrderDetails(inv);
+          }
           window.addEventListener('storage', () => this.checkLiveStock());
           window.addEventListener('cart-update-main_store_cart', () => this.checkLiveStock());
           window.addEventListener('rawgad-stock-updated', () => this.initStockFromCache());
+        },
+
+        async fetchOrderDetails(invoiceNumber) {
+          if (!invoiceNumber) return;
+          try {
+            const res = await fetch('/api/order?invoice_number=' + encodeURIComponent(invoiceNumber));
+            if (!res.ok) return;
+            const data = await res.json();
+            const fetched = data.order || (Array.isArray(data.orders) ? data.orders[0] : null);
+            if (fetched) {
+              this.orderDetails = fetched;
+            }
+          } catch (_) {}
         },
 
         initStockFromCache() {
@@ -618,12 +637,28 @@
             const jela = (this.form.custom_jela || '').toLowerCase().trim();
             const upz = (this.form.custom_upozela || '').toLowerCase().trim();
             const detail = (this.form.address_detail || '').toLowerCase().trim();
-            return jela.includes('dhaka') || upz.includes('dhaka') || detail.includes('dhaka');
+            if (jela) return jela.includes('dhaka') || jela.includes('ঢাকা');
+            return upz.includes('dhaka') || detail.includes('dhaka') || upz.includes('ঢাকা') || detail.includes('ঢাকা');
           }
           if (this.form.jela === 'Other') {
-            return (this.form.custom_jela || '').toLowerCase().trim().includes('dhaka');
+            const customJela = (this.form.custom_jela || '').toLowerCase().trim();
+            return customJela.includes('dhaka') || customJela.includes('ঢাকা');
           }
-          return this.form.jela === 'Dhaka';
+          return (this.form.jela || '').toLowerCase().trim() === 'dhaka';
+        },
+
+        get selectedDistrict() {
+          if (this.form.is_custom_address) {
+            return (this.form.custom_jela || '').trim();
+          }
+          return this.form.jela === 'Other' ? (this.form.custom_jela || '').trim() : (this.form.jela || '').trim();
+        },
+
+        get selectedUpazila() {
+          if (this.form.is_custom_address) {
+            return (this.form.custom_upozela || '').trim();
+          }
+          return this.form.upozela === 'Other' ? (this.form.custom_upozela || '').trim() : (this.form.upozela || '').trim();
         },
 
         get shippingCharge() {
@@ -632,6 +667,9 @@
         },
 
         get finalAmount() {
+          if (this.orderDetails && this.orderDetails.payment_amount !== undefined) {
+            return Number(this.orderDetails.payment_amount) || 0;
+          }
           if (this.cartItems.length === 0) return 0;
           const net = Math.max(0, this.subtotal - this.discountAmount);
           return net + this.shippingCharge;
@@ -793,6 +831,11 @@
             cust_email: finalEmail,
             cust_phone: this.form.cust_phone.trim().replace(/[\s-]/g, ''),
             cust_address: completeAddress,
+            district: this.selectedDistrict,
+            jela: this.selectedDistrict,
+            upazila: this.selectedUpazila,
+            upozela: this.selectedUpazila,
+            address_detail: (this.form.address_detail || '').trim(),
             payment_method: 'cod',
             coupon_code: this.appliedCoupon || undefined,
             idempotency_key: idempotencyKey,
