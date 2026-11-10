@@ -31,7 +31,7 @@ types:
     price: 1850
   - subProductId: MRA-2103
     published: yes
-    available: yes
+    available: no
     subTitle: Gray Glossy
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp
     price: 1850
