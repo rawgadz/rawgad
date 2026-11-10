@@ -12,7 +12,7 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082169/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp
 description: Premium leather steering wheel cover with comfortable grip,
   anti-slip protection, and stylish design.
-price: 1450
+price: 1600
 tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0901
