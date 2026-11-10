@@ -38,6 +38,11 @@ types:
     available: yes
     subTitle: Brown
     subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794275764/O1CN01iwUwBy2GvJzx7LBPM__3025299077-0-cib.jpg
+  - subProductId: ir0905
+    published: yes
+    available: yes
+    subTitle: Coffee
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794275764/O1CN01Zde2w52GvJzp4o21p__3025299077-0-cib.jpg
 ---
 Premium Leather Steering Wheel Cover
 
