@@ -1,9 +1,9 @@
 ---
 id: MRA-21
+published: yes
+available: yes
 slug: glossy-non-slip-peach-wood-grain-steering-cover-all-season-universal-fit-breathable-2/
 tab: normal
-available: "yes"
-published: "yes"
 title: Glossy Non-Slip Peach Wood Grain Steering Cover – All Season Universal
   Fit (Breathable)
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp
@@ -14,27 +14,27 @@ images:
 description: The Rawgadz Peach Wood Grain Steering Cover combines a luxury
   wooden aesthetic with an all-season, breathable anti-slip grip and quick
   1-minute installation for standard vehicles.
-price: 1850
+price: 1250
 tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-2001
+    published: yes
+    available: yes
     subTitle: RedWine Glossy
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01qDNHA925tz6DniC9c_2756927585-0-cib.webp
     price: 1850
-    available: "yes"
-    published: "yes"
   - subProductId: MRA-2102
+    published: yes
+    available: yes
     subTitle: Brown Glossy
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01DD0py325tz6IYCm7i_2756927585-0-cib.webp
     price: 1850
-    available: "yes"
-    published: "yes"
   - subProductId: MRA-2103
+    published: yes
+    available: yes
     subTitle: Gray Glossy
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790429651/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp
     price: 1850
-    available: "yes"
-    published: "yes"
 ---
 Upgrade your car’s interior elegance and driving comfort with the Rawgadz Peach Wood Grain Steering Cover.
 
