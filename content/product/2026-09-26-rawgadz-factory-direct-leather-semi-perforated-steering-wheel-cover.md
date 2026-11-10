@@ -10,6 +10,7 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081691/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib-1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081691/O1CN01PtYnHz25tz6cStEYd_2756927585-0-cib-1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081690/O1CN01zKWp3z25tz6gQhW6C_2756927585-0-cib-1.webp
+  - https://res.cloudinary.com/ostvuxgl/image/upload/v1794274951/O1CN01HhMqua25tz6fMSYy1__2756927585-0-cib.jpg
 description: Drive in comfort with the breathable, UV-protective, anti-slip
   Rawgadaz Massage Grip Steering Cover.
 price: 1860
