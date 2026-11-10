@@ -1,9 +1,9 @@
 ---
 id: MRA-09
+published: yes
+available: yes
 slug: napa-leather-steering-wheel-cover-universal-hand-shape-ergonomics/
 tab: normal
-available: "no"
-published: "yes"
 title: Napa Leather steering Wheel Cover Universal Hand Shape Ergonomics
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01UvOUiH2GvK02ncaTh_3025299077-0-cib.webp
 images:
@@ -16,23 +16,23 @@ price: 1450
 tags: Car Accessories, steering cover
 types:
   - subProductId: MRA-0901
+    published: yes
+    available: no
     subTitle: Red Wine
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp
     price: 1450
-    available: "no"
-    published: "yes"
   - subProductId: MRA-0902
+    published: yes
+    available: no
     subTitle: Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp
     price: 1450
-    available: "yes"
-    published: "yes"
   - subProductId: MRA-0903
+    published: yes
+    available: no
     subTitle: Gray
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp
     price: 1450
-    available: "yes"
-    published: "yes"
 ---
 Premium Leather Steering Wheel Cover
 
