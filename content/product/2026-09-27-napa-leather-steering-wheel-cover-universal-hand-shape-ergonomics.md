@@ -33,6 +33,11 @@ types:
     subTitle: Gray
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp
     price: 1450
+  - subProductId: Ir0904
+    published: yes
+    available: yes
+    subTitle: Brown
+    subImage: Napa Leather steering Wheel Cover Universal Hand Shape Ergonomics
 ---
 Premium Leather Steering Wheel Cover
 
