@@ -35,6 +35,7 @@ types:
     published: yes
     available: yes
     subTitle: Black & Blue
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794274951/O1CN01HhMqua25tz6fMSYy1__2756927585-0-cib.jpg
 ---
 Upgrade your driving comfort and interior protection with the Massage Grip Semi-Perforated Car Steering Wheel Cover.
 
