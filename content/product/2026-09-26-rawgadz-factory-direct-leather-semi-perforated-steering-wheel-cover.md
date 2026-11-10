@@ -33,6 +33,12 @@ types:
     subTitle: Black & Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790440810/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib.webp
     price: 1860
+  - subProductId: ir0504
+    published: yes
+    available: yes
+    subTitle: Black & Blue
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794274951/O1CN01HhMqua25tz6fMSYy1__2756927585-0-cib.jpg
+    price: 1858
 ---
 Transform your daily driving comfort and protect your steering wheel with the Rawgadaz Massage Grip Steering Wheel Cover.
 
