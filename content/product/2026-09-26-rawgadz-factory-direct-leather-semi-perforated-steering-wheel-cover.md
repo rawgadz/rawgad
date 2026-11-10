@@ -30,7 +30,7 @@ types:
   - subProductId: MRA-0503
     published: no
     available: yes
-    subTitle: Black
+    subTitle: Black & Black
     subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790440810/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib.webp
     price: 1860
 ---
