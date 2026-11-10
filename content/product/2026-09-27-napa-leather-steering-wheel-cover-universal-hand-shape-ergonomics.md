@@ -37,7 +37,7 @@ types:
     published: yes
     available: yes
     subTitle: Brown
-    subImage: Napa Leather steering Wheel Cover Universal Hand Shape Ergonomics
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794275764/O1CN01iwUwBy2GvJzx7LBPM__3025299077-0-cib.jpg
 ---
 Premium Leather Steering Wheel Cover
 
