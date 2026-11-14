@@ -5,7 +5,7 @@ media:
 
 content:
   - name: site_settings
-    label: Site Settings (Favicon)
+    label: Site Settings (Favicon & Analytics)
     type: file
     path: content/settings.json
     format: json
@@ -15,7 +15,11 @@ content:
         label: Website Favicon
         required: false
         description: "Upload your site favicon (PNG, WEBP, or ICO)"
-
+      - name: ga_id
+        type: string
+        label: Google Analytics (GA4) Measurement ID
+        required: false
+        description: "Enter your GA4 Measurement ID (e.g., G-XXXXXXXXXX)"
   - name: coupons
     label: Coupons
     type: file
