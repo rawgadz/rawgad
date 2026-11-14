@@ -11,6 +11,7 @@ types:
     published: yes
     available: yes
     subTitle: German Style
+    price: 1900
   - subProductId: ir000102
     published: yes
     available: yes
