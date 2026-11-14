@@ -22,5 +22,6 @@ types:
     published: yes
     available: yes
     subTitle: plain black
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794632207/O1CN01VHnTYo1JKAcUFF22a_2206426561009-0-cib.jpg
     price: 1650
 ---
