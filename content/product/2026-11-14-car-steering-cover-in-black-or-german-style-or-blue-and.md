@@ -16,6 +16,7 @@ types:
     published: yes
     available: yes
     subTitle: Blue and Red Thread
+    subImage: https://res.cloudinary.com/mltcbcft/image/upload/v1790618234/O1CN011UAdnb1JKAcSMgCCw_2206426561009-0-cib-1.webp
     price: 1650
   - subProductId: ir000103
     published: yes
