@@ -4,6 +4,7 @@ published: yes
 available: yes
 tab: normal
 title: Car PU Leather Steering Cover in Black | German Style | Blue and Red Thread
+imageSrc: https://res.cloudinary.com/ostvuxgl/image/upload/v1794632207/O1CN01RTrthB1JKAcWA2tlL__2206426561009-0-cib.jpg
 description: fsdfdfgasdf
 price: 1900
 types:
@@ -11,6 +12,7 @@ types:
     published: yes
     available: yes
     subTitle: German Style
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794632207/O1CN01RTrthB1JKAcWA2tlL__2206426561009-0-cib.jpg
     price: 1900
   - subProductId: ir000102
     published: yes
