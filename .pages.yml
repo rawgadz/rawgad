@@ -1,9 +1,21 @@
 media:
   input: content/images
   output: /content/images
-  extensions: [jpg, jpeg, png, webp, gif]
+  extensions: [jpg, jpeg, png, webp, gif, ico]
 
 content:
+  - name: site_settings
+    label: Site Settings (Favicon)
+    type: file
+    path: content/settings.json
+    format: json
+    fields:
+      - name: favicon
+        type: image
+        label: Website Favicon
+        required: false
+        description: "Upload your site favicon (PNG, WEBP, or ICO)"
+
   - name: coupons
     label: Coupons
     type: file
