@@ -28,7 +28,7 @@ function generateHTML(blog) {
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/js/stock.js"></script>
   <script src="/js/meta-pixel.js"></script>
-
+  <script src="/js/favicon.js" defer></script>
   <style>
     [x-cloak] { display: none !important; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
