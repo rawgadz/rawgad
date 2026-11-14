@@ -221,7 +221,7 @@ function generateStandaloneProductHTML(rawProduct) {
   <meta property="og:url" content="https://www.rawgadz.com/product/${escapeHtml(product.slug)}.html">
   <meta property="og:type" content="product">
   <script type="application/ld+json">${jsonLd}</script>
-  
+  <script src="/js/favicon.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/js/stock.js"></script>
