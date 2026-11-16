@@ -2,6 +2,7 @@
 id: ir0002
 published: yes
 available: yes
+slug: rawgadz-memory-foam-neck-lumbar-support-pillow-set
 tab: normal
 title: Rawgadz Premium Memory Foam Car Neck Pillow & Lumbar Support Cushion Set
   – Ergonomic Back & Headrest Support
