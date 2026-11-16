@@ -12,6 +12,15 @@ description: Upgrade your daily commute and long highway drives with the Rawgadz
   natural curve of your spine and neck—eliminating driving fatigue, stiffness,
   and lower back pain.
 price: 1250
+types:
+  - subProductId: ir000201
+    published: yes
+    available: yes
+    subTitle: plain black
+  - subProductId: ir000202
+    published: yes
+    available: yes
+    subTitle: plain ash
 ---
 **Drive Longer, Drive Pain-Free with Rawgadz Ergonomic Support** Whether you are stuck in daily city traffic or cruising on long highway trips, factory car seats rarely provide proper spinal alignment. The **Rawgadz Premium Memory Foam Neck & Lumbar Support Set** bridges the gap between your body and the seat, delivering tailored orthopedic comfort from the moment you sit down.
 
