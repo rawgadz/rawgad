@@ -6,6 +6,7 @@ slug: rawgadz-memory-foam-neck-lumbar-support-pillow-set
 tab: normal
 title: Rawgadz Premium Memory Foam Car Neck Pillow & Lumbar Support Cushion Set
   – Ergonomic Back & Headrest Support
+imageSrc: https://res.cloudinary.com/ostvuxgl/image/upload/v1794807450/Untitled_Design_7.png
 description: Upgrade your daily commute and long highway drives with the Rawgadz
   Premium Memory Foam Neck & Lumbar Support Set. Engineered with high-density,
   slow-rebound orthopedic memory foam, this ergonomic combo contours to the
@@ -17,10 +18,12 @@ types:
     published: yes
     available: yes
     subTitle: plain black
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794807450/Untitled_Design_7.png
   - subProductId: ir000202
     published: yes
     available: yes
     subTitle: plain ash
+    subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794807450/Untitled_Design_6.png
 ---
 **Drive Longer, Drive Pain-Free with Rawgadz Ergonomic Support** Whether you are stuck in daily city traffic or cruising on long highway trips, factory car seats rarely provide proper spinal alignment. The **Rawgadz Premium Memory Foam Neck & Lumbar Support Set** bridges the gap between your body and the seat, delivering tailored orthopedic comfort from the moment you sit down.
 
