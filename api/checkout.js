@@ -10,6 +10,7 @@ const { getOrdersCollection } = require("./_db");
 const { normalizeId, makeCanonicalKey, getPurchasableCatalogMap } = require("./_catalog");
 const { parseBody } = require("./_helpers");
 const { buildPurchaseCustomData, trackServerPurchase } = require("./_meta");
+const { sendSms } = require("../lib/smsHelper");
 
 const IDEMPOTENCY_WINDOW_MS = 5000;
 
@@ -404,6 +405,32 @@ module.exports = async function handler(req, res) {
     };
 
     await ordersCol.insertOne(orderDoc);
+
+    // Feature 1: Automatic Payment Verification SMS via BulkSMSBD (non-blocking)
+    try {
+      const autoSmsMessage =
+        "Thank you for your order! Please verify your payment to complete the process.";
+      const smsResult = await sendSms(phone, autoSmsMessage);
+
+      if (!smsResult.skipped) {
+        await ordersCol.updateOne(
+          { invoice_number },
+          {
+            $set: {
+              "sms_notification.sent": Boolean(smsResult.success),
+              "sms_notification.code": smsResult.code || null,
+              "sms_notification.status": smsResult.success ? "sent" : (smsResult.error || "failed"),
+              "sms_notification.updated_at": new Date(),
+            },
+          }
+        );
+      }
+    } catch (smsErr) {
+      console.error(
+        "[checkout] Non-blocking BulkSMSBD error:",
+        smsErr && smsErr.message ? smsErr.message : smsErr
+      );
+    }
 
     // Only after successful order insertion in MongoDB, trigger Purchase via Meta CAPI
     if (method === "cod") {
