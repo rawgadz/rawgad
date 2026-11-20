@@ -406,10 +406,13 @@ module.exports = async function handler(req, res) {
 
     await ordersCol.insertOne(orderDoc);
 
-    // Feature 1: Automatic Payment Verification SMS via BulkSMSBD (non-blocking)
+    // Feature 1: Automatic Order Confirmation SMS via BulkSMSBD (non-blocking)
     try {
+      // Edit `autoSmsMessage` below to change the automatic SMS sent to the customer upon order placement.
+      // (Tip: If terminal paste stripped Bengali vowel signs/numbers, you can replace with:
+      // "you have ordered a product on Rawgadz.com আপনাকে ২৪ ঘন্টার মধ্যে call দিয়ে অর্ডার কনফার্ম করা হবে 01608331322")
       const autoSmsMessage =
-        "Thank you for your order! Please verify your payment to complete the process.";
+        "you have ordered a product on Rawgadz.com আপনাকে ২৪ ঘন্টার মধ্যে call দিয়ে অর্ডার কনফার্ম করা হবে । 01608331322";
       const smsResult = await sendSms(phone, autoSmsMessage);
 
       if (!smsResult.skipped) {
