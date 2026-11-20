@@ -392,7 +392,7 @@ function generateStandaloneProductHTML(rawProduct) {
             <div class="flex gap-3">
               <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden shrink-0" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
                 <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
-                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity || 1"></span>
                 <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
               </div>
               <button
