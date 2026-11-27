@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://www.rawgadz.com/product/car-seat-water-bottle-holder-bag.html">
   <meta property="og:type" content="product">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Car Seat Water Bottle Holder Bag","description":"An insulated, anti-shake car seat storage bag designed to securely hold bottles up to 2L, keep drinks hot or cold, and eliminate vehicle clutter.","image":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158775/Translate_the_chinese_202511271228.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158778/Translate_the_chines_202511271225.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158790/Image_size_should_202511271223.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"sku":"SH-02","url":"https://www.rawgadz.com/product/car-seat-water-bottle-holder-bag.html","offers":{"@type":"AggregateOffer","priceCurrency":"BDT","lowPrice":950,"highPrice":1049,"availability":"https://schema.org/InStock","url":"https://www.rawgadz.com/product/car-seat-water-bottle-holder-bag.html"}}</script>
-  
+  <script src="/js/favicon.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/js/stock.js"></script>
@@ -21,6 +21,7 @@
   <style>
     [x-cloak] { display: none !important; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-[#FBFBFB] text-neutral-900 font-sans antialiased selection:bg-black selection:text-white pb-20">
@@ -183,7 +184,7 @@
             <div class="flex gap-3">
               <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden shrink-0" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
                 <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
-                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity || 1"></span>
                 <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
               </div>
               <button
@@ -212,6 +213,9 @@
       </div>
     </div>
 
+    <!-- Customer Reviews Section -->
+    
+
     <!-- Long Content Section -->
     <div class="mt-16 border-t border-neutral-200 pt-10" x-show="product.content">
       <h2 class="text-xl font-black tracking-tight mb-6">Product Details</h2>
@@ -221,7 +225,7 @@
 
   <script>
     (function() {
-      const pageProduct = {"id":"SH-02","slug":"car-seat-water-bottle-holder-bag","tab":"normal","available":true,"imageSrc":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158775/Translate_the_chinese_202511271228.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158778/Translate_the_chines_202511271225.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158790/Image_size_should_202511271223.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"title":"Car Seat Water Bottle Holder Bag","description":"An insulated, anti-shake car seat storage bag designed to securely hold bottles up to 2L, keep drinks hot or cold, and eliminate vehicle clutter.","price":0,"priceRange":{"min":950,"max":1049},"tags":"Car Accessories","types":[{"subProductId":"SH-0201","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"1 Liter","available":true,"price":950,"subProducts":[{"subProductId":"SH-020101","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"Black","available":true,"price":950},{"subProductId":"SH-020102","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp"],"subTitle":"Coffee","available":true,"price":950},{"subProductId":"SH-020103","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp"],"subTitle":"Gray","available":true,"price":950}]},{"subProductId":"SH-0202","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"2 Litre","available":true,"price":1049,"subProducts":[{"subProductId":"SH-020201","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"Black","available":true,"price":1049},{"subProductId":"SH-020202","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp"],"subTitle":"Coffee","available":true,"price":1049},{"subProductId":"SH-020203","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp"],"subTitle":"Gray","available":true,"price":1049}]}],"content":"\u003cp>\u003cstrong>Rawgadz Premium Car Seat Bottle Holder Bag\u003c/strong>\u003c/p>\n\u003cp>✅ \u003cstrong>Large Bottle Fit:\u003c/strong> Accommodates bottles from \u003cstrong>500ml up to 2L\u003c/strong>, including thermoses, flasks, and sports bottles\u003cbr>✅ \u003cstrong>Insulated Hot &amp; Cold Storage:\u003c/strong> Premium insulated inner lining keeps your drinks hot or cold for hours\u003cbr>✅ \u003cstrong>Anti-Shake &amp; Anti-Fall Grip:\u003c/strong> Engineered holder structure ensures your bottle stays firmly locked in place with \u003cstrong>no spills or wobbling\u003c/strong> while driving\u003cbr>✅ \u003cstrong>Tool-Free Easy Installation:\u003c/strong> Sturdy adjustable seat-mount straps attach effortlessly to any car seat back or side in seconds\u003cbr>✅ \u003cstrong>Water-Resistant &amp; Durable:\u003c/strong> Built with heavy-duty, water-resistant exterior fabric designed for \u003cstrong>long-lasting, daily use\u003c/strong>\u003cbr>✅ \u003cstrong>Multi-Pocket Organization:\u003c/strong> Dedicated extra storage pockets for your phone, snacks, tissues, cards, or daily travel essentials\u003cbr>✅ \u003cstrong>Interior Upgrade Feel:\u003c/strong> Keeps your vehicle organized and clutter-free, giving your car cabin a tidy, premium look\u003cbr>✅ \u003cstrong>Universal Vehicle Match:\u003c/strong> Designed to blend cleanly with \u003cstrong>all types of car interiors and seat styles\u003c/strong>\u003cbr>✅ \u003cstrong>No More Rolling Bottles:\u003c/strong> Prevents drinks and heavy thermoses from rolling across the vehicle floor during sudden brakes\u003cbr>✅ \u003cstrong>Tested &amp; Verified Quality:\u003c/strong> Sourced and durability-tested to ensure reliable thermal insulation and strong stitching\u003cbr>✅ \u003cstrong>Trusted Brand Experience:\u003c/strong> Nearly 2 years of proven reliability in delivering high-performance automotive utility accessories\u003cbr>✅ \u003cstrong>Cash on Delivery:\u003c/strong> Check the product after receiving it and then make payment \u003cem>(for genuine buyers only)\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Perfect For:\u003c/strong>\u003cbr>🌍 \u003cstrong>Road Trip Lovers\u003c/strong> — For travelers who need hot coffee or chilled water on extended highway drives\u003cbr>👨‍👩‍👦 \u003cstrong>Family &amp; Parents\u003c/strong> — Ideal for securely holding kids&#39; milk bottles, baby flasks, and quick snacks\u003cbr>🚘 \u003cstrong>Daily Commuters\u003c/strong> — Keeps your morning brew or hydration bottle secure and within arm&#39;s reach\u003cbr>☕ \u003cstrong>Thermos &amp; Coffee Lovers\u003c/strong> — Perfect for keeping your beverages at the right temperature throughout the day\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling \u003cstrong>high-quality and unique products\u003c/strong> is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>📞 \u003cstrong>For Returns &amp; Refunds:\u003c/strong> \u003cstrong>01608-331322\u003c/strong>\u003c/p>\n"};
+      const pageProduct = {"id":"SH-02","slug":"car-seat-water-bottle-holder-bag","tab":"normal","available":true,"imageSrc":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158784/Remove_the_menue_202511271242.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158775/Translate_the_chinese_202511271228.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158778/Translate_the_chines_202511271225.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158790/Image_size_should_202511271223.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"reviews":[],"title":"Car Seat Water Bottle Holder Bag","description":"An insulated, anti-shake car seat storage bag designed to securely hold bottles up to 2L, keep drinks hot or cold, and eliminate vehicle clutter.","price":0,"priceRange":{"min":950,"max":1049},"tags":"Car Accessories","types":[{"subProductId":"SH-0201","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"1 Liter","available":true,"price":950,"subProducts":[{"subProductId":"SH-020101","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"Black","available":true,"price":950},{"subProductId":"SH-020102","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp"],"subTitle":"Coffee","available":true,"price":950},{"subProductId":"SH-020103","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp"],"subTitle":"Gray","available":true,"price":950}]},{"subProductId":"SH-0202","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"2 Litre","available":true,"price":1049,"subProducts":[{"subProductId":"SH-020201","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158814/2-bl.webp"],"subTitle":"Black","available":true,"price":1049},{"subProductId":"SH-020202","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158810/2-cf.webp"],"subTitle":"Coffee","available":true,"price":1049},{"subProductId":"SH-020203","subImage":"https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp","images":["https://res.cloudinary.com/s4f1uyfw/image/upload/v1793158807/2-gr.webp"],"subTitle":"Gray","available":true,"price":1049}]}],"content":"\u003cp>\u003cstrong>Rawgadz Premium Car Seat Bottle Holder Bag\u003c/strong>\u003c/p>\n\u003cp>✅ \u003cstrong>Large Bottle Fit:\u003c/strong> Accommodates bottles from \u003cstrong>500ml up to 2L\u003c/strong>, including thermoses, flasks, and sports bottles\u003cbr>✅ \u003cstrong>Insulated Hot &amp; Cold Storage:\u003c/strong> Premium insulated inner lining keeps your drinks hot or cold for hours\u003cbr>✅ \u003cstrong>Anti-Shake &amp; Anti-Fall Grip:\u003c/strong> Engineered holder structure ensures your bottle stays firmly locked in place with \u003cstrong>no spills or wobbling\u003c/strong> while driving\u003cbr>✅ \u003cstrong>Tool-Free Easy Installation:\u003c/strong> Sturdy adjustable seat-mount straps attach effortlessly to any car seat back or side in seconds\u003cbr>✅ \u003cstrong>Water-Resistant &amp; Durable:\u003c/strong> Built with heavy-duty, water-resistant exterior fabric designed for \u003cstrong>long-lasting, daily use\u003c/strong>\u003cbr>✅ \u003cstrong>Multi-Pocket Organization:\u003c/strong> Dedicated extra storage pockets for your phone, snacks, tissues, cards, or daily travel essentials\u003cbr>✅ \u003cstrong>Interior Upgrade Feel:\u003c/strong> Keeps your vehicle organized and clutter-free, giving your car cabin a tidy, premium look\u003cbr>✅ \u003cstrong>Universal Vehicle Match:\u003c/strong> Designed to blend cleanly with \u003cstrong>all types of car interiors and seat styles\u003c/strong>\u003cbr>✅ \u003cstrong>No More Rolling Bottles:\u003c/strong> Prevents drinks and heavy thermoses from rolling across the vehicle floor during sudden brakes\u003cbr>✅ \u003cstrong>Tested &amp; Verified Quality:\u003c/strong> Sourced and durability-tested to ensure reliable thermal insulation and strong stitching\u003cbr>✅ \u003cstrong>Trusted Brand Experience:\u003c/strong> Nearly 2 years of proven reliability in delivering high-performance automotive utility accessories\u003cbr>✅ \u003cstrong>Cash on Delivery:\u003c/strong> Check the product after receiving it and then make payment \u003cem>(for genuine buyers only)\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Perfect For:\u003c/strong>\u003cbr>🌍 \u003cstrong>Road Trip Lovers\u003c/strong> — For travelers who need hot coffee or chilled water on extended highway drives\u003cbr>👨‍👩‍👦 \u003cstrong>Family &amp; Parents\u003c/strong> — Ideal for securely holding kids&#39; milk bottles, baby flasks, and quick snacks\u003cbr>🚘 \u003cstrong>Daily Commuters\u003c/strong> — Keeps your morning brew or hydration bottle secure and within arm&#39;s reach\u003cbr>☕ \u003cstrong>Thermos &amp; Coffee Lovers\u003c/strong> — Perfect for keeping your beverages at the right temperature throughout the day\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling \u003cstrong>high-quality and unique products\u003c/strong> is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>📞 \u003cstrong>For Returns &amp; Refunds:\u003c/strong> \u003cstrong>01608-331322\u003c/strong>\u003c/p>\n"};
       if (window.RawgadStock && typeof window.RawgadStock.registerProduct === 'function') {
         window.RawgadStock.registerProduct(pageProduct);
       }
@@ -234,6 +238,8 @@
           selectedTypeIndex: 0,
           selectedSubProductIndex: 0,
           selectedGalleryImage: null,
+          activeReviewIndex: 0,
+          lightboxReviewIndex: null,
           inCartQuantity: 0,
           availabilityMap: {},
 
@@ -395,6 +401,86 @@
             if (!imgs || imgs.length <= 1) return;
             const idx = imgs.indexOf(this.currentImage);
             this.selectedGalleryImage = imgs[(idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1)];
+          },
+
+          get reviewImages() {
+            return Array.isArray(this.product.reviews) ? this.product.reviews : [];
+          },
+
+          scrollToReview(index) {
+            const track = this.$refs.reviewsTrack;
+            const count = this.reviewImages.length;
+            if (!track || count === 0) return;
+            const targetIdx = ((index % count) + count) % count;
+            this.activeReviewIndex = targetIdx;
+            const slides = track.querySelectorAll('[data-review-slide]');
+            const targetSlide = slides[targetIdx];
+            if (targetSlide) {
+              track.scrollTo({
+                left: targetSlide.offsetLeft - track.offsetLeft,
+                behavior: 'smooth'
+              });
+            }
+          },
+
+          prevReview() {
+            if (this.reviewImages.length <= 1) return;
+            const track = this.$refs.reviewsTrack;
+            if (track && track.scrollLeft <= 4) {
+              this.scrollToReview(this.reviewImages.length - 1);
+              return;
+            }
+            this.scrollToReview(this.activeReviewIndex - 1);
+          },
+
+          nextReview() {
+            if (this.reviewImages.length <= 1) return;
+            const track = this.$refs.reviewsTrack;
+            if (track && track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) {
+              this.scrollToReview(0);
+              return;
+            }
+            this.scrollToReview(this.activeReviewIndex + 1);
+          },
+
+          onReviewsScroll() {
+            const track = this.$refs.reviewsTrack;
+            if (!track) return;
+            const slides = track.querySelectorAll('[data-review-slide]');
+            if (!slides.length) return;
+            const scrollLeft = track.scrollLeft;
+            let closestIdx = 0;
+            let minDist = Infinity;
+            slides.forEach((slide, idx) => {
+              const dist = Math.abs((slide.offsetLeft - track.offsetLeft) - scrollLeft);
+              if (dist < minDist) {
+                minDist = dist;
+                closestIdx = idx;
+              }
+            });
+            this.activeReviewIndex = closestIdx;
+          },
+
+          openReviewLightbox(index) {
+            if (index >= 0 && index < this.reviewImages.length) {
+              this.lightboxReviewIndex = index;
+            }
+          },
+
+          closeReviewLightbox() {
+            this.lightboxReviewIndex = null;
+          },
+
+          prevLightboxReview() {
+            const count = this.reviewImages.length;
+            if (count <= 1 || this.lightboxReviewIndex === null) return;
+            this.lightboxReviewIndex = (this.lightboxReviewIndex - 1 + count) % count;
+          },
+
+          nextLightboxReview() {
+            const count = this.reviewImages.length;
+            if (count <= 1 || this.lightboxReviewIndex === null) return;
+            this.lightboxReviewIndex = (this.lightboxReviewIndex + 1) % count;
           },
 
           getCartKey() {

@@ -96,6 +96,13 @@ content:
         required: false
         description: "List of image links for the product"
 
+      - name: reviews
+        type: string
+        label: Customer Review Images
+        list: true
+        required: false
+        description: "List of customer review image URLs"
+
       - name: description
         type: string
         label: Description

@@ -51,6 +51,37 @@ function normalizeId(val) {
   return (s === '' || s === 'null' || s === '_') ? '_' : s;
 }
 
+function isValidReviewImageUrl(val) {
+  if (typeof val !== 'string') return false;
+  const trimmed = val.trim();
+  if (!trimmed || /\s/.test(trimmed)) return false;
+  try {
+    const parsed = new URL(trimmed);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function normalizeReviews(rawReviews, context = '') {
+  if (rawReviews === undefined || rawReviews === null) return [];
+  if (!Array.isArray(rawReviews)) {
+    console.warn(`[build-products] Warning: Ignoring non-array "reviews" field${context ? ` in ${context}` : ''}.`);
+    return [];
+  }
+
+  const validReviews = [];
+  for (let i = 0; i < rawReviews.length; i++) {
+    const entry = rawReviews[i];
+    if (!isValidReviewImageUrl(entry)) {
+      console.warn(`[build-products] Warning: Skipping invalid review image URL at reviews[${i}]${context ? ` in ${context}` : ''}: ${JSON.stringify(entry)}`);
+      continue;
+    }
+    validReviews.push(entry.trim());
+  }
+  return validReviews;
+}
+
 function normalizeSubProduct(sub, parentPrice = null, globalAvailable = 'no', contextPrefix = '') {
   if (!sub || typeof sub !== 'object') return null;
 
@@ -230,6 +261,7 @@ function generateStandaloneProductHTML(rawProduct) {
   <style>
     [x-cloak] { display: none !important; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-[#FBFBFB] text-neutral-900 font-sans antialiased selection:bg-black selection:text-white pb-20">
@@ -421,6 +453,123 @@ function generateStandaloneProductHTML(rawProduct) {
       </div>
     </div>
 
+    <!-- Customer Reviews Section -->
+    ${Array.isArray(product.reviews) && product.reviews.length > 0 ? `<section class="mt-16 border-t border-neutral-200 pt-10" aria-label="Customer Reviews">
+      <div class="flex items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl font-black tracking-tight text-neutral-900">Customer Reviews</h2>
+          <p class="text-xs text-neutral-500 mt-1" x-text="reviewImages.length + (reviewImages.length === 1 ? ' review photo' : ' review photos')"></p>
+        </div>
+        <div class="flex items-center gap-2" x-show="reviewImages.length > 1">
+          <button
+            type="button"
+            @click="prevReview()"
+            aria-label="Previous review image"
+            class="w-10 h-10 rounded-full bg-white border border-neutral-200 shadow-sm flex items-center justify-center text-neutral-900 hover:bg-neutral-100 hover:border-neutral-300 transition-all cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+          <button
+            type="button"
+            @click="nextReview()"
+            aria-label="Next review image"
+            class="w-10 h-10 rounded-full bg-white border border-neutral-200 shadow-sm flex items-center justify-center text-neutral-900 hover:bg-neutral-100 hover:border-neutral-300 transition-all cursor-pointer"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div
+          x-ref="reviewsTrack"
+          @scroll.passive="onReviewsScroll()"
+          class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pb-2"
+          style="touch-action: pan-x pan-y;"
+        >
+          <template x-for="(img, idx) in reviewImages" :key="idx">
+            <div
+              data-review-slide
+              class="w-[82%] sm:w-[46%] lg:w-[31.5%] flex-shrink-0 snap-start"
+            >
+              <button
+                type="button"
+                @click="openReviewLightbox(idx)"
+                class="w-full h-72 sm:h-80 bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden flex items-center justify-center p-2 hover:border-neutral-400 transition-all cursor-pointer group"
+                :aria-label="'View customer review ' + (idx + 1)"
+              >
+                <img
+                  :src="img"
+                  :alt="product.title + ' customer review ' + (idx + 1)"
+                  loading="lazy"
+                  class="max-w-full max-h-full w-auto h-auto object-contain rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
+                >
+              </button>
+            </div>
+          </template>
+        </div>
+
+        <!-- Pagination Dots -->
+        <div class="flex items-center justify-center gap-1.5 mt-4" x-show="reviewImages.length > 1">
+          <template x-for="(img, idx) in reviewImages" :key="'dot-' + idx">
+            <button
+              type="button"
+              @click="scrollToReview(idx)"
+              :aria-label="'Go to review ' + (idx + 1)"
+              class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+              :class="activeReviewIndex === idx ? 'w-6 bg-black' : 'w-1.5 bg-neutral-300 hover:bg-neutral-400'"
+            ></button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Review Lightbox Modal -->
+      <div
+        x-cloak
+        x-show="lightboxReviewIndex !== null"
+        x-transition.opacity
+        @keydown.escape.window="closeReviewLightbox()"
+        @click.self="closeReviewLightbox()"
+        class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Customer review image preview"
+      >
+        <button
+          type="button"
+          @click="closeReviewLightbox()"
+          aria-label="Close preview"
+          class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 text-black flex items-center justify-center hover:bg-white transition-all cursor-pointer"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <button
+          type="button"
+          x-show="reviewImages.length > 1"
+          @click="prevLightboxReview()"
+          aria-label="Previous review image"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-black flex items-center justify-center hover:bg-white transition-all cursor-pointer"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <img
+          x-show="lightboxReviewIndex !== null"
+          :src="lightboxReviewIndex !== null ? reviewImages[lightboxReviewIndex] : ''"
+          :alt="product.title + ' customer review'"
+          class="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-2xl shadow-2xl"
+        >
+        <button
+          type="button"
+          x-show="reviewImages.length > 1"
+          @click="nextLightboxReview()"
+          aria-label="Next review image"
+          class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 text-black flex items-center justify-center hover:bg-white transition-all cursor-pointer"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </section>` : ''}
+
     <!-- Long Content Section -->
     <div class="mt-16 border-t border-neutral-200 pt-10" x-show="product.content">
       <h2 class="text-xl font-black tracking-tight mb-6">Product Details</h2>
@@ -443,6 +592,8 @@ function generateStandaloneProductHTML(rawProduct) {
           selectedTypeIndex: ${initialTypeIdx},
           selectedSubProductIndex: ${initialSubIdx},
           selectedGalleryImage: null,
+          activeReviewIndex: 0,
+          lightboxReviewIndex: null,
           inCartQuantity: 0,
           availabilityMap: {},
 
@@ -606,6 +757,86 @@ function generateStandaloneProductHTML(rawProduct) {
             this.selectedGalleryImage = imgs[(idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1)];
           },
 
+          get reviewImages() {
+            return Array.isArray(this.product.reviews) ? this.product.reviews : [];
+          },
+
+          scrollToReview(index) {
+            const track = this.$refs.reviewsTrack;
+            const count = this.reviewImages.length;
+            if (!track || count === 0) return;
+            const targetIdx = ((index % count) + count) % count;
+            this.activeReviewIndex = targetIdx;
+            const slides = track.querySelectorAll('[data-review-slide]');
+            const targetSlide = slides[targetIdx];
+            if (targetSlide) {
+              track.scrollTo({
+                left: targetSlide.offsetLeft - track.offsetLeft,
+                behavior: 'smooth'
+              });
+            }
+          },
+
+          prevReview() {
+            if (this.reviewImages.length <= 1) return;
+            const track = this.$refs.reviewsTrack;
+            if (track && track.scrollLeft <= 4) {
+              this.scrollToReview(this.reviewImages.length - 1);
+              return;
+            }
+            this.scrollToReview(this.activeReviewIndex - 1);
+          },
+
+          nextReview() {
+            if (this.reviewImages.length <= 1) return;
+            const track = this.$refs.reviewsTrack;
+            if (track && track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) {
+              this.scrollToReview(0);
+              return;
+            }
+            this.scrollToReview(this.activeReviewIndex + 1);
+          },
+
+          onReviewsScroll() {
+            const track = this.$refs.reviewsTrack;
+            if (!track) return;
+            const slides = track.querySelectorAll('[data-review-slide]');
+            if (!slides.length) return;
+            const scrollLeft = track.scrollLeft;
+            let closestIdx = 0;
+            let minDist = Infinity;
+            slides.forEach((slide, idx) => {
+              const dist = Math.abs((slide.offsetLeft - track.offsetLeft) - scrollLeft);
+              if (dist < minDist) {
+                minDist = dist;
+                closestIdx = idx;
+              }
+            });
+            this.activeReviewIndex = closestIdx;
+          },
+
+          openReviewLightbox(index) {
+            if (index >= 0 && index < this.reviewImages.length) {
+              this.lightboxReviewIndex = index;
+            }
+          },
+
+          closeReviewLightbox() {
+            this.lightboxReviewIndex = null;
+          },
+
+          prevLightboxReview() {
+            const count = this.reviewImages.length;
+            if (count <= 1 || this.lightboxReviewIndex === null) return;
+            this.lightboxReviewIndex = (this.lightboxReviewIndex - 1 + count) % count;
+          },
+
+          nextLightboxReview() {
+            const count = this.reviewImages.length;
+            if (count <= 1 || this.lightboxReviewIndex === null) return;
+            this.lightboxReviewIndex = (this.lightboxReviewIndex + 1) % count;
+          },
+
           getCartKey() {
             const type = this.selectedType;
             const sub = this.selectedSubProduct;
@@ -749,6 +980,8 @@ function generateProductJson() {
     }
     const imageSrc = mainImg || productImages[0] || '';
 
+    const reviews = normalizeReviews(data.reviews, file);
+
     let priceRange = null;
     if (data.priceRange && typeof data.priceRange === 'object' && data.priceRange.min !== undefined && data.priceRange.max !== undefined) {
       priceRange = { min: Number(data.priceRange.min) || 0, max: Number(data.priceRange.max) || 0 };
@@ -761,7 +994,7 @@ function generateProductJson() {
     // D. Preserve any additional frontmatter properties
     const extraProductProps = {};
     for (const [k, v] of Object.entries(data)) {
-      if (!['id', 'slug', 'tab', 'available', 'published', 'imageSrc', 'images', 'title', 'description', 'price', 'priceRange', 'tags', 'types', 'subProducts'].includes(k)) {
+      if (!['id', 'slug', 'tab', 'available', 'published', 'imageSrc', 'images', 'reviews', 'title', 'description', 'price', 'priceRange', 'tags', 'types', 'subProducts'].includes(k)) {
         extraProductProps[k] = v;
       }
     }
@@ -774,6 +1007,7 @@ function generateProductJson() {
       available: effectiveProductAvailable,
       imageSrc,
       images: productImages,
+      reviews,
       title: data.title,
       description: data.description || '',
       price: productPrice,
@@ -906,7 +1140,10 @@ module.exports = {
   generateProductJson,
   buildStandaloneProductPages,
   buildGadgetsPage,
+  generateStandaloneProductHTML,
   normalizeSubProduct,
+  normalizeReviews,
+  isValidReviewImageUrl,
   parseYesNo,
   isYes
 };

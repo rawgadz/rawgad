@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://www.rawgadz.com/product/leather-steering-wheel-cover-universal-hand-shape.html">
   <meta property="og:type" content="product">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Leather steering Wheel Cover Universal Hand Shape","description":"This ergonomic leather steering cover delivers a contoured, non-slip hand grip and durable all-season wheel protection.","image":["https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087313/5.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087366/2.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087368/4.webp"],"sku":"MRA-25","url":"https://www.rawgadz.com/product/leather-steering-wheel-cover-universal-hand-shape.html","offers":{"@type":"Offer","priceCurrency":"BDT","price":1450,"availability":"https://schema.org/OutOfStock","url":"https://www.rawgadz.com/product/leather-steering-wheel-cover-universal-hand-shape.html"}}</script>
-  
+  <script src="/js/favicon.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <script src="/js/stock.js"></script>
@@ -21,6 +21,7 @@
   <style>
     [x-cloak] { display: none !important; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-[#FBFBFB] text-neutral-900 font-sans antialiased selection:bg-black selection:text-white pb-20">
@@ -184,7 +185,7 @@
             <div class="flex gap-3">
               <div class="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden shrink-0" :class="isOutOfStock ? 'opacity-50 pointer-events-none' : ''">
                 <button type="button" @click="updateCart(inCartQuantity - 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">-</button>
-                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity"></span>
+                <span class="w-10 text-center font-black text-sm" x-text="inCartQuantity || 1"></span>
                 <button type="button" @click="updateCart(inCartQuantity + 1)" :disabled="isOutOfStock" class="px-3.5 py-3 hover:bg-neutral-100 disabled:cursor-not-allowed transition-colors font-bold text-neutral-600">+</button>
               </div>
               <button
@@ -213,6 +214,9 @@
       </div>
     </div>
 
+    <!-- Customer Reviews Section -->
+    
+
     <!-- Long Content Section -->
     <div class="mt-16 border-t border-neutral-200 pt-10" x-show="product.content">
       <h2 class="text-xl font-black tracking-tight mb-6">Product Details</h2>
@@ -222,7 +226,7 @@
 
   <script>
     (function() {
-      const pageProduct = {"id":"MRA-25","slug":"leather-steering-wheel-cover-universal-hand-shape","tab":"normal","available":false,"imageSrc":"https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087313/5.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087366/2.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087368/4.webp"],"title":"Leather steering Wheel Cover Universal Hand Shape","description":"This ergonomic leather steering cover delivers a contoured, non-slip hand grip and durable all-season wheel protection.","price":1450,"priceRange":{"min":1450,"max":1450},"tags":"Car Accessories, steering cover","types":[{"subProductId":"MRA-2501","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp"],"subTitle":"Red Wine","available":false,"price":1450},{"subProductId":"MRA-2502","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp"],"subTitle":"Black","available":false,"price":1450},{"subProductId":"MRA-2503","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp"],"subTitle":"Gray","available":false,"price":1450}],"content":"\u003cp>Enhance your driving comfort, safety, and cabin style with the RawGadz Ergonomic Hand-Shape Leather Steering Wheel Cover.\u003c/p>\n\u003cp>Brand: RawGadz | Ergonomic Comfort | Universal Fit (14.5–15&quot;)\u003c/p>\n\u003cp>\u003cstrong>✅ Ergonomic Hand-Shape Grip:\u003c/strong> Molded finger-contour design matches the natural shape of your hands for reduced fatigue and superior steering control\u003cbr>\u003cstrong>✅ Premium Synthetic Leather:\u003c/strong> Delivers a soft, luxurious feel while resisting daily wear, palm sweat, and surface abrasion\u003cbr>\u003cstrong>✅ High-Traction Anti-Slip Core:\u003c/strong> Durable inner lining locks securely onto the factory wheel to prevent shifting during sharp turns\u003cbr>\u003cstrong>✅ Complete All-Season Protection:\u003c/strong> Heat-resistant in summer and comfortable in winter while shielding your wheel from cracking and UV damage\u003cbr>\u003cstrong>✅ Universal Vehicle Fit:\u003c/strong> Stretches smoothly over standard 14.5 to 15-inch steering wheels across sedans, SUVs, and small trucks\u003cbr>\u003cstrong>✅ Tool-Free Quick Installation:\u003c/strong> Flexible construction slips on effortlessly by hand in just 1 to 2 minutes\u003cbr>\u003cstrong>✅ Cash on Delivery:\u003c/strong> Available for verified, genuine buyers across Bangladesh (inspect before payment)\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling high-quality and unique products is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>📞 For Returns &amp; Inquiries (Call / WhatsApp): 01608-331322\u003c/strong>\u003c/p>\n"};
+      const pageProduct = {"id":"MRA-25","slug":"leather-steering-wheel-cover-universal-hand-shape","tab":"normal","available":false,"imageSrc":"https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790833253/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087313/5.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087366/2.webp","https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087368/4.webp"],"reviews":[],"title":"Leather steering Wheel Cover Universal Hand Shape","description":"This ergonomic leather steering cover delivers a contoured, non-slip hand grip and durable all-season wheel protection.","price":1450,"priceRange":{"min":1450,"max":1450},"tags":"Car Accessories, steering cover","types":[{"subProductId":"MRA-2501","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01kdBAWh2GvJzy5a10w_3025299077-0-cib.webp"],"subTitle":"Red Wine","available":false,"price":1450},{"subProductId":"MRA-2502","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01Xg99kc2GvJzteLqEr_3025299077-0-cib.webp"],"subTitle":"Black","available":false,"price":1450},{"subProductId":"MRA-2503","subImage":"https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp","images":["https://res.cloudinary.com/mltcbcft/image/upload/v1790498768/O1CN01qeiozn2GvJzx99ZVR_3025299077-0-cib.webp"],"subTitle":"Gray","available":false,"price":1450}],"content":"\u003cp>Enhance your driving comfort, safety, and cabin style with the RawGadz Ergonomic Hand-Shape Leather Steering Wheel Cover.\u003c/p>\n\u003cp>Brand: RawGadz | Ergonomic Comfort | Universal Fit (14.5–15&quot;)\u003c/p>\n\u003cp>\u003cstrong>✅ Ergonomic Hand-Shape Grip:\u003c/strong> Molded finger-contour design matches the natural shape of your hands for reduced fatigue and superior steering control\u003cbr>\u003cstrong>✅ Premium Synthetic Leather:\u003c/strong> Delivers a soft, luxurious feel while resisting daily wear, palm sweat, and surface abrasion\u003cbr>\u003cstrong>✅ High-Traction Anti-Slip Core:\u003c/strong> Durable inner lining locks securely onto the factory wheel to prevent shifting during sharp turns\u003cbr>\u003cstrong>✅ Complete All-Season Protection:\u003c/strong> Heat-resistant in summer and comfortable in winter while shielding your wheel from cracking and UV damage\u003cbr>\u003cstrong>✅ Universal Vehicle Fit:\u003c/strong> Stretches smoothly over standard 14.5 to 15-inch steering wheels across sedans, SUVs, and small trucks\u003cbr>\u003cstrong>✅ Tool-Free Quick Installation:\u003c/strong> Flexible construction slips on effortlessly by hand in just 1 to 2 minutes\u003cbr>\u003cstrong>✅ Cash on Delivery:\u003c/strong> Available for verified, genuine buyers across Bangladesh (inspect before payment)\u003c/p>\n\u003cp>\u003cstrong>Return Policy:\u003c/strong>\u003cbr>\u003cem>\u003cstrong>If any product is faulty, you can return it within 7 days of receiving it.\u003c/strong>\u003c/em>\u003c/p>\n\u003cp>\u003cstrong>Our Promise:\u003c/strong>\u003cbr>Selling high-quality and unique products is our commitment.\u003cbr>\u003cstrong>If you receive a defective or poor-quality product, you can return it and we will refund your money.\u003c/strong>\u003c/p>\n\u003cp>\u003cstrong>📞 For Returns &amp; Inquiries (Call / WhatsApp): 01608-331322\u003c/strong>\u003c/p>\n"};
       if (window.RawgadStock && typeof window.RawgadStock.registerProduct === 'function') {
         window.RawgadStock.registerProduct(pageProduct);
       }
@@ -235,6 +239,8 @@
           selectedTypeIndex: 0,
           selectedSubProductIndex: 0,
           selectedGalleryImage: null,
+          activeReviewIndex: 0,
+          lightboxReviewIndex: null,
           inCartQuantity: 0,
           availabilityMap: {},
 
@@ -396,6 +402,86 @@
             if (!imgs || imgs.length <= 1) return;
             const idx = imgs.indexOf(this.currentImage);
             this.selectedGalleryImage = imgs[(idx === -1 || idx >= imgs.length - 1 ? 0 : idx + 1)];
+          },
+
+          get reviewImages() {
+            return Array.isArray(this.product.reviews) ? this.product.reviews : [];
+          },
+
+          scrollToReview(index) {
+            const track = this.$refs.reviewsTrack;
+            const count = this.reviewImages.length;
+            if (!track || count === 0) return;
+            const targetIdx = ((index % count) + count) % count;
+            this.activeReviewIndex = targetIdx;
+            const slides = track.querySelectorAll('[data-review-slide]');
+            const targetSlide = slides[targetIdx];
+            if (targetSlide) {
+              track.scrollTo({
+                left: targetSlide.offsetLeft - track.offsetLeft,
+                behavior: 'smooth'
+              });
+            }
+          },
+
+          prevReview() {
+            if (this.reviewImages.length <= 1) return;
+            const track = this.$refs.reviewsTrack;
+            if (track && track.scrollLeft <= 4) {
+              this.scrollToReview(this.reviewImages.length - 1);
+              return;
+            }
+            this.scrollToReview(this.activeReviewIndex - 1);
+          },
+
+          nextReview() {
+            if (this.reviewImages.length <= 1) return;
+            const track = this.$refs.reviewsTrack;
+            if (track && track.scrollLeft + track.clientWidth >= track.scrollWidth - 4) {
+              this.scrollToReview(0);
+              return;
+            }
+            this.scrollToReview(this.activeReviewIndex + 1);
+          },
+
+          onReviewsScroll() {
+            const track = this.$refs.reviewsTrack;
+            if (!track) return;
+            const slides = track.querySelectorAll('[data-review-slide]');
+            if (!slides.length) return;
+            const scrollLeft = track.scrollLeft;
+            let closestIdx = 0;
+            let minDist = Infinity;
+            slides.forEach((slide, idx) => {
+              const dist = Math.abs((slide.offsetLeft - track.offsetLeft) - scrollLeft);
+              if (dist < minDist) {
+                minDist = dist;
+                closestIdx = idx;
+              }
+            });
+            this.activeReviewIndex = closestIdx;
+          },
+
+          openReviewLightbox(index) {
+            if (index >= 0 && index < this.reviewImages.length) {
+              this.lightboxReviewIndex = index;
+            }
+          },
+
+          closeReviewLightbox() {
+            this.lightboxReviewIndex = null;
+          },
+
+          prevLightboxReview() {
+            const count = this.reviewImages.length;
+            if (count <= 1 || this.lightboxReviewIndex === null) return;
+            this.lightboxReviewIndex = (this.lightboxReviewIndex - 1 + count) % count;
+          },
+
+          nextLightboxReview() {
+            const count = this.reviewImages.length;
+            if (count <= 1 || this.lightboxReviewIndex === null) return;
+            this.lightboxReviewIndex = (this.lightboxReviewIndex + 1) % count;
           },
 
           getCartKey() {
