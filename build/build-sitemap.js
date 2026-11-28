@@ -3,7 +3,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT_DIR = process.cwd();
-const BASE_URL = (process.env.SITE_URL || 'https://www.rawgadz.com').replace(/\/+$/, '');
+// Canonical host is www (rawgadz.com redirects to www). Normalize even if SITE_URL env lacks www.
+const BASE_URL = (process.env.SITE_URL || 'https://www.rawgadz.com').replace(/\/+$/, '').replace(/^https?:\/\/rawgadz\.com$/i, 'https://www.rawgadz.com');
 const OUTPUT_FILE = path.join(ROOT_DIR, 'sitemap.xml');
 
 const IGNORED_DIRECTORIES = new Set([
