@@ -57,6 +57,8 @@ function generateCarsJson() {
       images: Array.isArray(data.images) ? data.images : (data.imageSrc ? [data.imageSrc] : []),
       video: data.video || data.videoUrl || '',
       description: data.description || '',
+      seoTitle: data.seoTitle || '',
+      seoDescription: data.seoDescription || '',
       tags: Array.isArray(data.tags) ? data.tags.join(', ') : (data.tags || ''),
       types: Array.isArray(data.types) ? data.types : [],
       content: htmlContent

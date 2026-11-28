@@ -349,6 +349,16 @@ content:
         type: string
         label: Description / Summary
         required: true
+      - name: seoTitle
+        type: string
+        label: SEO Title (Google)
+        required: false
+        description: "Optional. Max ~60 characters. Leave empty to auto-generate."
+      - name: seoDescription
+        type: string
+        label: SEO Meta Description (Google)
+        required: false
+        description: "Optional. 120-158 characters. Leave empty to auto-generate."
       - name: price
         type: number
         label: Starting MSRP / Price

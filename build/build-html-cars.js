@@ -11,7 +11,42 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
+const SITE_URL = 'https://www.rawgadz.com';
+
+function truncateAtWord(str, max) {
+  str = String(str || '').replace(/\s+/g, ' ').trim();
+  if (str.length <= max) return str;
+  const cut = str.slice(0, max + 1);
+  const i = cut.lastIndexOf(' ');
+  return cut.slice(0, i > max * 0.6 ? i : max).replace(/[\s,–\-|:;(&]+$/, '');
+}
+
+function carSeoTitle(car) {
+  if (car.seoTitle) return String(car.seoTitle).trim();
+  const suffix = ' | Rawgadz';
+  return truncateAtWord(car.title, 60 - suffix.length) + suffix;
+}
+
+function carSeoDescription(car) {
+  if (car.seoDescription) return String(car.seoDescription).trim();
+  const tail = car.price > 0 ? ` Price ৳${car.price}. Rawgadz Bangladesh.` : ' Rawgadz Bangladesh.';
+  return truncateAtWord(car.description || car.title, 158 - tail.length) + tail;
+}
+
 function generateStandaloneCarHTML(car) {
+  const seoTitle = carSeoTitle(car);
+  const seoDescription = carSeoDescription(car);
+  const canonicalUrl = `${SITE_URL}/cr/${car.slug}`;
+  const ogImage = (Array.isArray(car.images) && car.images[0]) || car.imageSrc || '';
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: 'Cars', item: `${SITE_URL}/car` },
+      { '@type': 'ListItem', position: 3, name: String(car.title || ''), item: canonicalUrl }
+    ]
+  }).replace(/</g, '\\u003c');
   const sanitizedCarJson = JSON.stringify(car).replace(/</g, '\\u003c');
   const tagsHtml = car.tags
     ? car.tags.split(',').map(tag => `<span class="bg-neutral-100 text-neutral-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200">${escapeHtml(tag.trim())}</span>`).join('\n             ')
@@ -22,8 +57,18 @@ function generateStandaloneCarHTML(car) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>${escapeHtml(car.title)} | Rawgadz Vehicles</title>
-  <meta name="description" content="${escapeHtml(car.description || car.title)}">
+  <title>${escapeHtml(seoTitle)}</title>
+  <meta name="description" content="${escapeHtml(seoDescription)}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
+  <meta property="og:site_name" content="Rawgadz">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${escapeHtml(seoTitle)}">
+  <meta property="og:description" content="${escapeHtml(seoDescription)}">
+  <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
+  <meta property="og:image" content="${escapeHtml(ogImage)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -66,13 +111,13 @@ function generateStandaloneCarHTML(car) {
       <div class="lg:col-span-5 flex flex-col justify-between">
         <div>
           <div class="flex flex-wrap gap-2 mb-3">${tagsHtml}</div>
-          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-neutral-900 mb-2" x-text="car.title"></h1>
+          <h1 class="text-3xl md:text-4xl font-black tracking-tight text-neutral-900 mb-2" x-text="car.title">${escapeHtml(car.title)}</h1>
           <p class="text-sm text-neutral-500 font-medium mb-4" x-text="car.subtitle"></p>
           <div class="text-2xl font-black text-black mb-6">
             Starting at ৳<span x-text="Number(car.price || 0).toLocaleString()"></span>
           </div>
 
-          <div class="text-neutral-600 text-sm leading-relaxed mb-6" x-text="car.description"></div>
+          <div class="text-neutral-600 text-sm leading-relaxed mb-6" x-text="car.description">${escapeHtml(car.description)}</div>
 
           <div class="border-t border-neutral-200 pt-6 mt-6">
             <a :href="inquiryUrl" class="w-full bg-black hover:bg-neutral-800 text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider transition-all">
