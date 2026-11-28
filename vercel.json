@@ -4,6 +4,183 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/product/combo-set-premium-steering-cover",
+      "destination": "/car-steering-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/rawgadz-4-in-1-(.*)",
+      "destination": "/car-steering-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/high-quality-universal-car-steering-cover",
+      "destination": "/car-steering-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/high-quality-universal-car-steering-cover-with-green-black-and-coffee-color",
+      "destination": "/product/high-quality-leather-and-fabric-super-soft-steering-cover-with-green-black-and-coffee-color-universal",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/3d-dot-grip-leather-carbon-fiber-splicing-universal-steering-cover",
+      "destination": "/product/rawgadz-3d-dot-grip-carbon-fiber-splicing-steering-wheel-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/unique-steering-cover-anti-slip-artificial-leather",
+      "destination": "/product/car-steering-cover-anti-slip-artificial-leather",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/orange-car-steering-cover-of-suede-fur-ultra-thin-premium-universal-fit-red-and-green",
+      "destination": "/product/green-car-steering-cover-of-suede-fur-ultra-thin-premium-universal-fit-red-and-orange",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/short-plush-patchwork-multi-color-leopard-print-steering-cover",
+      "destination": "/product/rawgadz-wool-patchwork-multi-color-leopard-print-steering-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/speaker-dust-protector-for-android-iphone-short-3-long-3",
+      "destination": "/product/high-quality-iphone-speaker-dust-protector",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/hanging-car-charm-crystal-imported-high-quality-stone",
+      "destination": "/product/hanging-gemstones-crystals-for-car-interior",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/tire-nut-opening-universal-telescopic-car-wrench-17-19-21-22mm",
+      "destination": "/product/jack-and-wrench-combo-for-car-15t-2t-and-3t",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/charging-cable-protector-iphone-android",
+      "destination": "/gadgets",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/cable-protector-combo",
+      "destination": "/gadgets",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/spiral-cable-protector-for-universal-cables",
+      "destination": "/gadgets",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/charging-cable-protector-speaker-dust-protector-for-android-iphone-best-combo",
+      "destination": "/gadgets",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/cable-organizers-for-charging-cable-and-other-cables",
+      "destination": "/gadgets",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/knife-sharpener-for-kitchen-regular-use",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/product/mini-refillable-perfume-bottle-empty-atomizer",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/product-category/car-steering-cover/:path*",
+      "destination": "/car-steering-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product-category/car-steering-cover",
+      "destination": "/car-steering-cover",
+      "statusCode": 301
+    },
+    {
+      "source": "/product-category/:path*",
+      "destination": "/car_accessories",
+      "statusCode": 301
+    },
+    {
+      "source": "/car-accessories",
+      "destination": "/car_accessories",
+      "statusCode": 301
+    },
+    {
+      "source": "/car-interior",
+      "destination": "/car_accessories",
+      "statusCode": 301
+    },
+    {
+      "source": "/best-steering-wheel-covers-for-2026-toyota-allion-premio-corolla-and-corolla-cross-in-bangladesh",
+      "destination": "/blog/best-steering-wheel-covers-for-2026-toyota-allion-premio-corolla-and-corolla-cross-in-bangladesh",
+      "statusCode": 301
+    },
+    {
+      "source": "/top-10-aesthetic-steering-wheel-covers-for-car-interiors",
+      "destination": "/blog/top-10-aesthetic-steering-wheel-covers-for-car-interiors",
+      "statusCode": 301
+    },
+    {
+      "source": "/the-ultimate-guide-to-steering-wheel-covers-2026-edition",
+      "destination": "/blog/the-ultimate-guide-to-steering-wheel-covers-2026-edition",
+      "statusCode": 301
+    },
+    {
+      "source": "/owner-info",
+      "destination": "/contact",
+      "statusCode": 301
+    },
+    {
+      "source": "/shop/:path*",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/shop",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/electronics",
+      "destination": "/gadgets",
+      "statusCode": 301
+    },
+    {
+      "source": "/fishing-accessories",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/sample-page-to-copy-as-landing-page",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/page/:path*",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/my-account",
+      "destination": "/",
+      "statusCode": 301
+    },
+    {
+      "source": "/cart",
+      "destination": "/checkout",
+      "statusCode": 301
+    }
+  ],
   "functions": {
     "api/*.js": {
       "includeFiles": "{data/*.json,content/coupons.json}"
