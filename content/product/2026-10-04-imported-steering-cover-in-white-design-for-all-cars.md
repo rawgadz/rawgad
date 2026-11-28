@@ -11,6 +11,8 @@ images:
 description: Crafted from ultra-thin, breathable artificial leather, this
   elegant white steering cover prevents sweaty palms while delivering a secure
   non-slip grip.
+seoTitle: "White Steering Wheel Cover for All Cars | Rawgadz"
+seoDescription: "Elegant white steering wheel cover in ultra-thin breathable artificial leather with a secure non-slip grip. From ৳1550, Cash on Delivery in BD."
 price: 0
 priceRange:
   min: 1550

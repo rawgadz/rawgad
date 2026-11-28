@@ -7,8 +7,10 @@ published: "yes"
 title: Car Steering cover with sports look, leather with super grip
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790424763/O1CN01cThDNz1nsSjSK79dr_2214997935145-0-cib.webp
 description: Upgrade your drive with the durable, breathable, and anti-slip
-  Rawgadaz Premium Steering Wheel Cover backed by a 3-month replacement
+  Rawgadz Premium Steering Wheel Cover backed by a 3-month replacement
   warranty.
+seoTitle: "Sporty Leather Steering Cover with Super Grip | Rawgadz"
+seoDescription: "Sports-look leather steering wheel cover, breathable and anti-slip, with 3-month replacement warranty. ৳1750, Cash on Delivery across Bangladesh."
 price: 1750
 tags: Car Accessories, steering cover
 types:
@@ -19,7 +21,7 @@ types:
     available: "yes"
     published: "yes"
 ---
-Upgrade your driving comfort and interior aesthetic with the Rawgadaz Premium Steering Wheel Cover.
+Upgrade your driving comfort and interior aesthetic with the Rawgadz Premium Steering Wheel Cover.
 
 Imported Premium Quality (Tested by Engineers & Drivers)
 

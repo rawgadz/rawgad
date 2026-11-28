@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081589/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp
 description: Upgrade your car's interior with the elegant, all-season, anti-slip
   Rawgadz Peach Wood Grain Steering Cover.
+seoTitle: "Peach Wood Grain Steering Cover, Glossy Non-Slip | Rawgadz"
+seoDescription: "Glossy peach wood grain steering wheel cover with breathable, all-season anti-slip grip. Universal fit. ৳1847, Cash on Delivery across Bangladesh."
 price: 1250
 tags: Car Accessories, steering cover
 types:

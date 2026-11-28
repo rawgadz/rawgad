@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082080/Untitled-design-51.webp
 description: Unique wool patchwork steering cover with stylish leopard print,
   all-season comfort, anti-slip grip and easy installation.
+seoTitle: "Leopard Print Wool Steering Cover, Multi-Color | Rawgadz"
+seoDescription: "Wool patchwork steering wheel cover with multi-color leopard print, all-season comfort and anti-slip grip. ৳920, Cash on Delivery across Bangladesh."
 price: 920
 tags: Car Accessories, steering cover
 types:

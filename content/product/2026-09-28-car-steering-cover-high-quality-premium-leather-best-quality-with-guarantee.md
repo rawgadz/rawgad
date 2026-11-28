@@ -13,6 +13,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083168/O1CN01ShHtBA20x7fIdSVJs_3326506915.webp
 description: Premium universal steering wheel cover with slim design, anti-slip
   grip, luxurious feel and long-lasting durability.
+seoTitle: "Premium Leather Steering Cover with Guarantee | Rawgadz"
+seoDescription: "Premium universal leather steering wheel cover with slim design, anti-slip grip and long-lasting durability. ৳1650, Cash on Delivery across Bangladesh."
 price: 1650
 tags: Car Accessories, steering cover
 types:

@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081589/O1CN01onGSVL25tz6Dc0gUc_2756927585-0-cib.webp
 description: The Rawgadz Peach Wood Grain Steering Cover offers an elegant,
   comfortable, all-season grip and easy installation for most cars.
+seoTitle: "Breathable Peach Wood Grain Steering Cover (New) | Rawgadz"
+seoDescription: "New breathable peach wood grain steering wheel cover with a comfortable all-season grip and easy fit for most cars. ৳1850, Cash on Delivery in BD."
 price: 1850
 tags: Car Accessories, steering cover
 types:

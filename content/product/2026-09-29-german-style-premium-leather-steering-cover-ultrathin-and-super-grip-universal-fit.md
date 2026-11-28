@@ -9,8 +9,10 @@ title: German Style Premium Leather Steering Cover Ultrathin and Super Grip
 imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790698236/Upload-to-rawgadz-increase-price-2.webp
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083963/Upload-to-rawgadz-increase-price-2.webp
-description: Drive in luxury with the non-slip Rawgadaz Nappa Leather Steering
+description: Drive in luxury with the non-slip Rawgadz Nappa Leather Steering
   Cover, backed by a 3-month replacement warranty.
+seoTitle: "German Style Nappa Leather Steering Cover | Rawgadz"
+seoDescription: "Ultra-thin German style leather steering wheel cover with super grip, universal fit and 3-month replacement warranty. ৳1990, Cash on Delivery in BD."
 price: 1990
 tags: Car Accessories, steering cover
 types:
@@ -27,7 +29,7 @@ types:
     available: "yes"
     published: "yes"
 ---
-Experience luxury and ultimate driving control with the Rawgadaz Authentic Nappa Leather Steering Wheel Cover.
+Experience luxury and ultimate driving control with the Rawgadz Authentic Nappa Leather Steering Wheel Cover.
 
 Imported Premium Quality (Tested by Engineers & Drivers)
 

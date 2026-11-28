@@ -175,36 +175,149 @@ function normalizeSubProduct(sub, parentPrice = null, globalAvailable = 'no', co
   return normalized;
 }
 
+// ---------------------------------------------------------------------------
+// SEO helpers
+// Optional frontmatter fields `seoTitle` and `seoDescription` (editable in
+// Pages CMS) override the auto-generated values below.
+// ---------------------------------------------------------------------------
+const SITE_URL = 'https://www.rawgadz.com';
+
+function productUrl(product) {
+  // vercel.json uses cleanUrls, so the live URL has no ".html".
+  return `${SITE_URL}/product/${product.slug}`;
+}
+
+function cleanText(str) {
+  return String(str || '')
+    .replace(/Rawgadaz/gi, 'Rawgadz')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function truncateAtWord(str, max) {
+  if (str.length <= max) return str;
+  const cut = str.slice(0, max + 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  return cut.slice(0, lastSpace > max * 0.6 ? lastSpace : max)
+    .replace(/[\s,–\-|:;(&]+$/, '')
+    .replace(/\s+(with|and|for|of|in|the|a|to|&)$/i, '')
+    .replace(/[\s,–\-|:;(&]+$/, '');
+}
+
+function buildSeoTitle(product) {
+  if (product.seoTitle) return cleanText(product.seoTitle);
+  const base = cleanText(product.title).replace(/^Rawgadz\s+/i, '');
+  const MAX = 60;
+  const suffixes = [' Price in BD | Rawgadz', ' | Rawgadz'];
+  for (const suffix of suffixes) {
+    if (base.length + suffix.length <= MAX) return base + suffix;
+  }
+  const suffix = ' | Rawgadz';
+  return truncateAtWord(base, MAX - suffix.length) + suffix;
+}
+
+function buildSeoDescription(product) {
+  if (product.seoDescription) return cleanText(product.seoDescription);
+  const price = product.priceRange && product.priceRange.min > 0 ? product.priceRange.min : product.price;
+  const tail = price > 0
+    ? ` Price ৳${price}. Cash on Delivery across Bangladesh.`
+    : ' Cash on Delivery across Bangladesh.';
+  const MAX = 158;
+  let lead = cleanText(product.description || product.title);
+  if (!/[.!?]$/.test(lead)) lead += '.';
+  if (lead.length + tail.length > MAX) {
+    lead = truncateAtWord(lead, MAX - tail.length - 1).replace(/[.!?]?$/, '.');
+  }
+  return lead + tail;
+}
+
+function categoryFor(product) {
+  if (product.tab === 'gadget') return { name: 'Gadgets', url: `${SITE_URL}/gadgets` };
+  const tags = String(product.tags || '').toLowerCase();
+  if (tags.includes('steering')) return { name: 'Steering Covers', url: `${SITE_URL}/car-steering-cover` };
+  return { name: 'Car Accessories', url: `${SITE_URL}/car_accessories` };
+}
+
+function buildBreadcrumbJsonLd(product) {
+  const cat = categoryFor(product);
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+      { '@type': 'ListItem', position: 2, name: cat.name, item: cat.url },
+      { '@type': 'ListItem', position: 3, name: cleanText(product.title), item: productUrl(product) }
+    ]
+  };
+  return JSON.stringify(schema).replace(/</g, '\\u003c');
+}
+
 function buildProductJsonLd(product) {
-  const canonicalUrl = `https://www.rawgadz.com/product/${product.slug}.html`;
+  const canonicalUrl = productUrl(product);
   const priceRange = product.priceRange || { min: product.price, max: product.price };
   const schemaAvailability = product.available === false
     ? 'https://schema.org/OutOfStock'
     : 'https://schema.org/InStock';
 
+  // Price valid until 31 Dec of next year (recommended by Google for Offer).
+  const priceValidUntil = `${new Date().getFullYear() + 1}-12-31`;
+
+  // Real store policy: ৳60 inside Dhaka, ৳90 outside Dhaka (checkout.html);
+  // faulty products can be returned within 7 days (product pages).
+  const shippingDetails = [
+    {
+      '@type': 'OfferShippingDetails',
+      shippingRate: { '@type': 'MonetaryAmount', value: 60, currency: 'BDT' },
+      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'BD', addressRegion: 'Dhaka' }
+    },
+    {
+      '@type': 'OfferShippingDetails',
+      shippingRate: { '@type': 'MonetaryAmount', value: 90, currency: 'BDT' },
+      shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'BD' }
+    }
+  ];
+  const returnPolicy = {
+    '@type': 'MerchantReturnPolicy',
+    applicableCountry: 'BD',
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: 7
+  };
+  const seller = { '@type': 'Organization', name: 'Rawgadz', url: `${SITE_URL}/` };
+
+  const commonOffer = {
+    priceCurrency: 'BDT',
+    availability: schemaAvailability,
+    itemCondition: 'https://schema.org/NewCondition',
+    url: canonicalUrl,
+    seller
+  };
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: product.title,
-    description: product.description || product.title,
+    name: cleanText(product.title),
+    description: cleanText(product.description || product.title),
     image: Array.isArray(product.images) && product.images.length > 0 ? product.images : (product.imageSrc ? [product.imageSrc] : []),
     sku: String(product.id),
+    brand: { '@type': 'Brand', name: 'Rawgadz' },
+    category: categoryFor(product).name,
     url: canonicalUrl,
     offers: priceRange.min !== priceRange.max
       ? {
           '@type': 'AggregateOffer',
-          priceCurrency: 'BDT',
           lowPrice: priceRange.min,
           highPrice: priceRange.max,
-          availability: schemaAvailability,
-          url: canonicalUrl
+          offerCount: Array.isArray(product.types) && product.types.length > 0 ? product.types.length : 1,
+          ...commonOffer
         }
       : {
           '@type': 'Offer',
-          priceCurrency: 'BDT',
-          price: product.price,
-          availability: schemaAvailability,
-          url: canonicalUrl
+          // Use the computed (available-variant) price so schema matches what the page shows.
+          price: priceRange.min > 0 ? priceRange.min : product.price,
+          priceValidUntil,
+          ...commonOffer,
+          shippingDetails,
+          hasMerchantReturnPolicy: returnPolicy
         }
   };
   return JSON.stringify(schema).replace(/</g, '\\u003c');
@@ -237,21 +350,35 @@ function generateStandaloneProductHTML(rawProduct) {
 
   const sanitizedProductJson = JSON.stringify(product).replace(/</g, '\\u003c');
   const jsonLd = buildProductJsonLd(product);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(product);
+  const seoTitle = buildSeoTitle(product);
+  const seoDescription = buildSeoDescription(product);
+  const canonicalUrl = productUrl(product);
+  const displayTitle = cleanText(product.title);
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>${escapeHtml(product.title)} | Rawgadz</title>
-  <meta name="description" content="${escapeHtml(product.description || product.title)}">
-  <link rel="canonical" href="https://www.rawgadz.com/product/${escapeHtml(product.slug)}.html">
-  <meta property="og:title" content="${escapeHtml(product.title)} | Rawgadz">
-  <meta property="og:description" content="${escapeHtml(product.description || product.title)}">
+  <title>${escapeHtml(seoTitle)}</title>
+  <meta name="description" content="${escapeHtml(seoDescription)}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
+  <meta property="og:site_name" content="Rawgadz">
+  <meta property="og:title" content="${escapeHtml(seoTitle)}">
+  <meta property="og:description" content="${escapeHtml(seoDescription)}">
   <meta property="og:image" content="${escapeHtml(initialImage || '')}">
-  <meta property="og:url" content="https://www.rawgadz.com/product/${escapeHtml(product.slug)}.html">
+  <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
   <meta property="og:type" content="product">
+  <meta property="product:price:amount" content="${escapeHtml(String((product.priceRange && product.priceRange.min > 0) ? product.priceRange.min : (product.price || '')))}">
+  <meta property="product:price:currency" content="BDT">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeHtml(seoTitle)}">
+  <meta name="twitter:description" content="${escapeHtml(seoDescription)}">
+  <meta name="twitter:image" content="${escapeHtml(initialImage || '')}">
   <script type="application/ld+json">${jsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
   <script src="/js/favicon.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -324,7 +451,7 @@ function generateStandaloneProductHTML(rawProduct) {
       <div class="lg:col-span-5 flex flex-col justify-between">
         <div>
           <div class="flex flex-wrap gap-2 mb-3">${tagsHtml}</div>
-          <h1 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900 mb-2" x-text="product.title"></h1>
+          <h1 class="text-2xl md:text-3xl font-black tracking-tight text-neutral-900 mb-2" x-text="product.title">${escapeHtml(displayTitle)}</h1>
           
           <div class="flex items-baseline gap-3 mb-6">
             <span class="text-3xl font-black text-black">৳<span x-text="currentPrice"></span></span>
@@ -448,7 +575,7 @@ function generateStandaloneProductHTML(rawProduct) {
             </div>
           </div>
 
-          <div class="mt-8 text-neutral-600 text-sm leading-relaxed" x-text="product.description"></div>
+          <div class="mt-8 text-neutral-600 text-sm leading-relaxed" x-text="product.description">${escapeHtml(cleanText(product.description))}</div>
         </div>
       </div>
     </div>

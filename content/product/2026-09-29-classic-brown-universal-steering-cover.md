@@ -9,7 +9,9 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790670734/h-1.webp
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083638/h-1.webp
 description: Get reliable, all-season anti-slip grip on a budget with the
-  universal Rawgadaz Basic Steering Cover.
+  universal Rawgadz Basic Steering Cover.
+seoTitle: "Classic Brown Steering Cover, Universal Fit | Rawgadz"
+seoDescription: "Budget classic brown steering wheel cover with all-season anti-slip grip and universal fit. ৳1050, Cash on Delivery across Bangladesh."
 price: 1050
 tags: Car Accessories, steering cover
 types:
@@ -20,7 +22,7 @@ types:
     available: "yes"
     published: "yes"
 ---
-Protect your steering wheel and improve your grip affordably with the Rawgadaz Basic Steering Wheel Cover.
+Protect your steering wheel and improve your grip affordably with the Rawgadz Basic Steering Wheel Cover.
 
 Budget-Friendly Quality
 

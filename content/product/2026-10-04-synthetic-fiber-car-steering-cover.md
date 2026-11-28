@@ -13,6 +13,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087736/Untitled-design-35.webp
 description: The ultra-thin ice silk and leather steering cover keeps your grip
   cool, sweat-free, and slip-resistant.
+seoTitle: "Ice Silk Synthetic Fiber Steering Cover | Rawgadz"
+seoDescription: "Ultra-thin ice silk and leather steering wheel cover that keeps your grip cool, sweat-free and slip-resistant. ৳899, Cash on Delivery across Bangladesh."
 price: 899
 tags: Car Accessories, steering cover
 types:

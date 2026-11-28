@@ -12,7 +12,9 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081690/O1CN01zKWp3z25tz6gQhW6C_2756927585-0-cib-1.webp
   - https://res.cloudinary.com/ostvuxgl/image/upload/v1794274951/O1CN01HhMqua25tz6fMSYy1__2756927585-0-cib.jpg
 description: Drive in comfort with the breathable, UV-protective, anti-slip
-  Rawgadaz Massage Grip Steering Cover.
+  Rawgadz Massage Grip Steering Cover.
+seoTitle: "Semi-Perforated Leather Steering Wheel Cover | Rawgadz"
+seoDescription: "Breathable semi-perforated leather steering cover with massage grip, UV protection and anti-slip hold. ৳1858, Cash on Delivery across Bangladesh."
 price: 1860
 tags: Car Accessories, steering cover
 types:
@@ -41,7 +43,7 @@ types:
     subImage: https://res.cloudinary.com/ostvuxgl/image/upload/v1794274951/O1CN01HhMqua25tz6fMSYy1__2756927585-0-cib.jpg
     price: 1858
 ---
-Transform your daily driving comfort and protect your steering wheel with the Rawgadaz Massage Grip Steering Wheel Cover.
+Transform your daily driving comfort and protect your steering wheel with the Rawgadz Massage Grip Steering Wheel Cover.
 
 Factory Direct Quality (Tested & Durable)
 

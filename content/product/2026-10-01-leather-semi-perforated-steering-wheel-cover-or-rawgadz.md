@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/mltcbcft/image/upload/v1790440810/O1CN01Jpq07N25tz6eODC9c_2756927585-0-cib.webp
 description: This breathable massage-grip steering cover relieves driving
   fatigue and shields against sun damage with a cool, non-slip hold.
+seoTitle: "Perforated Leather Massage Grip Steering Cover | Rawgadz"
+seoDescription: "Breathable semi-perforated leather steering cover with massage grip that eases driving fatigue and resists sun damage. ৳1860, Cash on Delivery in BD."
 price: 1860
 tags: Car Accessories, steering cover
 types:

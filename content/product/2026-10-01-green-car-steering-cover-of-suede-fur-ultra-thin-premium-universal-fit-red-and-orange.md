@@ -13,6 +13,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793084353/Untitled-design-42.webp
 description: Crafted from authentic suede, this ultra-thin steering wheel cover
   prevents sweaty slips while delivering a luxurious, non-slip grip.
+seoTitle: "Green Suede Steering Cover, Ultra-Thin Premium | Rawgadz"
+seoDescription: "Ultra-thin green suede steering wheel cover (also red and orange) with a luxurious, sweat-free non-slip grip. ৳1690, Cash on Delivery in Bangladesh."
 price: 1690
 tags: Car Accessories, steering cover
 types:

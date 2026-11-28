@@ -10,8 +10,10 @@ images:
   - https://res.cloudinary.com/mltcbcft/image/upload/v1790509576/O1CN01SRDca81hR59X1XMWe_2208764344273-0-cib.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082681/Untitled-design-33-1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082680/Untitled-design-32-1.webp
-description: Premium carbon fiber & microfiber steering cover with super grip,
-  slim design, luxurious feel and long-lasting durability.
+description: Crystal mahogany wood grain steering cover with carbon fiber
+  grip, slim design, luxurious feel and long-lasting durability.
+seoTitle: "Crystal Mahogany Grain Steering Cover, Carbon | Rawgadz"
+seoDescription: "Crystal mahogany wood grain steering cover with carbon fiber grip, slim design and a luxurious feel. ৳2400, Cash on Delivery across Bangladesh."
 price: 2400
 tags: Car Accessories, steering cover
 types:

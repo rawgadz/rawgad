@@ -16,6 +16,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793086813/green-1-1.webp
 description: This ultra-slim cowhide leather steering cover delivers a
   breathable, non-slip grip backed by a 3-month replacement warranty.
+seoTitle: "Soft Leather & Fabric Steering Cover, 3 Colors | Rawgadz"
+seoDescription: "Super soft leather and fabric steering wheel cover in green, black and coffee with breathable non-slip grip. ৳1650, Cash on Delivery across Bangladesh."
 price: 1650
 tags: Car Accessories, steering cover
 types:

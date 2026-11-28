@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082169/O1CN01QT3DXj2GvJzy5Y4Rj_3025299077-0-cib.webp
 description: Premium leather steering wheel cover with comfortable grip,
   anti-slip protection, and stylish design.
+seoTitle: "Hand Shape Napa Leather Steering Wheel Cover | Rawgadz"
+seoDescription: "Ergonomic hand-shape steering wheel cover with anti-slip lining, all-season comfort and universal 14.5–15 inch fit. ৳1600, Cash on Delivery in BD."
 price: 1600
 tags: Car Accessories, steering cover
 types:

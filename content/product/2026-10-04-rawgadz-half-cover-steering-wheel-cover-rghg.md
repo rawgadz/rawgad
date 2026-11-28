@@ -13,6 +13,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793088196/RED-WINE-4-1.webp
 description: The RawGadz Nappa leather and silicone half-grip steering cover
   prevents sweaty slips while delivering firm, universal driving control.
+seoTitle: "Half Steering Wheel Cover, Nappa & Silicone | Rawgadz"
+seoDescription: "Nappa leather and silicone half-grip steering wheel cover with firm, sweat-free universal control. ৳1500, Cash on Delivery across Bangladesh."
 price: 1500
 tags: Car Accessories, steering cover, HALF COVER
 types:

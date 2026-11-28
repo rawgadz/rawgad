@@ -24,6 +24,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083781/product-photo.webp
 description: This budget-friendly all-season steering cover offers durable
   protection and a steady anti-slip rubber grip for daily driving.
+seoTitle: "38cm Steering Cover, Long Lasting – Best Budget | Rawgadz"
+seoDescription: "Long-lasting 38cm steering wheel cover with anti-slip rubber grip, all-season use and a budget price. ৳750, Cash on Delivery across Bangladesh."
 price: 750
 tags: Car Accessories, steering cover
 ---

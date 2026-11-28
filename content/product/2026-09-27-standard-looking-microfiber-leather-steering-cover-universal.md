@@ -9,8 +9,10 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790483283/O1CN01n2G
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081972/O1CN01n2GChu26HLEZGOPka_2215748707636-0-cib.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793081972/O1CN01AFZCvv26HLEWDMCcU_2215748707636-0-cib.webp
-description: Premium mahogany grain steering wheel cover with luxurious feel,
+description: Universal microfiber leather steering wheel cover with a soft,
   anti-slip grip, slim design and long-lasting durability.
+seoTitle: "Microfiber Leather Steering Cover, Universal Fit | Rawgadz"
+seoDescription: "Universal microfiber leather steering wheel cover with soft anti-slip grip and a slim, durable design. ৳1699, Cash on Delivery across Bangladesh."
 price: 1699
 tags: Car Accessories, steering cover
 types:

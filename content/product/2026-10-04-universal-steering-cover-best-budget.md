@@ -24,6 +24,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793083781/product-photo.webp
 description: This budget-friendly all-season steering cover offers durable
   protection and a steady anti-slip rubber grip for daily driving.
+seoTitle: "Universal Steering Cover – Best Budget Price | Rawgadz"
+seoDescription: "Affordable universal steering wheel cover with steady anti-slip rubber grip and all-season protection for daily driving. ৳750, Cash on Delivery in BD."
 price: 750
 tags: Car Accessories, steering cover
 ---

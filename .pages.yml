@@ -108,6 +108,18 @@ content:
         label: Description
         required: true
 
+      - name: seoTitle
+        type: string
+        label: SEO Title (Google)
+        required: false
+        description: "Optional. Title shown in Google results (max ~60 characters). Leave empty to auto-generate from the product title."
+
+      - name: seoDescription
+        type: string
+        label: SEO Meta Description (Google)
+        required: false
+        description: "Optional. Snippet shown under the title in Google (120-158 characters). Leave empty to auto-generate from the description + price."
+
       - name: price
         type: number
         label: Price

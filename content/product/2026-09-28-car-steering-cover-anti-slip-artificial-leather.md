@@ -13,6 +13,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793082907/Untitled-design-44.webp
 description: Ultra-thin artificial leather steering cover with super grip,
   breathable comfort and a stylish anti-slip design.
+seoTitle: "Anti-Slip Artificial Leather Steering Cover | Rawgadz"
+seoDescription: "Ultra-thin artificial leather steering wheel cover with super grip and breathable, anti-slip comfort. ৳1100, Cash on Delivery across Bangladesh."
 price: 1100
 tags: Car Accessories, Steering Cover, Anti-slip Leather
 types:

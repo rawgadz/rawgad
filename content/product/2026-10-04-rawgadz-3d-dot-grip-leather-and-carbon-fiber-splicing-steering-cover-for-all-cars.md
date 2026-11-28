@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793071897/O1CN01pZVhcc1x10iYambI4_2219093776382-0-cib.webp
 description: The ultra-thin RawGadz carbon fiber and 3D polka-dot steering cover
   delivers breathable, sweat-free handling and a sporty interior upgrade.
+seoTitle: "3D Dot Grip Carbon Fiber Steering Wheel Cover | Rawgadz"
+seoDescription: "Ultra-thin carbon fiber and leather steering cover with 3D dot grip for breathable, sweat-free, sporty handling. ৳2790, Cash on Delivery in BD."
 price: 2790
 tags: Car Accessories, steering cover
 types:

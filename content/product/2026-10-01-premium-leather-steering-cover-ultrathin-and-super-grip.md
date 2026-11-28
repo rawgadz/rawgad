@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087622/O1CN01VHnTYo1JKAcUFF22a_2206426561009-0-cib.webp
 description: This ultra-thin Nappa leather steering cover delivers a luxurious,
   slip-proof grip backed by a 3-month replacement warranty.
+seoTitle: "Ultrathin Premium Leather Steering Cover | Rawgadz"
+seoDescription: "Ultra-thin premium leather steering wheel cover with slip-proof grip and 3-month replacement warranty. ৳1650, Cash on Delivery across Bangladesh."
 price: 1650
 tags: Car Accessories, steering cover
 types:

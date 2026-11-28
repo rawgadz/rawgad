@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT_DIR = process.cwd();
-const BASE_URL = (process.env.SITE_URL || 'https://rawgadz.com').replace(/\/+$/, '');
+const BASE_URL = (process.env.SITE_URL || 'https://www.rawgadz.com').replace(/\/+$/, '');
 const OUTPUT_FILE = path.join(ROOT_DIR, 'sitemap.xml');
 
 const IGNORED_DIRECTORIES = new Set([

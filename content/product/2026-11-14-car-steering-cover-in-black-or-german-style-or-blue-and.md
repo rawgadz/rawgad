@@ -5,7 +5,9 @@ available: yes
 tab: normal
 title: Car PU Leather Steering Cover in Black | German Style | Blue and Red Thread
 imageSrc: https://res.cloudinary.com/ostvuxgl/image/upload/v1794632207/O1CN01RTrthB1JKAcWA2tlL__2206426561009-0-cib.jpg
-description: fsdfdfgasdf
+description: Black PU leather steering wheel cover in German style with blue and red stitching, anti-slip grip and universal fit.
+seoTitle: "PU Leather Steering Cover – German Style Black | Rawgadz"
+seoDescription: "Black PU leather steering wheel cover, German style with blue and red stitching. Universal fit, anti-slip grip. From ৳1650, Cash on Delivery in BD."
 price: 1900
 types:
   - subProductId: ir000101

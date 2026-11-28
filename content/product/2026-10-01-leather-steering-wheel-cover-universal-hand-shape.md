@@ -12,6 +12,8 @@ images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793087368/4.webp
 description: This ergonomic leather steering cover delivers a contoured,
   non-slip hand grip and durable all-season wheel protection.
+seoTitle: "Hand Shape Leather Steering Wheel Cover | Rawgadz"
+seoDescription: "Ergonomic hand-shape leather steering wheel cover with contoured non-slip grip and durable all-season protection. ৳1450, Cash on Delivery in BD."
 price: 1450
 tags: Car Accessories, steering cover
 types:

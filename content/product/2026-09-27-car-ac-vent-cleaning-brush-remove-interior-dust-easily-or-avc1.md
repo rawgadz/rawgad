@@ -9,12 +9,12 @@ imageSrc: https://res.cloudinary.com/s4f1uyfw/image/upload/v1790524205/car-ac-cl
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089065/1.webp
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793089085/20.webp
-description: Keep your car’s AC vents and interior spotless with the Rawgadaz
+description: Keep your car’s AC vents and interior spotless with the Rawgadz
   Car AC Vent Cleaning Brush.
 price: 150
 tags: Car Accessories
 ---
-Keep your car’s AC vents and interior spotless with the Rawgadaz Car AC Vent Cleaning Brush.
+Keep your car’s AC vents and interior spotless with the Rawgadz Car AC Vent Cleaning Brush.
 
 Imported from China
 

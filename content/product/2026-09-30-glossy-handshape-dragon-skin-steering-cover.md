@@ -9,8 +9,10 @@ imageSrc: https://res.cloudinary.com/mltcbcft/image/upload/v1790743807/O1CN01BOm
 images:
   - https://res.cloudinary.com/s4f1uyfw/image/upload/v1793084031/O1CN013BchY625tyqovMRLi_2756927585-0-cib.webp
 description: Elevate your car’s interior with the bold Dragon Skin texture,
-  classy peach wood accents, and ergonomic anti-slip grip of the Rawgadaz
+  classy peach wood accents, and ergonomic anti-slip grip of the Rawgadz
   Steering Cover.
+seoTitle: "Glossy Dragon Skin Hand-Shape Steering Cover | Rawgadz"
+seoDescription: "Dragon skin texture steering wheel cover with peach wood accents and ergonomic hand-shape anti-slip grip. ৳1550, Cash on Delivery across Bangladesh."
 price: 1550
 tags: Car Accessories, steering cover
 types:
@@ -27,7 +29,7 @@ types:
     available: "yes"
     published: "yes"
 ---
-Upgrade your vehicle's interior luxury and road control with the Rawgadaz Glossy Dragon Skin & Peach Wood Grain Steering Cover.
+Upgrade your vehicle's interior luxury and road control with the Rawgadz Glossy Dragon Skin & Peach Wood Grain Steering Cover.
 
 Imported Premium Quality (Direct from China)
 

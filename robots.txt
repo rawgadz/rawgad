@@ -26,4 +26,4 @@ Disallow: /fail.html
 Disallow: /api/
 
 # Sitemap Location
-Sitemap: https://rawgadz.com/sitemap.xml
+Sitemap: https://www.rawgadz.com/sitemap.xml
